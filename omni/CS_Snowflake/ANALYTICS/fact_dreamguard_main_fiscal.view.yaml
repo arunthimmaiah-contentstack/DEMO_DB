@@ -51,15 +51,22 @@ dimensions:
 
   geo_c:
     sql: '"GEO_C"'
+    label: Geography
+    group_label: Locations
+    all_values: [ AMER, EMEA, undefined, APAC, LATAM ]
+    synonyms: [ Geo, Region ]
 
   region:
     sql: '"REGION"'
+    group_label: Locations
 
   sub_region:
     sql: '"SUB_REGION"'
+    group_label: Locations
 
   revenue:
     sql: '"REVENUE"'
+    label: Revenue Bands
 
   company_size:
     sql: '"COMPANY_SIZE"'
@@ -92,12 +99,14 @@ dimensions:
 
   deployment_status_c:
     sql: '"DEPLOYMENT_STATUS_C"'
+    label: Deployment Status
 
   type:
     sql: '"TYPE"'
 
   sync_date:
     sql: '"SYNC_DATE"'
+    hidden: true
 
   sales_motion:
     sql: '"SALES_MOTION"'
@@ -110,9 +119,11 @@ dimensions:
 
   fiscal_quarter:
     sql: '"FISCAL_QUARTER"'
+    hidden: true
 
   fiscal_year:
     sql: '"FISCAL_YEAR"'
+    hidden: true
 
   metric_date_only:
     sql: date(metric_date_1)
@@ -128,35 +139,113 @@ dimensions:
     sql: date(metric_date_2)
     label: Metric Date Only 2
 
-  current_date_qtr:
-    sql: quarter(CURRENT_DATE)
-    label: Current date Qtr
+  closed_lost_date:
+    sql: case when metric_name = 'Closed Lost Reason' then "METRIC_DATE_1" else null
+      end
+    label: Closed Lost Date
 
-  current_qtr_check:
-    sql: IFF(fiscal_quarter = QUARTER(DATEADD(month, 11, CURRENT_DATE)), 'Yes',
-      'No')
-    label: Current Qtr check
-
-  current_year_check:
-    sql: IFF(fiscal_year = year(DATEADD(month, 11, CURRENT_DATE)), 'Yes', 'No')
-    label: Current year check
+  close_won_date:
+    sql: case when metric_name='Bookings ($)' then "METRIC_DATE_1" else null end
+    label: Closed Won Date
+    group_label: Closed Won Date
 
 measures:
   count:
+    label: Count
+    format: NUMBER_0
     aggregate_type: count
 
   metric_measure_2_sum:
     sql: ${analytics__fact_dreamguard_main_fiscal.metric_measure_2}
+    label: New Pipeline ($)
+    format: USDCURRENCY_2
+    drill_fields: [ analytics__fact_dreamguard_main_fiscal.account_name ]
     aggregate_type: sum
+    filters:
+      metric_name:
+        is: New Pipeline ($)
 
   id_count_distinct:
     sql: ${analytics__fact_dreamguard_main_fiscal.id}
+    label: Opportunity Count
+    format: NUMBER_0
     aggregate_type: count_distinct
+
+  metric_measure_2_sum_1_expansion_bookings:
+    sql: ${analytics__fact_dreamguard_main_fiscal.metric_measure_2}
+    label: Expansion Bookings
+    aggregate_type: sum
+    filters:
+      metric_name:
+        is: Expansion Bookings
+
+  metric_measure_2_sum_1_asc__days__by_expansion_motion__existing_biz_:
+    sql: ${analytics__fact_dreamguard_main_fiscal.metric_measure_2}
+    label: ASC (Days) by Expansion Motion (Existing Biz)
+    aggregate_type: sum
+    filters:
+      metric_name:
+        is: ASC (Days) by Expansion Motion (Existing Biz)
+
+  metric_measure_2_sum_1_asc__days__by_sales_motion__new_biz_:
+    sql: ${analytics__fact_dreamguard_main_fiscal.metric_measure_2}
+    label: ASC (Days) by Sales Motion (New Biz)
+    aggregate_type: sum
+    filters:
+      metric_name:
+        is: ASC (Days) by Sales Motion (New Biz)
+
+  metric_measure_2_sum_1_bookings____:
+    sql: ${analytics__fact_dreamguard_main_fiscal.metric_measure_2}
+    label: Bookings ($)
+    format: USDCURRENCY_2
+    aggregate_type: sum
+    filters:
+      metric_name:
+        is: Bookings ($)
+    synonyms: [ Opportunity Amount, Closed Won Amount ]
+
+  metric_measure_2_sum_1_closed_won_opps:
+    sql: ${analytics__fact_dreamguard_main_fiscal.metric_measure_2}
+    label: Closed Won Opps
+    aggregate_type: sum
+    filters:
+      metric_name:
+        is: Closed Won Opps
+
+  metric_measure_2_sum_1_mqo_volume:
+    sql: ${analytics__fact_dreamguard_main_fiscal.metric_measure_2}
+    label: MQO Volume
+    aggregate_type: sum
+    filters:
+      metric_name:
+        is: MQO Volume
+
+  metric_measure_2_sum_1_time_to_deploy__days_:
+    sql: ${analytics__fact_dreamguard_main_fiscal.metric_measure_2}
+    label: Time to Deploy (Days)
+    aggregate_type: sum
+    filters:
+      metric_name:
+        is: Time to Deploy (Days)
 
   metric_measure_2_average:
     sql: ${analytics__fact_dreamguard_main_fiscal.metric_measure_2}
+    label: Average Sales Cycle Days
     format: NUMBER_0
     aggregate_type: average
+    filters:
+      metric_name:
+        is: Avg Sales Cycle (Days)
+
+  metric_measure_2_sum_1:
+    sql: ${analytics__fact_dreamguard_main_fiscal.metric_measure_2}
+    label: Closed Lost Amount ($)
+    format: USDCURRENCY_2
+    aggregate_type: sum
+    filters:
+      metric_name:
+        is: Closed Lost Reason
 
 #The info below was pulled from your dbt repository and is read-only.
 dbt:
