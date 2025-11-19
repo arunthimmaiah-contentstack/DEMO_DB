@@ -1,0 +1,73 @@
+# Reference this view as omni_dbt_staging__stg_lytics_user_profile_counts
+schema_label: ""
+
+schema: omni_dbt_staging
+table_name: STG_LYTICS_USER_PROFILE_COUNTS
+
+dimensions:
+  timestamp:
+    sql: '"TIMESTAMP"'
+
+  date:
+    sql: '"DATE"'
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  aid:
+    sql: '"AID"'
+
+  lytics_org_id:
+    sql: '"LYTICS_ORG_ID"'
+    format: ID
+
+  contentstack_uid:
+    sql: '"CONTENTSTACK_UID"'
+
+  max_entitlement_profiles_count:
+    sql: '"MAX_ENTITLEMENT_PROFILES_COUNT"'
+
+  period_start:
+    sql: '"PERIOD_START"'
+
+  period_end:
+    sql: '"PERIOD_END"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_lytics_user_profile_counts
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select *
+        from {{ source('lytics_data_share', 'LYTICS_USER_PROFILE_COUNTS_RAW') }}
+    ),
+
+    renamed as (
+        select 
+           TIMESTAMP,
+           date,
+           account_name,
+          account_id,
+          aid,
+          lytics_org_id,
+          contentstack_uid,
+           max_entitlement_profiles_count,
+         period_start,
+         period_end
+         from source
+
+    )
+
+    select * from renamed

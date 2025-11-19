@@ -1,0 +1,23 @@
+# Reference this view as staging__int_last30au
+schema: STAGING
+table_name: INT_LAST30AU
+
+dimensions:
+  date:
+    sql: '"DATE"'
+
+  organization_uid:
+    sql: '"ORGANIZATION_UID"'
+
+  location:
+    sql: '"LOCATION"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+  l30au:
+    sql: '"L30AU"'
+
+measures:
+  count:
+    aggregate_type: count

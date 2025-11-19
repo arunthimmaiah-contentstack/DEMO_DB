@@ -1,0 +1,21 @@
+# Reference this view as staging__int_salesforce_account_daily
+schema: STAGING
+table_name: INT_SALESFORCE_ACCOUNT_DAILY
+
+dimensions:
+  as_of_date:
+    sql: '"AS_OF_DATE"'
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  type:
+    sql: '"TYPE"'
+
+  customer_designation_c:
+    sql: '"CUSTOMER_DESIGNATION_C"'
+
+measures:
+  count:
+    aggregate_type: count

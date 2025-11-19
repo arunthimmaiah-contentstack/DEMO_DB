@@ -1,0 +1,53 @@
+# Reference this view as omni_dbt__fct_public_models_without_contract
+schema_label: ""
+#This description was pulled from dbt.
+description: This table shows each public model that does not have an enforced contract
+
+schema: omni_dbt
+table_name: FCT_PUBLIC_MODELS_WITHOUT_CONTRACT
+
+dimensions:
+  resource_name:
+    sql: '"RESOURCE_NAME"'
+
+  is_public:
+    sql: '"IS_PUBLIC"'
+
+  is_contract_enforced:
+    sql: '"IS_CONTRACT_ENFORCED"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_public_models_without_contract
+  target_schema: STAGING
+  description: This table shows each public model that does not have an enforced contract
+  config:
+    materialized: view
+  code: |-
+    with 
+
+    all_resources as (
+        select * from {{ ref('int_all_graph_resources') }}
+        where not is_excluded
+    ),
+
+    final as (
+
+        select 
+            resource_name,
+            is_public,
+            is_contract_enforced
+            
+        from all_resources
+        where 
+            is_public 
+            and not is_contract_enforced
+    )
+
+    select * from final
+
+    {{ filter_exceptions() }}

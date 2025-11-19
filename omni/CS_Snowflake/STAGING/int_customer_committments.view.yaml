@@ -1,0 +1,18 @@
+# Reference this view as staging__int_customer_committments
+schema: STAGING
+table_name: INT_CUSTOMER_COMMITTMENTS
+
+dimensions:
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  date:
+    sql: '"DATE"'
+
+  customer_commitment_count:
+    sql: '"CUSTOMER_COMMITMENT_COUNT"'
+
+measures:
+  count:
+    aggregate_type: count

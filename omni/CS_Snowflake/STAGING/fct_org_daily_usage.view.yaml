@@ -1,0 +1,102 @@
+# Reference this view as staging__fct_org_daily_usage
+schema: STAGING
+table_name: FCT_ORG_DAILY_USAGE
+
+dimensions:
+  date:
+    sql: '"DATE"'
+
+  organization_id:
+    sql: '"ORGANIZATION_ID"'
+    format: ID
+
+  account_id_18:
+    sql: '"ACCOUNT_ID_18"'
+
+  account_type:
+    sql: '"ACCOUNT_TYPE"'
+
+  customer_designation:
+    sql: '"CUSTOMER_DESIGNATION"'
+
+  organization_name:
+    sql: '"ORGANIZATION_NAME"'
+
+  organization_type:
+    sql: '"ORGANIZATION_TYPE"'
+
+  organization_tag:
+    sql: '"ORGANIZATION_TAG"'
+
+  cma_bandwidth:
+    sql: '"CMA_BANDWIDTH"'
+
+  cma_count:
+    sql: '"CMA_COUNT"'
+
+  cdn_bandwidth:
+    sql: '"CDN_BANDWIDTH"'
+
+  cdn_count:
+    sql: '"CDN_COUNT"'
+
+  assets_bandwidth:
+    sql: '"ASSETS_BANDWIDTH"'
+
+  assets_count:
+    sql: '"ASSETS_COUNT"'
+
+  images_bandwidth:
+    sql: '"IMAGES_BANDWIDTH"'
+
+  images_count:
+    sql: '"IMAGES_COUNT"'
+
+  graphql_bandwidth:
+    sql: '"GRAPHQL_BANDWIDTH"'
+
+  graphql_count:
+    sql: '"GRAPHQL_COUNT"'
+
+  api_bandwidth:
+    sql: '"API_BANDWIDTH"'
+
+  api_count:
+    sql: '"API_COUNT"'
+
+  ui_bandwidth:
+    sql: '"UI_BANDWIDTH"'
+
+  ui_count:
+    sql: '"UI_COUNT"'
+
+  stacks:
+    sql: '"STACKS"'
+
+  users:
+    sql: '"USERS"'
+
+  content_types:
+    sql: '"CONTENT_TYPES"'
+
+  entries:
+    sql: '"ENTRIES"'
+
+  roles:
+    sql: '"ROLES"'
+
+  assets:
+    sql: '"ASSETS"'
+
+  locales:
+    sql: '"LOCALES"'
+
+  environments:
+    sql: '"ENVIRONMENTS"'
+
+  extensions:
+    sql: '"EXTENSIONS"'
+
+measures:
+  count:
+    aggregate_type: count

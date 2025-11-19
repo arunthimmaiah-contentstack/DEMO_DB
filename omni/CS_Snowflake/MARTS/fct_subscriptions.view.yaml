@@ -1,0 +1,201 @@
+# Reference this view as marts__fct_subscriptions
+label: Revenue Subscription
+
+schema: MARTS
+table_name: FCT_SUBSCRIPTIONS
+
+dimensions:
+  subscription_key:
+    sql: '"SUBSCRIPTION_KEY"'
+
+  subscription_id:
+    sql: '"SUBSCRIPTION_ID"'
+    format: ID
+    primary_key: true
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  opportunity_name:
+    sql: '"OPPORTUNITY_NAME"'
+
+  subscription_start_date:
+    sql: '"SUBSCRIPTION_START_DATE"'
+
+  subscription_end_date:
+    sql: '"SUBSCRIPTION_END_DATE"'
+
+  subscription_status:
+    sql: '"SUBSCRIPTION_STATUS"'
+
+  product_type:
+    sql: '"PRODUCT_TYPE"'
+
+  contract_average_arr:
+    sql: '"CONTRACT_AVERAGE_ARR"'
+
+  monthly_recurring_revenue:
+    sql: '"MONTHLY_RECURRING_REVENUE"'
+
+  total_contract_value:
+    sql: '"TOTAL_CONTRACT_VALUE"'
+
+  start_month:
+    sql: '"START_MONTH"'
+
+  start_quarter:
+    sql: '"START_QUARTER"'
+
+  start_year:
+    sql: '"START_YEAR"'
+
+  subscription_length_months:
+    sql: '"SUBSCRIPTION_LENGTH_MONTHS"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  dbt_updated_at:
+    sql: '"DBT_UPDATED_AT"'
+
+  _entity_subscription_id:
+    # Entity is defined in the 'revenue_subscription' dbt semantic model (models/semantic_models/sem_revenue_subscription.yml)
+    sql: ${subscription_id}
+    hidden: true
+
+  _entity_account_id:
+    # Entity is defined in the 'revenue_subscription' dbt semantic model (models/semantic_models/sem_revenue_subscription.yml)
+    sql: ${account_id}
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+  contract_arr:
+    # Measure is defined in the 'revenue_subscription' dbt semantic model (models/semantic_models/sem_revenue_subscription.yml)
+    sql: ${contract_average_arr}
+    description: Annual Recurring Revenue from contracts
+    aggregate_type: sum
+
+  mrr:
+    # Measure is defined in the 'revenue_subscription' dbt semantic model (models/semantic_models/sem_revenue_subscription.yml)
+    sql: ${monthly_recurring_revenue}
+    description: Monthly Recurring Revenue
+    aggregate_type: sum
+
+  tcv:
+    # Measure is defined in the 'revenue_subscription' dbt semantic model (models/semantic_models/sem_revenue_subscription.yml)
+    sql: ${total_contract_value}
+    description: Total Contract Value
+    aggregate_type: sum
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_subscriptions
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    -- models/marts/sales/fct_subscriptions.sql
+    {{ config(
+        materialized='table'
+    ) }}
+
+    WITH opportunity_subscriptions AS (
+        SELECT 
+            id AS opportunity_id,
+            account_id,
+            owner_id,
+            name AS opportunity_name,
+            close_date,
+            stage_name,
+            amount,
+            -- Extract subscription details from opportunity
+            close_date AS subscription_start_date,
+            CASE 
+                WHEN stage_name = 'Closed Won' THEN close_date + INTERVAL '1 year'
+                ELSE NULL 
+            END AS subscription_end_date,
+            CASE 
+                WHEN stage_name = 'Closed Won' THEN 'Active'
+                WHEN stage_name = 'Closed Lost' THEN 'Cancelled'
+                ELSE 'Pending'
+            END AS subscription_status,
+            -- Product type from opportunity
+            CASE 
+                WHEN name ILIKE '%enterprise%' THEN 'Enterprise'
+                WHEN name ILIKE '%professional%' OR name ILIKE '%pro%' THEN 'Professional'
+                WHEN name ILIKE '%starter%' OR name ILIKE '%basic%' THEN 'Starter'
+                ELSE 'Standard'
+            END AS product_type,
+            -- Calculate ARR and MRR
+            CASE 
+                WHEN stage_name = 'Closed Won' THEN amount
+                ELSE 0
+            END AS contract_average_arr,
+            CASE 
+                WHEN stage_name = 'Closed Won' THEN amount / 12.0
+                ELSE 0
+            END AS monthly_recurring_revenue,
+            amount AS total_contract_value,
+            created_date,
+            last_modified_date
+        FROM {{ source('salesforce_opportunity', 'opportunity') }}
+        WHERE amount > 0
+    ),
+
+    subscription_enrichment AS (
+        SELECT 
+            -- Primary Key
+            -- Primary Key
+           {{ dbt_utils.generate_surrogate_key(['opportunity_id', 'account_id']) }} AS subscription_key,
+
+            
+            -- Use opportunity_id as subscription_id for now
+            opportunity_id AS subscription_id,
+            account_id,
+            owner_id,
+            opportunity_name,
+            
+            -- Subscription Details
+            subscription_start_date,
+            subscription_end_date,
+            subscription_status,
+            product_type,
+            
+            -- Financial Metrics
+            contract_average_arr,
+            monthly_recurring_revenue,
+            total_contract_value,
+            
+            -- Time Dimensions
+            DATE_TRUNC('month', subscription_start_date) AS start_month,
+            DATE_TRUNC('quarter', subscription_start_date) AS start_quarter,
+            DATE_TRUNC('year', subscription_start_date) AS start_year,
+            
+            -- Subscription Metrics
+            CASE 
+                WHEN subscription_end_date IS NOT NULL 
+                THEN DATEDIFF('month', subscription_start_date, subscription_end_date)
+                ELSE NULL
+            END AS subscription_length_months,
+            
+            -- Metadata
+            created_date,
+            last_modified_date,
+            CURRENT_TIMESTAMP AS dbt_updated_at
+        FROM opportunity_subscriptions
+    )
+
+    SELECT * 
+    FROM subscription_enrichment

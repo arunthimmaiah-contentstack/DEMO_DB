@@ -1,0 +1,107 @@
+# Reference this view as omni_dbt__salesforce__manager_performance
+schema_label: ""
+
+schema: omni_dbt
+table_name: SALESFORCE__MANAGER_PERFORMANCE
+
+dimensions:
+  manager_id:
+    sql: '"MANAGER_ID"'
+    format: ID
+
+  manager_name:
+    sql: '"MANAGER_NAME"'
+
+  manager_city:
+    sql: '"MANAGER_CITY"'
+
+  manager_state:
+    sql: '"MANAGER_STATE"'
+
+  manager_position:
+    sql: '"MANAGER_POSITION"'
+
+  number_of_direct_reports:
+    sql: '"NUMBER_OF_DIRECT_REPORTS"'
+
+  bookings_amount_closed_this_month:
+    sql: '"BOOKINGS_AMOUNT_CLOSED_THIS_MONTH"'
+
+  bookings_amount_closed_this_quarter:
+    sql: '"BOOKINGS_AMOUNT_CLOSED_THIS_QUARTER"'
+
+  total_number_bookings:
+    sql: '"TOTAL_NUMBER_BOOKINGS"'
+
+  total_bookings_amount:
+    sql: '"TOTAL_BOOKINGS_AMOUNT"'
+
+  bookings_count_closed_this_month:
+    sql: '"BOOKINGS_COUNT_CLOSED_THIS_MONTH"'
+
+  bookings_count_closed_this_quarter:
+    sql: '"BOOKINGS_COUNT_CLOSED_THIS_QUARTER"'
+
+  largest_booking:
+    sql: '"LARGEST_BOOKING"'
+
+  lost_amount_this_month:
+    sql: '"LOST_AMOUNT_THIS_MONTH"'
+
+  lost_amount_this_quarter:
+    sql: '"LOST_AMOUNT_THIS_QUARTER"'
+
+  total_number_lost:
+    sql: '"TOTAL_NUMBER_LOST"'
+
+  total_lost_amount:
+    sql: '"TOTAL_LOST_AMOUNT"'
+
+  lost_count_this_month:
+    sql: '"LOST_COUNT_THIS_MONTH"'
+
+  lost_count_this_quarter:
+    sql: '"LOST_COUNT_THIS_QUARTER"'
+
+  pipeline_created_amount_this_month:
+    sql: '"PIPELINE_CREATED_AMOUNT_THIS_MONTH"'
+
+  pipeline_created_amount_this_quarter:
+    sql: '"PIPELINE_CREATED_AMOUNT_THIS_QUARTER"'
+
+  pipeline_created_forecast_amount_this_month:
+    sql: '"PIPELINE_CREATED_FORECAST_AMOUNT_THIS_MONTH"'
+
+  pipeline_created_forecast_amount_this_quarter:
+    sql: '"PIPELINE_CREATED_FORECAST_AMOUNT_THIS_QUARTER"'
+
+  pipeline_count_created_this_month:
+    sql: '"PIPELINE_COUNT_CREATED_THIS_MONTH"'
+
+  pipeline_count_created_this_quarter:
+    sql: '"PIPELINE_COUNT_CREATED_THIS_QUARTER"'
+
+  total_number_pipeline:
+    sql: '"TOTAL_NUMBER_PIPELINE"'
+
+  total_pipeline_amount:
+    sql: '"TOTAL_PIPELINE_AMOUNT"'
+
+  total_pipeline_forecast_amount:
+    sql: '"TOTAL_PIPELINE_FORECAST_AMOUNT"'
+
+  largest_deal_in_pipeline:
+    sql: '"LARGEST_DEAL_IN_PIPELINE"'
+
+  win_percent_this_month:
+    sql: '"WIN_PERCENT_THIS_MONTH"'
+
+  win_percent_this_quarter:
+    sql: '"WIN_PERCENT_THIS_QUARTER"'
+
+  total_win_percent:
+    sql: '"TOTAL_WIN_PERCENT"'
+
+measures:
+  count:
+    aggregate_type: count

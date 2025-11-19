@@ -1,0 +1,47 @@
+# Reference this view as omni_dbt__fct_undocumented_source_tables
+schema_label: ""
+#This description was pulled from dbt.
+description: |
+  This model contains all source tables that do not have a description configured in a YML file. 
+
+schema: omni_dbt
+table_name: FCT_UNDOCUMENTED_SOURCE_TABLES
+
+dimensions:
+  resource_name:
+    sql: '"RESOURCE_NAME"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_undocumented_source_tables
+  target_schema: STAGING
+  description: |
+    This model contains all source tables that do not have a description configured in a YML file. 
+  config:
+    materialized: view
+  code: |-
+    with
+
+    all_resources as (
+        select * from {{ ref('int_all_graph_resources') }}
+        where not is_excluded
+
+    ),
+
+    final as (
+
+        select
+            resource_name
+
+        from all_resources
+        where not is_described and resource_type = 'source'
+
+    )
+
+    select * from final
+
+    {{ filter_exceptions() }}

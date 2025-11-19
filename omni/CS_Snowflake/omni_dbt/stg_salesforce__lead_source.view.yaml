@@ -1,0 +1,32 @@
+# Reference this view as omni_dbt__stg_salesforce__lead_source
+schema_label: ""
+
+schema: omni_dbt
+table_name: STG_SALESFORCE__LEAD_SOURCE
+
+dimensions:
+  lead_id:
+    sql: '"LEAD_ID"'
+    format: ID
+
+  first_name:
+    sql: '"FIRST_NAME"'
+
+  last_name:
+    sql: '"LAST_NAME"'
+
+  email:
+    sql: '"EMAIL"'
+
+  status:
+    sql: '"STATUS"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+measures:
+  count:
+    aggregate_type: count

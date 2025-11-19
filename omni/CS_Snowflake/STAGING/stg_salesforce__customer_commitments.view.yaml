@@ -1,0 +1,59 @@
+# Reference this view as staging__stg_salesforce__customer_commitments
+#This description was pulled from dbt.
+description: |
+  Staging model for Salesforce Customer Commitments object. Provides a cleaned and standardized view of commitments data for downstream intermediate and mart models.
+
+schema: STAGING
+table_name: STG_SALESFORCE__CUSTOMER_COMMITMENTS
+
+dimensions:
+  commitment_id:
+    sql: '"COMMITMENT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Primary key from Salesforce (Commitment record Id)
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Foreign key to Salesforce Account object
+
+  start_date:
+    sql: '"START_DATE"'
+    #This description was pulled from dbt.
+    description: Start date of the commitment
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  name:
+    sql: '"NAME"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__customer_commitments
+  target_schema: STAGING
+  description: |
+    Staging model for Salesforce Customer Commitments object. Provides a cleaned and standardized view of commitments data for downstream intermediate and mart models.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    -- models/staging/salesforce/stg_salesforce__customer_commitments.sql
+    with source as (
+        select *
+        from {{ source('salesforce', 'customer_commitment_tracking_c') }}
+    )
+    select
+        id as commitment_id,
+        account_c as account_id,
+        created_date as start_date,
+        is_deleted,
+        name
+    from source
+  referenced_by: [ int_customer_committments ]

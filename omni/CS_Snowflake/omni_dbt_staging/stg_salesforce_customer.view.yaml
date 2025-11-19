@@ -1,0 +1,103 @@
+# Reference this view as omni_dbt_staging__stg_salesforce_customer
+schema_label: ""
+
+schema: omni_dbt_staging
+table_name: STG_SALESFORCE_CUSTOMER
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  industry:
+    sql: '"INDUSTRY"'
+
+  segment:
+    sql: '"SEGMENT"'
+
+  region:
+    sql: '"REGION"'
+
+  license_start_date:
+    sql: '"LICENSE_START_DATE"'
+
+  license_end_date:
+    sql: '"LICENSE_END_DATE"'
+
+  renewal_date:
+    sql: '"RENEWAL_DATE"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  source_system:
+    sql: '"SOURCE_SYSTEM"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce_customer
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+    tags: [ staging, customer ]
+  code: |-
+    {{ config(
+        materialized = 'view',
+        tags = ['staging', 'customer']
+    ) }}
+
+    -- ===============================================================
+    -- stg_customer
+    -- Staging model for customer and onboarding data
+    -- ===============================================================
+
+    with accounts as (
+        select
+            id as account_id,
+            name as account_name,
+            industry,
+            CUSTOMER_SEGMENT_C as segment,
+            region_c as region,
+            created_date,
+            last_modified_date
+        from {{ source('salesforce_account', 'account') }}
+    ),
+
+    subscriptions as (
+        select
+            id as subscription_id,
+            SBQQ_ACCOUNT_C as account_id,
+            SBQQ_START_DATE_C as license_start_date,
+            SBQQ_end_DATE_C as license_end_date,
+            SBQQ_renewed_DATE_C as renewal_date,
+        from {{source('sfdc_subscription','sbqq_subscription_c')}}
+    )
+
+    select
+        a.account_id as id,
+        a.account_name,
+        a.industry,
+        a.segment,
+        a.region,
+        s.license_start_date,
+        s.license_end_date,
+        s.renewal_date,
+        a.created_date,
+        a.last_modified_date,
+        'salesforce' as source_system
+    from accounts a
+    left join subscriptions s
+        on a.account_id = s.account_id
+  referenced_by: [ fct_customer_success ]

@@ -1,0 +1,42 @@
+# Reference this view as omni_dbt__stg_user_profile_counts
+schema_label: ""
+
+schema: omni_dbt
+table_name: STG_USER_PROFILE_COUNTS
+
+dimensions:
+  timestamp:
+    sql: '"TIMESTAMP"'
+
+  date:
+    sql: '"DATE"'
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  aid:
+    sql: '"AID"'
+
+  lytics_org_id:
+    sql: '"LYTICS_ORG_ID"'
+    format: ID
+
+  contentstack_uid:
+    sql: '"CONTENTSTACK_UID"'
+
+  max_entitlement_profiles_count:
+    sql: '"MAX_ENTITLEMENT_PROFILES_COUNT"'
+
+  period_start:
+    sql: '"PERIOD_START"'
+
+  period_end:
+    sql: '"PERIOD_END"'
+
+measures:
+  count:
+    aggregate_type: count

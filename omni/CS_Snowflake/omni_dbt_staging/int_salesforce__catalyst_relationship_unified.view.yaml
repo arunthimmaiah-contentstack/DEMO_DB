@@ -1,0 +1,209 @@
+# Reference this view as omni_dbt_staging__int_salesforce__catalyst_relationship_unified
+schema_label: ""
+#This description was pulled from dbt.
+description: |
+  Unified Catalyst Relationship model connecting partners to opportunities, capturing Co-Sell, Referral, and Influencer relationships.
+
+schema: omni_dbt_staging
+table_name: INT_SALESFORCE__CATALYST_RELATIONSHIP_UNIFIED
+
+dimensions:
+  catalyst_relationship_id:
+    sql: '"CATALYST_RELATIONSHIP_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Primary key for catalyst relationship records.
+
+  catalyst_relationship_name:
+    sql: '"CATALYST_RELATIONSHIP_NAME"'
+
+  catalyst_owner_id:
+    sql: '"CATALYST_OWNER_ID"'
+    format: ID
+
+  record_type_id:
+    sql: '"RECORD_TYPE_ID"'
+    format: ID
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+    #This description was pulled from dbt.
+    description: Indicates deleted records in Salesforce.
+
+  catalyst_account_id:
+    sql: '"CATALYST_ACCOUNT_ID"'
+    format: ID
+
+  related_account_id:
+    sql: '"RELATED_ACCOUNT_ID"'
+    format: ID
+
+  customer_account_id:
+    sql: '"CUSTOMER_ACCOUNT_ID"'
+    format: ID
+
+  catalyst_relationship_status:
+    sql: '"CATALYST_RELATIONSHIP_STATUS"'
+    #This description was pulled from dbt.
+    description: Relationship status (Active/Inactive).
+
+  catalyst_relationship_source:
+    sql: '"CATALYST_RELATIONSHIP_SOURCE"'
+
+  catalyst_role:
+    sql: '"CATALYST_ROLE"'
+    #This description was pulled from dbt.
+    description: Partner role (Co-Sell or Referral).
+
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Linked Salesforce opportunity.
+
+  catalyst_notes:
+    sql: '"CATALYST_NOTES"'
+
+  catalyst_date:
+    sql: '"CATALYST_DATE"'
+
+  catalyst_digital_tech_type:
+    sql: '"CATALYST_DIGITAL_TECH_TYPE"'
+
+  catalyst_implementation_type:
+    sql: '"CATALYST_IMPLEMENTATION_TYPE"'
+
+  catalyst_digital_property:
+    sql: '"CATALYST_DIGITAL_PROPERTY"'
+
+  catalyst_influencer_approval_status:
+    sql: '"CATALYST_INFLUENCER_APPROVAL_STATUS"'
+    #This description was pulled from dbt.
+    description: Status of influencer approval.
+
+  catalyst_influence_type:
+    sql: '"CATALYST_INFLUENCE_TYPE"'
+
+  catalyst_contentstack_referred:
+    sql: '"CATALYST_CONTENTSTACK_REFERRED"'
+
+  catalyst_qualified_pso:
+    sql: '"CATALYST_QUALIFIED_PSO"'
+
+  catalyst_qualified_pso_date:
+    sql: '"CATALYST_QUALIFIED_PSO_DATE"'
+
+  partner_relationship_manager_id:
+    sql: '"PARTNER_RELATIONSHIP_MANAGER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Assigned partner manager for the relationship.
+
+  partner_contact_id:
+    sql: '"PARTNER_CONTACT_ID"'
+    format: ID
+
+  partner_relationship_id_case_safe:
+    sql: '"PARTNER_RELATIONSHIP_ID_CASE_SAFE"'
+
+  split_percent:
+    sql: '"SPLIT_PERCENT"'
+
+  catalyst_sentiment:
+    sql: '"CATALYST_SENTIMENT"'
+
+  catalyst_target_meeting_date:
+    sql: '"CATALYST_TARGET_MEETING_DATE"'
+
+  catalyst_meeting_status:
+    sql: '"CATALYST_MEETING_STATUS"'
+
+  catalyst_meeting_type:
+    sql: '"CATALYST_MEETING_TYPE"'
+
+  catalyst_prm_notes:
+    sql: '"CATALYST_PRM_NOTES"'
+
+  cr_role:
+    sql: '"CR_ROLE"'
+
+  cr_qualified_pso:
+    sql: '"CR_QUALIFIED_PSO"'
+
+  data_built_ts:
+    sql: '"DATA_BUILT_TS"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: int_salesforce__catalyst_relationship_unified
+  target_schema: STAGING
+  description: |
+    Unified Catalyst Relationship model connecting partners to opportunities, capturing Co-Sell, Referral, and Influencer relationships.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    {{ config(materialized='view') }}
+
+    with base as (
+        select * from {{ ref('stg_salesforce__catalyst_relationship') }}
+    ),
+
+    facts as (
+        select
+            id as cr_id,
+            catalyst_role_c as cr_role,
+            qualified_pso_c as cr_qualified_pso
+        from {{ ref('stg_salesforce__cr_facts') }}
+    )
+
+    select
+        b.id as catalyst_relationship_id,
+        b.name as catalyst_relationship_name,
+        b.owner_id as catalyst_owner_id,
+        b.record_type_id,
+        b.last_modified_by_id,
+        b.is_deleted,
+        b.catalyst_account_c as catalyst_account_id,
+        b.related_account_c as related_account_id,
+        b.customer_account_c as customer_account_id,
+        b.relationship_status_c as catalyst_relationship_status,
+        b.relationship_source_c as catalyst_relationship_source,
+        b.catalyst_role_c as catalyst_role,
+        b.opportunity_c as opportunity_id,
+        b.notes_c as catalyst_notes,
+        b.date_c as catalyst_date,
+        b.digital_technology_type_c as catalyst_digital_tech_type,
+        b.implementation_type_c as catalyst_implementation_type,
+        b.digital_property_c as catalyst_digital_property,
+        b.influencer_approval_status_c as catalyst_influencer_approval_status,
+        b.influence_type_c as catalyst_influence_type,
+        b.contentstack_referred_c as catalyst_contentstack_referred,
+        b.qualified_pso_c as catalyst_qualified_pso,
+        b.qualified_pso_date_c as catalyst_qualified_pso_date,
+        b.prm_c as partner_relationship_manager_id,
+        b.partner_contact_c as partner_contact_id,
+        b.partner_relationship_id_case_safe_c as partner_relationship_id_case_safe,
+        b.split_percent_c as split_percent,
+        b.sentiment_c as catalyst_sentiment,
+        b.target_meeting_date_c as catalyst_target_meeting_date,
+        b.meeting_request_status_c as catalyst_meeting_status,
+        b.meeting_request_type_c as catalyst_meeting_type,
+        b.prm_notes_c as catalyst_prm_notes,
+
+        -- Join with simplified facts
+        f.cr_role,
+        f.cr_qualified_pso,
+
+        current_timestamp() as data_built_ts
+    from base b
+    left join facts f on b.id = f.cr_id
+  referenced_by: [ fct_partner360_summary ]

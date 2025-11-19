@@ -1,0 +1,105 @@
+# Reference this view as staging__stg_salesforce__contract_contacts
+#This description was pulled from dbt.
+description: |
+  Staging model for Salesforce contract contacts. This model selects relevant contract fields from the Salesforce 'contract' source table, filtering out deleted records.
+
+schema: STAGING
+table_name: STG_SALESFORCE__CONTRACT_CONTACTS
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Primary key for the contract record.
+    primary_key: true
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Foreign key referencing the account associated with the contract.
+
+  contract_number:
+    sql: '"CONTRACT_NUMBER"'
+    #This description was pulled from dbt.
+    description: Unique contract number assigned by Salesforce.
+
+  billing_street:
+    sql: '"BILLING_STREET"'
+    #This description was pulled from dbt.
+    description: Street address for contract billing.
+
+  billing_city:
+    sql: '"BILLING_CITY"'
+    #This description was pulled from dbt.
+    description: City for contract billing.
+
+  billing_postal_code:
+    sql: '"BILLING_POSTAL_CODE"'
+    #This description was pulled from dbt.
+    description: Postal code for contract billing.
+
+  billing_country:
+    sql: '"BILLING_COUNTRY"'
+    #This description was pulled from dbt.
+    description: Country for contract billing.
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: User ID of the contract owner.
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: User ID of the person who created the contract.
+
+  created_date:
+    sql: '"CREATED_DATE"'
+    #This description was pulled from dbt.
+    description: Timestamp when the contract was created.
+
+  activated_by_id:
+    sql: '"ACTIVATED_BY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: User ID of the person who activated the contract.
+
+  activated_date:
+    sql: '"ACTIVATED_DATE"'
+    #This description was pulled from dbt.
+    description: Timestamp when the contract was activated.
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__contract_contacts
+  target_schema: STAGING
+  description: |
+    Staging model for Salesforce contract contacts. This model selects relevant contract fields from the Salesforce 'contract' source table, filtering out deleted records.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    select
+        id,
+        account_id,
+        contract_number,
+        billing_street,
+        billing_city,
+        billing_postal_code,
+        billing_country,
+        owner_id,
+        created_by_id,
+        created_date,
+        activated_by_id,
+        activated_date
+    from {{source('salesforce','contract')}}
+    where 1=1
+        and is_deleted = 'false'

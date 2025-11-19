@@ -1,0 +1,25 @@
+# Reference this view as staging__int_marketing__contact_campaigns
+schema: STAGING
+table_name: INT_MARKETING__CONTACT_CAMPAIGNS
+
+dimensions:
+  contact_id:
+    sql: '"CONTACT_ID"'
+    format: ID
+
+  campaign_id:
+    sql: '"CAMPAIGN_ID"'
+    format: ID
+
+  name:
+    sql: '"NAME"'
+
+  type:
+    sql: '"TYPE"'
+
+  engagement_date:
+    sql: '"ENGAGEMENT_DATE"'
+
+measures:
+  count:
+    aggregate_type: count

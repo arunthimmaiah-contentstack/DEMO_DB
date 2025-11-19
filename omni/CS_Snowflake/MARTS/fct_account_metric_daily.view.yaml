@@ -1,0 +1,46 @@
+# Reference this view as marts__fct_account_metric_daily
+schema: MARTS
+table_name: FCT_ACCOUNT_METRIC_DAILY
+
+dimensions:
+  snapshot_date:
+    sql: '"SNAPSHOT_DATE"'
+
+  no_of_customers:
+    sql: '"NO_OF_CUSTOMERS"'
+
+  no_of_churned_customers:
+    sql: '"NO_OF_CHURNED_CUSTOMERS"'
+
+  no_of_cms_customers:
+    sql: '"NO_OF_CMS_CUSTOMERS"'
+
+  no_of_dxp_customers:
+    sql: '"NO_OF_DXP_CUSTOMERS"'
+
+  no_of_cdp_customers:
+    sql: '"NO_OF_CDP_CUSTOMERS"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_account_metric_daily
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    {{ config(materialized='table') }}
+
+    SELECT 
+        snapshot_date,
+        no_of_customers,
+        no_of_churned_customers,
+        no_of_cms_customers,
+        no_of_dxp_customers,
+        no_of_cdp_customers
+    FROM {{ ref('snp_account_metric_daily') }}
+    WHERE dbt_valid_to IS NULL

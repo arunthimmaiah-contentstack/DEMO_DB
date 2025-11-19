@@ -1,0 +1,103 @@
+# Reference this view as omni_dbt__dbt_query_refactored
+schema_label: ""
+
+schema: omni_dbt
+table_name: DBT_QUERY_REFACTORED
+
+dimensions:
+  date:
+    sql: '"DATE"'
+
+  organization_uid:
+    sql: '"ORGANIZATION_UID"'
+
+  name:
+    sql: '"NAME"'
+
+  location:
+    sql: '"LOCATION"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+  tags:
+    sql: '"TAGS"'
+
+  all_requests:
+    sql: '"ALL_REQUESTS"'
+
+  cdn_bandwidth:
+    sql: '"CDN_BANDWIDTH"'
+
+  cdn_count:
+    sql: '"CDN_COUNT"'
+
+  assets_bandwidth:
+    sql: '"ASSETS_BANDWIDTH"'
+
+  assets_count:
+    sql: '"ASSETS_COUNT"'
+
+  images_bandwidth:
+    sql: '"IMAGES_BANDWIDTH"'
+
+  images_count:
+    sql: '"IMAGES_COUNT"'
+
+  api_bandwidth:
+    sql: '"API_BANDWIDTH"'
+
+  api_count:
+    sql: '"API_COUNT"'
+
+  ui_bandwidth:
+    sql: '"UI_BANDWIDTH"'
+
+  ui_count:
+    sql: '"UI_COUNT"'
+
+  graphql_bandwidth:
+    sql: '"GRAPHQL_BANDWIDTH"'
+
+  graphql_count:
+    sql: '"GRAPHQL_COUNT"'
+
+  cma_bandwidth:
+    sql: '"CMA_BANDWIDTH"'
+
+  cma_count:
+    sql: '"CMA_COUNT"'
+
+  stacks:
+    sql: '"STACKS"'
+
+  entries:
+    sql: '"ENTRIES"'
+
+  assets:
+    sql: '"ASSETS"'
+
+  content_types:
+    sql: '"CONTENT_TYPES"'
+
+  environments:
+    sql: '"ENVIRONMENTS"'
+
+  locales:
+    sql: '"LOCALES"'
+
+  users:
+    sql: '"USERS"'
+
+  extensions:
+    sql: '"EXTENSIONS"'
+
+  roles:
+    sql: '"ROLES"'
+
+  global_fields:
+    sql: '"GLOBAL_FIELDS"'
+
+measures:
+  count:
+    aggregate_type: count

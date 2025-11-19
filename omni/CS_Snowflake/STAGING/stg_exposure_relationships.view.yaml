@@ -1,0 +1,46 @@
+# Reference this view as staging__stg_exposure_relationships
+schema: STAGING
+table_name: STG_EXPOSURE_RELATIONSHIPS
+
+dimensions:
+  unique_id:
+    sql: '"UNIQUE_ID"'
+    format: ID
+
+  resource_id:
+    sql: '"RESOURCE_ID"'
+    format: ID
+
+  direct_parent_id:
+    sql: '"DIRECT_PARENT_ID"'
+    format: ID
+
+  is_primary_relationship:
+    sql: '"IS_PRIMARY_RELATIONSHIP"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_exposure_relationships
+  target_schema: STAGING
+  config:
+    materialized: view
+  code: |-
+    with 
+
+    _base_exposure_relationships as (
+        select * from {{ ref('base_exposure_relationships') }}
+    ),
+
+    final as (
+        select 
+            {{ dbt_utils.generate_surrogate_key(['resource_id', 'direct_parent_id']) }} as unique_id, 
+            *
+        from _base_exposure_relationships
+    )
+
+    select distinct * from final
+  referenced_by: [ int_direct_relationships ]

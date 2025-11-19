@@ -1,0 +1,108 @@
+# Reference this view as omni_dbt__stg_metrics
+schema_label: ""
+
+schema: omni_dbt
+table_name: STG_METRICS
+
+dimensions:
+  unique_id:
+    sql: '"UNIQUE_ID"'
+    format: ID
+
+  name:
+    sql: '"NAME"'
+
+  resource_type:
+    sql: '"RESOURCE_TYPE"'
+
+  file_path:
+    sql: '"FILE_PATH"'
+
+  is_described:
+    sql: '"IS_DESCRIBED"'
+
+  metric_type:
+    sql: '"METRIC_TYPE"'
+
+  label:
+    sql: '"LABEL"'
+
+  package_name:
+    sql: '"PACKAGE_NAME"'
+
+  metric_filter:
+    sql: '"METRIC_FILTER"'
+
+  metric_measure:
+    sql: '"METRIC_MEASURE"'
+
+  metric_measure_alias:
+    sql: '"METRIC_MEASURE_ALIAS"'
+
+  numerator:
+    sql: '"NUMERATOR"'
+
+  denominator:
+    sql: '"DENOMINATOR"'
+
+  expr:
+    sql: '"EXPR"'
+
+  metric_window:
+    sql: '"METRIC_WINDOW"'
+
+  grain_to_date:
+    sql: '"GRAIN_TO_DATE"'
+
+  meta:
+    sql: '"META"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_metrics
+  target_schema: STAGING
+  config:
+    materialized: table
+  code: |-
+    {{
+        config(
+            materialized='table',
+            post_hook="{{ insert_resources_from_graph(this, resource_type='metrics') }}"
+        )
+    }}
+
+    {% if execute %}
+        {{ check_model_is_table(model) }}
+    {% endif %}
+    /* Bigquery won't let us `where` without `from` so we use this workaround */
+    with dummy_cte as (
+        select 1 as foo
+    )
+
+    select 
+
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as unique_id,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as name,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as resource_type,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as file_path,
+        cast(True as {{ dbt.type_boolean() }}) as is_described,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as metric_type,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as label,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as package_name,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as metric_filter,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as metric_measure,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as metric_measure_alias,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as numerator,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as denominator,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as expr,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as metric_window,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as grain_to_date,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as meta
+
+    from dummy_cte
+    where false
+  referenced_by: [ int_all_graph_resources ]

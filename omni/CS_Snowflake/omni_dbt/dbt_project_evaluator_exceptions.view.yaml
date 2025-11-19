@@ -1,0 +1,70 @@
+# Reference this view as omni_dbt__dbt_project_evaluator_exceptions
+schema_label: ""
+#This description was pulled from dbt.
+description: List of exceptions not to be reported.
+
+schema: omni_dbt
+table_name: DBT_PROJECT_EVALUATOR_EXCEPTIONS
+
+dimensions:
+  fct_name:
+    sql: '"FCT_NAME"'
+    #This description was pulled from dbt.
+    description: Name of the fact table to define exceptions.
+
+  column_name:
+    sql: '"COLUMN_NAME"'
+    #This description was pulled from dbt.
+    description: Column name from fct_name to define exceptions.
+
+  id_to_exclude:
+    sql: '"ID_TO_EXCLUDE"'
+    #This description was pulled from dbt.
+    description: Values (or like pattern) to exclude for column_name.
+
+  comment:
+    sql: '"COMMENT"'
+    #This description was pulled from dbt.
+    description: Field to document why a given exception is legitimate.
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: dbt_project_evaluator_exceptions
+  target_schema: STAGING
+  description: List of exceptions not to be reported.
+  config:
+    materialized: seed
+  referenced_by:
+    [
+      fct_root_models,
+      fct_model_fanout,
+      fct_source_fanout,
+      fct_too_many_joins,
+      fct_unused_sources,
+      fct_test_directories,
+      fct_duplicate_sources,
+      fct_model_directories,
+      fct_source_directories,
+      fct_undocumented_models,
+      fct_undocumented_sources,
+      fct_direct_join_to_source,
+      fct_hard_coded_references,
+      fct_multiple_sources_joined,
+      fct_model_naming_conventions,
+      fct_missing_primary_key_tests,
+      fct_sources_without_freshness,
+      fct_chained_views_dependencies,
+      fct_undocumented_public_models,
+      fct_undocumented_source_tables,
+      fct_staging_dependent_on_staging,
+      fct_public_models_without_contract,
+      fct_rejoining_of_upstream_concepts,
+      fct_exposure_parents_materializations,
+      fct_exposures_dependent_on_private_models,
+      fct_marts_or_intermediate_dependent_on_source,
+      fct_staging_dependent_on_marts_or_intermediate
+    ]

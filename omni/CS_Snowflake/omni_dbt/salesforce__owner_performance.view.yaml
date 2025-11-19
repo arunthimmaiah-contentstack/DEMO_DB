@@ -1,0 +1,141 @@
+# Reference this view as omni_dbt__salesforce__owner_performance
+schema_label: ""
+
+schema: omni_dbt
+table_name: SALESFORCE__OWNER_PERFORMANCE
+
+dimensions:
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  manager_id:
+    sql: '"MANAGER_ID"'
+    format: ID
+
+  b_manager_id:
+    sql: '"B_MANAGER_ID"'
+    format: ID
+
+  b_owner_id:
+    sql: '"B_OWNER_ID"'
+    format: ID
+
+  bookings_amount_closed_this_month:
+    sql: '"BOOKINGS_AMOUNT_CLOSED_THIS_MONTH"'
+
+  bookings_amount_closed_this_quarter:
+    sql: '"BOOKINGS_AMOUNT_CLOSED_THIS_QUARTER"'
+
+  total_number_bookings:
+    sql: '"TOTAL_NUMBER_BOOKINGS"'
+
+  total_bookings_amount:
+    sql: '"TOTAL_BOOKINGS_AMOUNT"'
+
+  bookings_count_closed_this_month:
+    sql: '"BOOKINGS_COUNT_CLOSED_THIS_MONTH"'
+
+  bookings_count_closed_this_quarter:
+    sql: '"BOOKINGS_COUNT_CLOSED_THIS_QUARTER"'
+
+  avg_bookings_amount:
+    sql: '"AVG_BOOKINGS_AMOUNT"'
+
+  largest_booking:
+    sql: '"LARGEST_BOOKING"'
+
+  avg_days_to_close:
+    sql: '"AVG_DAYS_TO_CLOSE"'
+
+  l_manager_id:
+    sql: '"L_MANAGER_ID"'
+    format: ID
+
+  l_owner_id:
+    sql: '"L_OWNER_ID"'
+    format: ID
+
+  lost_amount_this_month:
+    sql: '"LOST_AMOUNT_THIS_MONTH"'
+
+  lost_amount_this_quarter:
+    sql: '"LOST_AMOUNT_THIS_QUARTER"'
+
+  total_number_lost:
+    sql: '"TOTAL_NUMBER_LOST"'
+
+  total_lost_amount:
+    sql: '"TOTAL_LOST_AMOUNT"'
+
+  lost_count_this_month:
+    sql: '"LOST_COUNT_THIS_MONTH"'
+
+  lost_count_this_quarter:
+    sql: '"LOST_COUNT_THIS_QUARTER"'
+
+  p_manager_id:
+    sql: '"P_MANAGER_ID"'
+    format: ID
+
+  p_owner_id:
+    sql: '"P_OWNER_ID"'
+    format: ID
+
+  pipeline_created_amount_this_month:
+    sql: '"PIPELINE_CREATED_AMOUNT_THIS_MONTH"'
+
+  pipeline_created_amount_this_quarter:
+    sql: '"PIPELINE_CREATED_AMOUNT_THIS_QUARTER"'
+
+  pipeline_created_forecast_amount_this_month:
+    sql: '"PIPELINE_CREATED_FORECAST_AMOUNT_THIS_MONTH"'
+
+  pipeline_created_forecast_amount_this_quarter:
+    sql: '"PIPELINE_CREATED_FORECAST_AMOUNT_THIS_QUARTER"'
+
+  pipeline_count_created_this_month:
+    sql: '"PIPELINE_COUNT_CREATED_THIS_MONTH"'
+
+  pipeline_count_created_this_quarter:
+    sql: '"PIPELINE_COUNT_CREATED_THIS_QUARTER"'
+
+  total_number_pipeline:
+    sql: '"TOTAL_NUMBER_PIPELINE"'
+
+  total_pipeline_amount:
+    sql: '"TOTAL_PIPELINE_AMOUNT"'
+
+  total_pipeline_forecast_amount:
+    sql: '"TOTAL_PIPELINE_FORECAST_AMOUNT"'
+
+  avg_pipeline_opp_amount:
+    sql: '"AVG_PIPELINE_OPP_AMOUNT"'
+
+  largest_deal_in_pipeline:
+    sql: '"LARGEST_DEAL_IN_PIPELINE"'
+
+  avg_days_open:
+    sql: '"AVG_DAYS_OPEN"'
+
+  owner_name:
+    sql: '"OWNER_NAME"'
+
+  owner_city:
+    sql: '"OWNER_CITY"'
+
+  owner_state:
+    sql: '"OWNER_STATE"'
+
+  win_percent_this_month:
+    sql: '"WIN_PERCENT_THIS_MONTH"'
+
+  win_percent_this_quarter:
+    sql: '"WIN_PERCENT_THIS_QUARTER"'
+
+  total_win_percent:
+    sql: '"TOTAL_WIN_PERCENT"'
+
+measures:
+  count:
+    aggregate_type: count

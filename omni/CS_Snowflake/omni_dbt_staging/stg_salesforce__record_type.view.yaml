@@ -1,0 +1,86 @@
+# Reference this view as omni_dbt_staging__stg_salesforce__record_type
+schema_label: ""
+#This description was pulled from dbt.
+description: |
+  Staging model for Salesforce record type model.
+
+schema: omni_dbt_staging
+table_name: STG_SALESFORCE__RECORD_TYPE
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Primary key for the contract record.
+    primary_key: true
+
+  name:
+    sql: '"NAME"'
+
+  developer_name:
+    sql: '"DEVELOPER_NAME"'
+
+  namespace_prefix:
+    sql: '"NAMESPACE_PREFIX"'
+
+  description:
+    sql: '"DESCRIPTION"'
+
+  business_process_id:
+    sql: '"BUSINESS_PROCESS_ID"'
+    format: ID
+
+  sobject_type:
+    sql: '"SOBJECT_TYPE"'
+
+  is_active:
+    sql: '"IS_ACTIVE"'
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  system_modstamp:
+    sql: '"SYSTEM_MODSTAMP"'
+
+  _fivetran_deleted:
+    sql: '"_FIVETRAN_DELETED"'
+    hidden: true
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__record_type
+  target_schema: STAGING
+  description: |
+    Staging model for Salesforce record type model.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('record_type_c', 'record_type') }} where is_active = 'true'
+    )
+
+    select
+      *
+    from source
+  referenced_by: [ int_salesforce__record_type_unified ]

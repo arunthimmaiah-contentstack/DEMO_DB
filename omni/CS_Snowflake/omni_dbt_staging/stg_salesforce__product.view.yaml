@@ -1,0 +1,174 @@
+# Reference this view as omni_dbt_staging__stg_salesforce__product
+schema_label: ""
+#This description was pulled from dbt.
+description: |
+  Staging model for Salesforce Products.  This model selects and renames key fields from the Salesforce 'product_2' source table,  providing a standardized view of product details, status, pricing,  and audit information for downstream analytics.
+
+schema: omni_dbt_staging
+table_name: STG_SALESFORCE__PRODUCT
+
+dimensions:
+  product_id:
+    sql: '"PRODUCT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Salesforce ID of the product.
+
+  product_name:
+    sql: '"PRODUCT_NAME"'
+    #This description was pulled from dbt.
+    description: Name of the product.
+
+  product_code:
+    sql: '"PRODUCT_CODE"'
+    #This description was pulled from dbt.
+    description: Product code as defined in Salesforce.
+
+  description:
+    sql: '"DESCRIPTION"'
+    #This description was pulled from dbt.
+    description: Description of the product.
+
+  family:
+    sql: '"FAMILY"'
+    #This description was pulled from dbt.
+    description: Product family.
+
+  product_family_detail_c:
+    sql: '"PRODUCT_FAMILY_DETAIL_C"'
+    #This description was pulled from dbt.
+    description: "Custom field: Detailed product family."
+
+  gearset_external_id:
+    sql: '"GEARSET_EXTERNAL_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: "Custom field: External ID for Gearset integration."
+
+  cpq_document_summary_product:
+    sql: '"CPQ_DOCUMENT_SUMMARY_PRODUCT"'
+    #This description was pulled from dbt.
+    description: "Custom field: CPQ document summary product."
+
+  overage_type:
+    sql: '"OVERAGE_TYPE"'
+    #This description was pulled from dbt.
+    description: "Custom field: Overage type for the product."
+
+  currency_iso_code:
+    sql: '"CURRENCY_ISO_CODE"'
+    #This description was pulled from dbt.
+    description: Currency ISO code for the product.
+
+  override_product_name_order_form_c:
+    sql: '"OVERRIDE_PRODUCT_NAME_ORDER_FORM_C"'
+    #This description was pulled from dbt.
+    description: "Custom field: Override product name for order forms."
+
+  is_active:
+    sql: '"IS_ACTIVE"'
+    #This description was pulled from dbt.
+    description: Boolean indicating if the product is active.
+
+  is_archived:
+    sql: '"IS_ARCHIVED"'
+    #This description was pulled from dbt.
+    description: Boolean indicating if the product is archived.
+
+  unit_of_measure:
+    sql: '"UNIT_OF_MEASURE"'
+    #This description was pulled from dbt.
+    description: Unit of measure for product quantity.
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+    #This description was pulled from dbt.
+    description: Boolean indicating if the product record is deleted.
+
+  created_at:
+    sql: '"CREATED_AT"'
+    #This description was pulled from dbt.
+    description: Timestamp when the product was created.
+
+  last_modified_at:
+    sql: '"LAST_MODIFIED_AT"'
+    #This description was pulled from dbt.
+    description: Timestamp when the product was last modified.
+
+  system_modstamp:
+    sql: '"SYSTEM_MODSTAMP"'
+    #This description was pulled from dbt.
+    description: System modstamp for the product record.
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Salesforce ID of the user who created the product.
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Salesforce ID of the user who last modified the product.
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__product
+  target_schema: STAGING
+  description: |
+    Staging model for Salesforce Products.  This model selects and renames key fields from the Salesforce 'product_2' source table,  providing a standardized view of product details, status, pricing,  and audit information for downstream analytics.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    -- models/staging/salesforce/stg_salesforce__product.sql
+
+    with source as (
+
+        select * 
+        from {{ source('sfdc_product', 'product_2') }}
+
+    ),
+
+    renamed as (
+        select
+            id as product_id,
+            name as product_name,
+            product_code as product_code,
+            description,
+            family,
+            product_family_detail_c,
+            gearset_external_id_c as gearset_external_id,
+            cpq_document_summary_product_c as cpq_document_summary_product,
+            overage_type_c as overage_type,
+            currency_iso_code as currency_iso_code,
+            override_product_name_order_form_c,
+
+
+            -- Status flags
+            is_active,
+            is_archived,
+
+            -- Pricing info
+            quantity_unit_of_measure as unit_of_measure,
+            is_deleted as is_deleted,
+
+            -- Dates
+            created_date as created_at,
+            last_modified_date as last_modified_at,
+            system_modstamp,
+
+            -- Audit / lineage
+            created_by_id,
+            last_modified_by_id
+
+        from source 
+
+    )
+
+    select * from renamed

@@ -1,0 +1,295 @@
+# Reference this view as staging__stg_salesforce__opportunity
+label: Opportunity
+#This description was pulled from dbt.
+description: |
+  Staging model for Salesforce Opportunities.  This model selects, renames, and standardizes key fields from the Salesforce 'opportunity' source table, filtering out deleted records.  It provides a comprehensive view of opportunity details, including status, financials, dates,  sales motions, and metadata for downstream analytics.
+
+schema: STAGING
+table_name: STG_SALESFORCE__OPPORTUNITY
+
+dimensions:
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Salesforce ID of the opportunity.
+    primary_key: true
+
+  opportunity_name:
+    sql: '"OPPORTUNITY_NAME"'
+    #This description was pulled from dbt.
+    description: Name of the opportunity.
+
+  is_won:
+    sql: '"IS_WON"'
+    #This description was pulled from dbt.
+    description: Boolean indicating if the opportunity is won.
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Salesforce ID of the related account.
+
+  contact_id:
+    sql: '"CONTACT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Salesforce ID of the related contact.
+
+  is_closed:
+    sql: '"IS_CLOSED"'
+    #This description was pulled from dbt.
+    description: Boolean indicating if the opportunity is closed.
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  opportunity_description:
+    sql: '"OPPORTUNITY_DESCRIPTION"'
+    #This description was pulled from dbt.
+    description: Description of the opportunity.
+
+  opportunity_stage_name:
+    sql: '"OPPORTUNITY_STAGE_NAME"'
+    #This description was pulled from dbt.
+    description: Current stage of the opportunity.
+
+  opportunity_created_date:
+    sql: '"OPPORTUNITY_CREATED_DATE"'
+    #This description was pulled from dbt.
+    description: Date the opportunity was created.
+
+  opportunity_close_date:
+    sql: '"OPPORTUNITY_CLOSE_DATE"'
+    #This description was pulled from dbt.
+    description: Close date of the opportunity.
+
+  opportunity_last_activity_date:
+    sql: '"OPPORTUNITY_LAST_ACTIVITY_DATE"'
+    #This description was pulled from dbt.
+    description: Date of the last activity on the opportunity.
+
+  license_start_c:
+    sql: '"LICENSE_START_C"'
+    #This description was pulled from dbt.
+    description: "Custom field: License start date."
+
+  license_end_c:
+    sql: '"LICENSE_END_C"'
+    #This description was pulled from dbt.
+    description: "Custom field: License end date."
+
+  opportunity_type:
+    sql: '"OPPORTUNITY_TYPE"'
+    #This description was pulled from dbt.
+    description: Type of the opportunity.
+
+  contraction_amount_c:
+    sql: '"CONTRACTION_AMOUNT_C"'
+    #This description was pulled from dbt.
+    description: "Custom field: Contraction amount."
+
+  fiscal_quarter:
+    sql: '"FISCAL_QUARTER"'
+    #This description was pulled from dbt.
+    description: Fiscal quarter of the opportunity.
+
+  renewal_opt_out_date_c:
+    sql: '"RENEWAL_OPT_OUT_DATE_C"'
+    #This description was pulled from dbt.
+    description: "Custom field: Renewal opt-out date."
+
+  churn_amount_c:
+    sql: '"CHURN_AMOUNT_C"'
+    #This description was pulled from dbt.
+    description: "Custom field: Churn amount."
+
+  fiscal_year:
+    sql: '"FISCAL_YEAR"'
+    #This description was pulled from dbt.
+    description: Fiscal year of the opportunity.
+
+  lead_source:
+    sql: '"LEAD_SOURCE"'
+    #This description was pulled from dbt.
+    description: Lead source for the opportunity.
+
+  probability:
+    sql: '"PROBABILITY"'
+    #This description was pulled from dbt.
+    description: Probability of closing the opportunity.
+
+  amount:
+    sql: '"AMOUNT"'
+    #This description was pulled from dbt.
+    description: Amount associated with the opportunity.
+
+  total_original_piped_amount_c:
+    sql: '"TOTAL_ORIGINAL_PIPED_AMOUNT_C"'
+    #This description was pulled from dbt.
+    description: "Custom field: Total original piped amount."
+
+  opp_total_bookings_c:
+    sql: '"OPP_TOTAL_BOOKINGS_C"'
+
+  opp_expansion_bookings_c:
+    sql: '"OPP_EXPANSION_BOOKINGS_C"'
+
+  opportunity_lead_source_category:
+    sql: '"OPPORTUNITY_LEAD_SOURCE_CATEGORY"'
+    #This description was pulled from dbt.
+    description: "Custom field: Lead source category for the opportunity."
+
+  opportunity_record_type:
+    sql: '"OPPORTUNITY_RECORD_TYPE"'
+    #This description was pulled from dbt.
+    description: "Custom field: Record type for the opportunity."
+
+  opportunity_owner_region:
+    sql: '"OPPORTUNITY_OWNER_REGION"'
+    #This description was pulled from dbt.
+    description: "Custom field: Owner region for the opportunity."
+
+  opportunity_owner_sub_region:
+    sql: '"OPPORTUNITY_OWNER_SUB_REGION"'
+    #This description was pulled from dbt.
+    description: "Custom field: Owner sub-region for the opportunity."
+
+  opportunity_pipeline_date:
+    sql: '"OPPORTUNITY_PIPELINE_DATE"'
+    #This description was pulled from dbt.
+    description: "Custom field: Date when the opportunity entered the pipeline."
+
+  cms_sales_motion:
+    sql: '"CMS_SALES_MOTION"'
+    #This description was pulled from dbt.
+    description: "Custom field: CMS sales motion."
+
+  cdp_pipeline_percentage_c:
+    sql: '"CDP_PIPELINE_PERCENTAGE_C"'
+
+  cdp_deal_percentage_c:
+    sql: '"CDP_DEAL_PERCENTAGE_C"'
+
+  expansion_sales_motion:
+    sql: '"EXPANSION_SALES_MOTION"'
+    #This description was pulled from dbt.
+    description: "Custom field: Expansion sales motion."
+
+  renewal_opp_prior_contract_end_arr_c:
+    sql: '"RENEWAL_OPP_PRIOR_CONTRACT_END_ARR_C"'
+    #This description was pulled from dbt.
+    description: "Custom field: Renewal opportunity prior contract end ARR."
+
+  renewal_opp_prior_contract_arr_cumulative_c:
+    sql: '"RENEWAL_OPP_PRIOR_CONTRACT_ARR_CUMULATIVE_C"'
+    #This description was pulled from dbt.
+    description: "Custom field: Renewal opportunity prior contract cumulative ARR."
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    #This description was pulled from dbt.
+    description: Timestamp of the last sync by Fivetran.
+    hidden: true
+
+  _entity_opportunity:
+    # Entity is defined in the 'opportunity' dbt semantic model (models/semantic_models/sem_opportunity.yml)
+    sql: ${opportunity_id}
+    hidden: true
+
+  _entity_account:
+    # Entity is defined in the 'opportunity' dbt semantic model (models/semantic_models/sem_opportunity.yml)
+    sql: ${account_id}
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+  won_opps:
+    # Measure is defined in the 'opportunity' dbt semantic model (models/semantic_models/sem_opportunity.yml)
+    sql: CASE WHEN ${is_won} THEN ${opportunity_id} ELSE NULL END
+    description: Count of won opportunities.
+    aggregate_type: count
+
+  total_pipeline_value:
+    # Measure is defined in the 'opportunity' dbt semantic model (models/semantic_models/sem_opportunity.yml)
+    sql: ${amount}
+    label: Total Opportunity Amount
+    aggregate_type: sum
+
+  total_amount:
+    # Measure is defined in the 'opportunity' dbt semantic model (models/semantic_models/sem_opportunity.yml)
+    sql: ${amount}
+    description: The total value of all opportunities.
+    aggregate_type: sum
+
+  distinct_accounts:
+    # Measure is defined in the 'opportunity' dbt semantic model (models/semantic_models/sem_opportunity.yml)
+    sql: ${account_id}
+    description: The distinct count of all accounts in the pipeline.
+    aggregate_type: count_distinct
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__opportunity
+  target_schema: STAGING
+  description: |
+    Staging model for Salesforce Opportunities.  This model selects, renames, and standardizes key fields from the Salesforce 'opportunity' source table, filtering out deleted records.  It provides a comprehensive view of opportunity details, including status, financials, dates,  sales motions, and metadata for downstream analytics.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('salesforce_opportunity', 'opportunity') }} where is_deleted = 'FALSE'
+    )
+
+    select
+        id as opportunity_id,
+        name as opportunity_name,
+        is_won,
+        account_id,
+        contact_id,
+        is_closed,
+        is_deleted,
+        description as opportunity_description,
+        stage_name as opportunity_stage_name,
+        created_date as opportunity_created_date,
+        close_date as opportunity_close_date,
+        last_activity_date as opportunity_last_activity_date,
+        LICENSE_START_C,
+        LICENSE_end_C,
+        type as opportunity_type,
+        CONTRACTION_AMOUNT_C,
+        FISCAL_QUARTER,
+        RENEWAL_OPT_OUT_DATE_C,
+        CHURN_AMOUNT_C,
+        FISCAL_YEAR,
+        lead_source,
+        PROBABILITY,
+        amount,
+        TOTAL_ORIGINAL_PIPED_AMOUNT_C,
+        opp_total_bookings_c,
+    	opp_expansion_bookings_c, 
+        lead_source_category_c as opportunity_lead_source_category,
+        record_type_c as opportunity_record_type,
+        owner_region_c as opportunity_owner_region,
+        owner_sub_region_c as opportunity_owner_sub_region,
+        pipeline_date_c as opportunity_pipeline_date,
+        cms_sales_motion_c as cms_sales_motion,
+        cdp_pipeline_percentage_c,
+        cdp_deal_percentage_c,
+        expansion_sales_motion_c as expansion_sales_motion,
+        RENEWAL_OPP_PRIOR_CONTRACT_END_ARR_C,
+        RENEWAL_OPP_PRIOR_CONTRACT_ARR_CUMULATIVE_C,
+        _fivetran_synced
+    from source
+  referenced_by:
+    [
+      fct_renewals,
+      fct_opportunity,
+      opp_snapshot,
+      fct_campaign_influence,
+      int_salesforce__opportunity_unified
+    ]

@@ -1,0 +1,40 @@
+# Reference this view as marts__dim_event_relation
+schema: MARTS
+table_name: DIM_EVENT_RELATION
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  event_id:
+    sql: '"EVENT_ID"'
+    format: ID
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  status:
+    sql: '"STATUS"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: dim_event_relation
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    select
+        id,
+        event_id,
+        account_id,
+        status
+    from {{ ref('stg_salesforce__event_relation') }}
+  referenced_by: [ fct_event ]

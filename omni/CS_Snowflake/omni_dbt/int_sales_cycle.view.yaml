@@ -1,0 +1,19 @@
+# Reference this view as omni_dbt__int_sales_cycle
+schema_label: ""
+
+schema: omni_dbt
+table_name: INT_SALES_CYCLE
+
+dimensions:
+  closed_won_opportunity_count:
+    sql: '"CLOSED_WON_OPPORTUNITY_COUNT"'
+
+  total_days_in_pipeline:
+    sql: '"TOTAL_DAYS_IN_PIPELINE"'
+
+  avg_sales_cycle_days:
+    sql: '"AVG_SALES_CYCLE_DAYS"'
+
+measures:
+  count:
+    aggregate_type: count

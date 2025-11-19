@@ -1,0 +1,206 @@
+# Reference this view as omni_dbt_staging__int_salesforce__account_unified
+schema_label: ""
+#This description was pulled from dbt.
+description: |
+  Unified Salesforce Account model consolidating key account information, customer attributes, and relationship ownership.
+
+schema: omni_dbt_staging
+table_name: INT_SALESFORCE__ACCOUNT_UNIFIED
+
+dimensions:
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Primary key for account records.
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+    #This description was pulled from dbt.
+    description: Account name from Salesforce.
+
+  industry:
+    sql: '"INDUSTRY"'
+
+  geo:
+    sql: '"GEO"'
+
+  region:
+    sql: '"REGION"'
+    #This description was pulled from dbt.
+    description: Geographic region.
+
+  sub_region:
+    sql: '"SUB_REGION"'
+    #This description was pulled from dbt.
+    description: Sub-region classification.
+
+  account_tier:
+    sql: '"ACCOUNT_TIER"'
+    #This description was pulled from dbt.
+    description: Tier segmentation (Enterprise, SMB, etc.).
+
+  customer_designation:
+    sql: '"CUSTOMER_DESIGNATION"'
+
+  account_type:
+    sql: '"ACCOUNT_TYPE"'
+
+  customer_segment:
+    sql: '"CUSTOMER_SEGMENT"'
+
+  parent_id:
+    sql: '"PARENT_ID"'
+    format: ID
+
+  ultimate_parent_account_name:
+    sql: '"ULTIMATE_PARENT_ACCOUNT_NAME"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  account_revenue:
+    sql: '"ACCOUNT_REVENUE"'
+
+  account_deployment_status:
+    sql: '"ACCOUNT_DEPLOYMENT_STATUS"'
+
+  account_current_arr:
+    sql: '"ACCOUNT_CURRENT_ARR"'
+    #This description was pulled from dbt.
+    description: Current ARR (Annual Recurring Revenue).
+
+  account_product_type:
+    sql: '"ACCOUNT_PRODUCT_TYPE"'
+
+  account_created_date:
+    sql: '"ACCOUNT_CREATED_DATE"'
+
+  account_last_modified_date:
+    sql: '"ACCOUNT_LAST_MODIFIED_DATE"'
+
+  account_owner_id:
+    sql: '"ACCOUNT_OWNER_ID"'
+    format: ID
+
+  account_actual_go_live_date:
+    sql: '"ACCOUNT_ACTUAL_GO_LIVE_DATE"'
+
+  account_predicted_go_live_date:
+    sql: '"ACCOUNT_PREDICTED_GO_LIVE_DATE"'
+
+  account_license_start_date:
+    sql: '"ACCOUNT_LICENSE_START_DATE"'
+
+  account_license_end_date:
+    sql: '"ACCOUNT_LICENSE_END_DATE"'
+
+  customer_success_manager_id:
+    sql: '"CUSTOMER_SUCCESS_MANAGER_ID"'
+    format: ID
+
+  sales_engineer_id:
+    sql: '"SALES_ENGINEER_ID"'
+    format: ID
+
+  solution_architect_id:
+    sql: '"SOLUTION_ARCHITECT_ID"'
+    format: ID
+
+  partner_relationship_manager_id:
+    sql: '"PARTNER_RELATIONSHIP_MANAGER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Manager assigned to the account partnership.
+
+  data_built_ts:
+    sql: '"DATA_BUILT_TS"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: int_salesforce__account_unified
+  target_schema: STAGING
+  description: |
+    Unified Salesforce Account model consolidating key account information, customer attributes, and relationship ownership.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    {{ config(materialized='view') }}
+
+    with acct as (
+        select * from {{ ref('stg_salesforce__accounts') }}
+    ),
+
+    acct_info as (
+        select
+            account_id,
+            revenue_c,
+            deployment_status_c,
+            current_arr,
+            product_type,
+            account_last_modified_date,
+            account_created_date,
+            account_owner_id,
+            actual_go_live_date_c,
+            predicted_go_live_date_c,
+            license_start_date,
+            license_end_date
+        from {{ ref('stg_salesforce__accounts_info') }}
+    ),
+
+    acct_user_rel as (
+        select
+            account_id,
+            customer_success_manager_id,
+            sales_engineer_id,
+            solution_architect_id,
+            partner_relationship_manager_id
+        from {{ ref('stg_salesforce__account_user_relation') }}
+    )
+
+    select
+        -- Core account details
+        a.account_id,
+        a.account_name,
+        a.industry,
+        a.geo,
+        a.region,
+        a.sub_region,
+        a.account_tier,
+        a.customer_designation,
+        a.account_type,
+        a.customer_segment,
+        a.parent_id,
+        a.ultimate_parent_account_name,
+        a.is_deleted,
+
+        -- Account Info fields
+        i.revenue_c as account_revenue,
+        i.deployment_status_c as account_deployment_status,
+        i.current_arr as account_current_arr,
+        i.product_type as account_product_type,
+        i.account_created_date,
+        i.account_last_modified_date,
+        i.account_owner_id,
+        i.actual_go_live_date_c as account_actual_go_live_date,
+        i.predicted_go_live_date_c as account_predicted_go_live_date,
+        i.license_start_date as account_license_start_date,
+        i.license_end_date as account_license_end_date,
+
+        -- Account–User Relationship
+        u.customer_success_manager_id,
+        u.sales_engineer_id,
+        u.solution_architect_id,
+        u.partner_relationship_manager_id,
+
+        current_timestamp() as data_built_ts
+
+    from acct a
+    left join acct_info i on a.account_id = i.account_id
+    left join acct_user_rel u on a.account_id = u.account_id
+  referenced_by: [ fct_partner360_summary ]

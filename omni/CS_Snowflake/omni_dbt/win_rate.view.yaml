@@ -1,0 +1,16 @@
+# Reference this view as omni_dbt__win_rate
+schema_label: ""
+
+schema: omni_dbt
+table_name: WIN_RATE
+
+dimensions:
+  opportunity_close_date:
+    sql: '"OPPORTUNITY_CLOSE_DATE"'
+
+  win_rate:
+    sql: '"WIN_RATE"'
+
+measures:
+  count:
+    aggregate_type: count

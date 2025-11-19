@@ -1,0 +1,90 @@
+# Reference this view as staging__stg_salesforce__partner_financials
+#This description was pulled from dbt.
+description: Staging model for Salesforce Partner Financials object. Uses a
+  formula view to clean, standardize, and prepare partner financial data for
+  downstream analytics.
+
+schema: STAGING
+table_name: STG_SALESFORCE__PARTNER_FINANCIALS
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Unique identifier for each Partner Financials record.
+    primary_key: true
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  name:
+    sql: '"NAME"'
+
+  currency_iso_code:
+    sql: '"CURRENCY_ISO_CODE"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+
+  system_modstamp:
+    sql: '"SYSTEM_MODSTAMP"'
+
+  last_viewed_date:
+    sql: '"LAST_VIEWED_DATE"'
+
+  last_referenced_date:
+    sql: '"LAST_REFERENCED_DATE"'
+
+  partner_c:
+    sql: '"PARTNER_C"'
+
+  payment_type_c:
+    sql: '"PAYMENT_TYPE_C"'
+
+  payment_sub_type_c:
+    sql: '"PAYMENT_SUB_TYPE_C"'
+
+  _fivetran_deleted:
+    sql: '"_FIVETRAN_DELETED"'
+    hidden: true
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    #This description was pulled from dbt.
+    description: Timestamp indicating when the record was last synced via Fivetran.
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__partner_financials
+  target_schema: STAGING
+  description: Staging model for Salesforce Partner Financials object. Uses a
+    formula view to clean, standardize, and prepare partner financial data for
+    downstream analytics.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('salesforce_partner_financials', 'partner_financials_c') }} where is_deleted != 'true'
+    )
+
+    select
+    *
+    from source

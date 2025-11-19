@@ -1,0 +1,97 @@
+# Reference this view as marts__dim_calendar
+schema: MARTS
+table_name: DIM_CALENDAR
+
+dimensions:
+  date_id:
+    sql: '"DATE_ID"'
+    format: ID
+
+  year:
+    sql: '"YEAR"'
+
+  quarter:
+    sql: '"QUARTER"'
+
+  month:
+    sql: '"MONTH"'
+
+  week:
+    sql: '"WEEK"'
+
+  day_of_month:
+    sql: '"DAY_OF_MONTH"'
+
+  day_of_week:
+    sql: '"DAY_OF_WEEK"'
+
+  year_label:
+    sql: '"YEAR_LABEL"'
+
+  quarter_label:
+    sql: '"QUARTER_LABEL"'
+
+  month_label:
+    sql: '"MONTH_LABEL"'
+
+  date_label:
+    sql: '"DATE_LABEL"'
+
+  quarter_start_date:
+    sql: '"QUARTER_START_DATE"'
+
+  month_start_date:
+    sql: '"MONTH_START_DATE"'
+
+  week_start_date:
+    sql: '"WEEK_START_DATE"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: dim_calendar
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    {{ config(
+        materialized='table'
+    ) }}
+
+    with date_spine as (
+
+        {{ dbt_utils.date_spine(
+            datepart="day",
+            start_date="cast('2020-01-01' as date)",
+            end_date="cast(current_date as date)"
+        ) }}
+
+    )
+
+    select
+        date_day as date_id,
+
+        -- Basic components
+        extract(year from date_day)          as year,
+        extract(quarter from date_day)       as quarter,
+        extract(month from date_day)         as month,
+        extract(week from date_day)          as week,
+        extract(day from date_day)           as day_of_month,
+        extract(dow from date_day)           as day_of_week,  -- 0=Sunday, 6=Saturday (Snowflake)
+        
+        -- Labels
+        to_char(date_day, 'YYYY')            as year_label,
+        to_char(date_day, 'YYYY-"Q"Q')       as quarter_label,
+        to_char(date_day, 'YYYY-MM')         as month_label,
+        to_char(date_day, 'YYYY-MM-DD')      as date_label,
+
+        -- Period start dates
+        date_trunc('quarter', date_day)      as quarter_start_date,
+        date_trunc('month', date_day)        as month_start_date,
+        date_trunc('week', date_day)         as week_start_date
+
+    from date_spine

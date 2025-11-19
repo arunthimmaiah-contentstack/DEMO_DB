@@ -1,0 +1,105 @@
+# Reference this view as omni_dbt__all_enrollments_partner
+schema_label: ""
+
+schema: omni_dbt
+table_name: ALL_ENROLLMENTS_PARTNER
+
+dimensions:
+  source:
+    sql: '"SOURCE"'
+
+  file_row_number:
+    sql: '"FILE_ROW_NUMBER"'
+
+  batch_number:
+    sql: '"BATCH_NUMBER"'
+
+  data_sync_date:
+    sql: '"DATA_SYNC_DATE"'
+
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  course_id:
+    sql: '"COURSE_ID"'
+    format: ID
+
+  course_source_id:
+    sql: '"COURSE_SOURCE_ID"'
+    format: ID
+
+  version:
+    sql: '"VERSION"'
+
+  user_id:
+    sql: '"USER_ID"'
+    format: ID
+
+  has_attempts_remaining:
+    sql: '"HAS_ATTEMPTS_REMAINING"'
+
+  date_started:
+    sql: '"DATE_STARTED"'
+
+  date_completed:
+    sql: '"DATE_COMPLETED"'
+
+  date_enrolled:
+    sql: '"DATE_ENROLLED"'
+
+  course_name:
+    sql: '"COURSE_NAME"'
+
+  first_name:
+    sql: '"FIRST_NAME"'
+
+  last_name:
+    sql: '"LAST_NAME"'
+
+  email:
+    sql: '"EMAIL"'
+
+  certificate_name:
+    sql: '"CERTIFICATE_NAME"'
+
+  percentage_complete:
+    sql: '"PERCENTAGE_COMPLETE"'
+
+  unenrolled:
+    sql: '"UNENROLLED"'
+
+  from_catalog:
+    sql: '"FROM_CATALOG"'
+
+  from_store:
+    sql: '"FROM_STORE"'
+
+  updated_at:
+    sql: '"UPDATED_AT"'
+
+  date_last_accessed:
+    sql: '"DATE_LAST_ACCESSED"'
+
+  due_date:
+    sql: '"DUE_DATE"'
+
+  cert_expires_at:
+    sql: '"CERT_EXPIRES_AT"'
+
+  course_access_expires_at:
+    sql: '"COURSE_ACCESS_EXPIRES_AT"'
+
+  status:
+    sql: '"STATUS"'
+
+  was_recertified:
+    sql: '"WAS_RECERTIFIED"'
+
+  partner_name:
+    sql: '"PARTNER_NAME"'
+
+measures:
+  count:
+    aggregate_type: count

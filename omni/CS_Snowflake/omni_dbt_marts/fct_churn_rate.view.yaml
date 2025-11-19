@@ -1,0 +1,90 @@
+# Reference this view as omni_dbt_marts__fct_churn_rate
+schema_label: ""
+
+schema: omni_dbt_marts
+table_name: FCT_CHURN_RATE
+
+dimensions:
+  period_month:
+    sql: '"PERIOD_MONTH"'
+
+  active_accounts:
+    sql: '"ACTIVE_ACCOUNTS"'
+
+  active_arr:
+    sql: '"ACTIVE_ARR"'
+
+  churned_accounts:
+    sql: '"CHURNED_ACCOUNTS"'
+
+  churned_arr:
+    sql: '"CHURNED_ARR"'
+
+  total_accounts:
+    sql: '"TOTAL_ACCOUNTS"'
+
+  churn_rate_pct:
+    sql: '"CHURN_RATE_PCT"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_churn_rate
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    with churn_matrix as (
+        select * from {{ ref('fct_churn_matrix') }}
+    ),
+
+    -- Total accounts per month (denominator)
+    total_accounts as (
+        select
+            period_month,
+            sum(account_count) as total_accounts
+        from churn_matrix
+        group by period_month
+    ),
+
+    -- Churned accounts per month (numerator)
+    churned_accounts as (
+        select
+            period_month,
+            sum(account_count) as churned_accounts,
+            sum(total_arr) as churned_arr
+        from churn_matrix
+        where churn_status = 'Churned'
+        group by period_month
+    ),
+
+    -- Active accounts per month (optional KPI)
+    active_accounts as (
+        select
+            period_month,
+            sum(account_count) as active_accounts,
+            sum(total_arr) as active_arr
+        from churn_matrix
+        where churn_status = 'Active'
+        group by period_month
+    )
+
+    select
+        t.period_month,
+        coalesce(a.active_accounts, 0) as active_accounts,
+        coalesce(a.active_arr, 0) as active_arr,
+        coalesce(c.churned_accounts, 0) as churned_accounts,
+        coalesce(c.churned_arr, 0) as churned_arr,
+        t.total_accounts,
+        case 
+            when t.total_accounts > 0 then round( (coalesce(c.churned_accounts,0)::decimal / t.total_accounts) * 100, 2 )
+            else 0
+        end as churn_rate_pct
+    from total_accounts t
+    left join churned_accounts c on t.period_month = c.period_month
+    left join active_accounts a on t.period_month = a.period_month
+    order by t.period_month

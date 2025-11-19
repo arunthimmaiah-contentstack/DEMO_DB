@@ -1,0 +1,1385 @@
+# Reference this view as analytics__fact_dreamguard_main
+#This description was pulled from dbt.
+description: Fact table combining Salesforce opportunity, account, and currency
+  rate data with calculated metrics for Dreamguard analytics.
+
+schema: ANALYTICS
+table_name: FACT_DREAMGUARD_MAIN
+
+dimensions:
+  metric_name:
+    sql: '"METRIC_NAME"'
+
+  object:
+    sql: '"OBJECT"'
+
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Opportunity ID from Salesforce. Not unique in this fact table but
+      required for identifying related records.
+    primary_key: true
+
+  product:
+    sql: '"PRODUCT"'
+
+  customer_designation:
+    sql: '"CUSTOMER_DESIGNATION"'
+
+  product_deal_percentage:
+    sql: '"PRODUCT_DEAL_PERCENTAGE"'
+
+  metric_date_1:
+    sql: '"METRIC_DATE_1"'
+
+  metric_date_2:
+    sql: '"METRIC_DATE_2"'
+
+  metric_measure_1:
+    sql: '"METRIC_MEASURE_1"'
+
+  metric_measure_2:
+    sql: '"METRIC_MEASURE_2"'
+
+  metric_measure_3:
+    sql: '"METRIC_MEASURE_3"'
+
+  geo_c:
+    sql: '"GEO_C"'
+
+  region:
+    sql: '"REGION"'
+
+  sub_region:
+    sql: '"SUB_REGION"'
+
+  revenue:
+    sql: '"REVENUE"'
+
+  company_size:
+    sql: '"COMPANY_SIZE"'
+
+  record_type:
+    sql: '"RECORD_TYPE"'
+
+  leadsource:
+    sql: '"LEADSOURCE"'
+
+  motion:
+    sql: '"MOTION"'
+    #This description was pulled from dbt.
+    description: Categorization of the sales motion (e.g., GTM, Partner, etc).
+
+  sub_motion:
+    sql: '"SUB_MOTION"'
+
+  opp_type:
+    sql: '"OPP_TYPE"'
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  matched_account_tier_ld:
+    sql: '"MATCHED_ACCOUNT_TIER_LD"'
+
+  account_tier:
+    sql: '"ACCOUNT_TIER"'
+
+  deployment_status_c:
+    sql: '"DEPLOYMENT_STATUS_C"'
+
+  type:
+    sql: '"TYPE"'
+
+  sync_date:
+    sql: '"SYNC_DATE"'
+
+  sales_motion:
+    sql: '"SALES_MOTION"'
+
+  expansion_sales_motion:
+    sql: '"EXPANSION_SALES_MOTION"'
+
+  demand_bucket:
+    sql: '"DEMAND_BUCKET"'
+
+measures:
+  count:
+    aggregate_type: count
+
+  metric_measure_2_sum:
+    sql: ${analytics__fact_dreamguard_main.metric_measure_2}
+    aggregate_type: sum
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fact_dreamguard_main
+  target_schema: STAGING
+  description: Fact table combining Salesforce opportunity, account, and currency
+    rate data with calculated metrics for Dreamguard analytics.
+  config:
+    schema: analytics
+    materialized: table
+  code: |-
+    {{ config(
+        materialized='table',
+        schema='analytics'
+    ) }}
+
+    with lead_base as (
+        select
+            id,
+            company,
+            lead_source,
+            lead_source_category_c,
+            email,
+            status,
+            geo_c,
+            annual_revenue_c,
+            customer_segment_c,
+            matched_account_name_c,
+            matched_account_tier_ld_c,
+            stage_date_mel_c,
+            stage_date_mql_v_2_c,
+            stage_date_sal_v_2_c,
+            stage_date_sql_v_2_c,
+            contact_us_subject_c,
+            _fivetran_synced
+        from {{ ref('stg_lead_dg') }}
+    ),
+
+    account_base as (
+        select
+            id,
+            name,
+            customer_segment_c,
+            account_tier_c,
+            geo_c,
+            region_c,
+            sub_region_c,
+            revenue_c,
+            type,
+            deployment_status_c,
+            license_start_date_c,
+            actual_go_live_date_c,
+            predicted_go_live_date_c,
+            _fivetran_synced
+        from {{ ref('stg_account_dg') }}
+    ),
+
+    opportunity_base as (
+        select
+            id,
+            account_id,
+            record_type_c,
+            type,
+            lead_source,
+            lead_source_category_c,
+            owner_region_c,
+            owner_sub_region_c,
+            currency_iso_code,
+            total_original_piped_amount_c,
+            cdp_pipeline_percentage_c,
+            cdp_deal_percentage_c,
+            pipeline_date_c,
+            close_date,
+            stage_name,
+            opp_total_bookings_c,
+            opp_expansion_bookings_c,
+            lost_reason_c,
+            is_won,
+            stage_enter_mqo_c,
+            demand_bucket_c,
+            cms_sales_motion_c,
+            expansion_sales_motion_c,
+            _fivetran_synced
+        from {{ ref('stg_salesforce__opportunity_dg') }}
+    ),
+
+    conversion_rate as (
+        select
+            iso_code,
+            conversion_rate,
+            start_date,
+            next_start_date
+        from {{ ref('stg_dated_conversion_rate') }}
+    ),
+
+    -- MEL Volume
+    mel_volume as (
+        select
+            'MEL Volume' as metric_name,
+            'Lead' as object,
+            null as id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            convert_timezone('UTC', 'America/Los_Angeles', stage_date_mel_c::timestamp_ntz) as metric_date_1,
+            null as metric_date_2,
+            id as metric_measure_1,
+            null as metric_measure_2,
+            null as metric_measure_3,
+            geo_c,
+            null as region,
+            null as sub_region,
+            annual_revenue_c as revenue,
+            case
+                when customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else customer_segment_c
+            end as company_size,
+            null as record_type,
+            lead_source as leadsource,
+            case 
+                when lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when lead_source_category_c in ('Partner') then 'Partner'
+                when lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            lead_source_category_c as sub_motion,
+            null as opp_type,
+            company as account_name,
+            matched_account_name_c as matched_account_tier_ld,
+            matched_account_tier_ld_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', _fivetran_synced::timestamp_ntz) as sync_date,
+            null as sales_motion,
+            null as expansion_sales_motion,
+            null as demand_bucket
+        from lead_base
+        where 1=1
+            and (lead_source not like 'In Product Contentstack' or lead_source is null)
+            and (email not like '%contentstack%' or email is null)
+            and (contact_us_subject_c not in ('Free Trial') or contact_us_subject_c is null)
+            and (status not in ('Customer','Partner') or status is null)
+    ),
+
+    -- MQL Volume
+    mql_volume as (
+        select
+            'MQL Volume' as metric_name,
+            'Lead' as object,
+            null as id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            convert_timezone('UTC', 'America/Los_Angeles', stage_date_mql_v_2_c::timestamp_ntz) as metric_date_1,
+            null as metric_date_2,
+            id as metric_measure_1,
+            null as metric_measure_2,
+            null as metric_measure_3,
+            geo_c,
+            null as region,
+            null as sub_region,
+            annual_revenue_c as revenue,
+            case
+                when customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else customer_segment_c
+            end as company_size,
+            null as record_type,
+            lead_source as leadsource,
+            case 
+                when lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when lead_source_category_c in ('Partner') then 'Partner'
+                when lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            lead_source_category_c as sub_motion,
+            null as opp_type,
+            company as account_name,
+            matched_account_name_c as matched_account_tier_ld,
+            matched_account_tier_ld_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', _fivetran_synced::timestamp_ntz) as sync_date,
+            null as sales_motion,
+            null as expansion_sales_motion,
+            null as demand_bucket
+        from lead_base
+        where 1=1
+            and (lead_source not like 'In Product Contentstack' or lead_source is null)
+            and (email not like '%contentstack%' or email is null)
+            and (contact_us_subject_c not in ('Free Trial') or contact_us_subject_c is null)
+            and (status not in ('Customer','Partner') or status is null)
+    ),
+
+    -- SAL Volume
+    sal_volume as (
+        select
+            'SAL Volume' as metric_name,
+            'Lead' as object,
+            null as id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            convert_timezone('UTC', 'America/Los_Angeles', stage_date_sal_v_2_c::timestamp_ntz) as metric_date_1,
+            null as metric_date_2,
+            id as metric_measure_1,
+            null as metric_measure_2,
+            null as metric_measure_3,
+            geo_c,
+            null as region,
+            null as sub_region,
+            annual_revenue_c as revenue,
+            case
+                when customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else customer_segment_c
+            end as company_size,
+            null as record_type,
+            lead_source as leadsource,
+            case 
+                when lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when lead_source_category_c in ('Partner') then 'Partner'
+                when lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            lead_source_category_c as sub_motion,
+            null as opp_type,
+            company as account_name,
+            matched_account_name_c as matched_account_tier_ld,
+            matched_account_tier_ld_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', _fivetran_synced::timestamp_ntz) as sync_date,
+            null as sales_motion,
+            null as expansion_sales_motion,
+            null as demand_bucket
+        from lead_base
+        where 1=1
+            and (lead_source not like 'In Product Contentstack' or lead_source is null)
+            and (email not like '%contentstack%' or email is null)
+            and (contact_us_subject_c not in ('Free Trial') or contact_us_subject_c is null)
+            and (status not in ('Customer','Partner') or status is null)
+    ),
+
+    -- SQL Volume
+    sql_volume as (
+        select
+            'SQL Volume' as metric_name,
+            'Lead' as object,
+            null as id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            convert_timezone('UTC', 'America/Los_Angeles', stage_date_sql_v_2_c::timestamp_ntz) as metric_date_1,
+            null as metric_date_2,
+            id as metric_measure_1,
+            null as metric_measure_2,
+            null as metric_measure_3,
+            geo_c,
+            null as region,
+            null as sub_region,
+            annual_revenue_c as revenue,
+            case
+                when customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else customer_segment_c
+            end as company_size,
+            null as record_type,
+            lead_source as leadsource,
+            case 
+                when lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when lead_source_category_c in ('Partner') then 'Partner'
+                when lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            lead_source_category_c as sub_motion,
+            null as opp_type,
+            company as account_name,
+            matched_account_name_c as matched_account_tier_ld,
+            matched_account_tier_ld_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', _fivetran_synced::timestamp_ntz) as sync_date,
+            null as sales_motion,
+            null as expansion_sales_motion,
+            null as demand_bucket
+        from lead_base
+        where 1=1
+            and (lead_source not like 'In Product Contentstack' or lead_source is null)
+            and (email not like '%contentstack%' or email is null)
+            and (contact_us_subject_c not in ('Free Trial') or contact_us_subject_c is null)
+            and (status not in ('Customer','Partner') or status is null)
+    ),
+
+    -- MEL to MQL Conversion %
+    mel_to_mql_conversion as (
+        select
+            'MEL TO MQL Conversion %' as metric_name,
+            'Lead' as object,
+            null as id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            date_trunc('MONTH', convert_timezone('UTC', 'America/Los_Angeles', stage_date_mel_c::timestamp_ntz)) as metric_date_1,
+            null as metric_date_2,
+            null as metric_measure_1,
+            round((count(distinct case when stage_date_mql_v_2_c is not null then id end) * 1.0 / count(distinct id)), 2) as metric_measure_2,
+            null as metric_measure_3,
+            null as geo_c,
+            null as region,
+            null as sub_region,
+            null as revenue,
+            null as company_size,
+            null as record_type,
+            null as leadsource,
+            null as motion,
+            null as sub_motion,
+            null as opp_type,
+            null as account_name,
+            null as matched_account_tier_ld,
+            null as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', _fivetran_synced::timestamp_ntz) as sync_date,
+            null as sales_motion,
+            null as expansion_sales_motion,
+            null as demand_bucket
+        from lead_base
+        where 1=1
+            and (stage_date_mql_v_2_c is null or convert_timezone('UTC', 'America/Los_Angeles', stage_date_mql_v_2_c::timestamp_ntz) >= convert_timezone('UTC', 'America/Los_Angeles', stage_date_mel_c::timestamp_ntz))
+            and convert_timezone('UTC', 'America/Los_Angeles', stage_date_mel_c::timestamp_ntz) > '2023-02-01'
+            and status not in ('Customer', 'Partner')
+            and email not like '%contentstack%'
+        group by metric_date_1, sync_date
+    ),
+
+    -- MQL to SAL Conversion %
+    mql_to_sal_conversion as (
+        select
+            'MQL TO SAL Conversion %' as metric_name,
+            'Lead' as object,
+            null as id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            date_trunc('MONTH', convert_timezone('UTC', 'America/Los_Angeles', stage_date_mql_v_2_c::timestamp_ntz)) as metric_date_1,
+            null as metric_date_2,
+            null as metric_measure_1,
+            round((count(distinct case when stage_date_sal_v_2_c is not null then id end) * 1.0 / count(distinct id)), 2) as metric_measure_2,
+            null as metric_measure_3,
+            null as geo_c,
+            null as region,
+            null as sub_region,
+            null as revenue,
+            null as company_size,
+            null as record_type,
+            null as leadsource,
+            null as motion,
+            null as sub_motion,
+            null as opp_type,
+            null as account_name,
+            null as matched_account_tier_ld,
+            null as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', _fivetran_synced::timestamp_ntz) as sync_date,
+            null as sales_motion,
+            null as expansion_sales_motion,
+            null as demand_bucket
+        from lead_base
+        where 1=1
+            and (stage_date_sal_v_2_c is null or convert_timezone('UTC', 'America/Los_Angeles', stage_date_sal_v_2_c::timestamp_ntz) >= convert_timezone('UTC', 'America/Los_Angeles', stage_date_mql_v_2_c::timestamp_ntz))
+            and convert_timezone('UTC', 'America/Los_Angeles', stage_date_mql_v_2_c::timestamp_ntz) > '2023-02-01'
+            and status not in ('Customer', 'Partner')
+            and email not like '%contentstack%'
+        group by metric_date_1, sync_date
+    ),
+
+    -- SAL to SQL Conversion %
+    sal_to_sql_conversion as (
+        select
+            'SAL TO SQL Conversion %' as metric_name,
+            'Lead' as object,
+            null as id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            date_trunc('MONTH', convert_timezone('UTC', 'America/Los_Angeles', stage_date_sal_v_2_c::timestamp_ntz)) as metric_date_1,
+            null as metric_date_2,
+            null as metric_measure_1,
+            round((count(distinct case when stage_date_sql_v_2_c is not null then id end) * 1.0 / count(distinct id)), 2) as metric_measure_2,
+            null as metric_measure_3,
+            null as geo_c,
+            null as region,
+            null as sub_region,
+            null as revenue,
+            null as company_size,
+            null as record_type,
+            null as leadsource,
+            null as motion,
+            null as sub_motion,
+            null as opp_type,
+            null as account_name,
+            null as matched_account_tier_ld,
+            null as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', _fivetran_synced::timestamp_ntz) as sync_date,
+            null as sales_motion,
+            null as expansion_sales_motion,
+            null as demand_bucket
+        from lead_base
+        where 1=1
+            and (stage_date_sql_v_2_c is null or convert_timezone('UTC', 'America/Los_Angeles', stage_date_sql_v_2_c::timestamp_ntz) >= convert_timezone('UTC', 'America/Los_Angeles', stage_date_sal_v_2_c::timestamp_ntz))
+            and convert_timezone('UTC', 'America/Los_Angeles', stage_date_sal_v_2_c::timestamp_ntz) > '2023-02-01'
+            and status not in ('Customer', 'Partner')
+            and email not like '%contentstack%'
+        group by metric_date_1, sync_date
+    ),
+
+    -- CDP Pipeline
+    cdp_pipeline as (
+        select
+            'New Pipeline ($)' as metric_name,
+            'OPPORTUNITY' as object,
+            o.id,
+            'Lytics' as product,
+            case
+                when cdp_pipeline_percentage_c = 100 then 'CDP'
+                else 'DXP'
+            end as customer_designation,
+            cdp_pipeline_percentage_c as product_deal_percentage,
+            pipeline_date_c as metric_date_1,
+            null as metric_date_2,
+            null as metric_measure_1,
+            (total_original_piped_amount_c * (1 / d.conversion_rate)) * (cdp_pipeline_percentage_c / 100) as metric_measure_2,
+            (total_original_piped_amount_c * (1 / d.conversion_rate)) as metric_measure_3,
+            null as geo_c,
+            owner_region_c as region,
+            owner_sub_region_c as sub_region,
+            null as revenue,
+            case
+                when a.customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when a.customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else a.customer_segment_c
+            end as company_size,
+            case 
+                when o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell') then 'Cross-Sell'
+                when o.record_type_c in ('Upsell', 'CPQ Amendment', 'CPQ Renewal') then 'Upsell'
+                else record_type_c
+            end as record_type,
+            lead_source as leadsource,
+            case 
+                when o.lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when o.lead_source_category_c in ('Partner') then 'Partner'
+                when o.lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            o.lead_source_category_c as sub_motion,
+            o.type as opp_type,
+            a.name as account_name,
+            null as matched_account_tier_ld,
+            a.account_tier_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', o._fivetran_synced::timestamp_ntz) as sync_date,
+            o.cms_sales_motion_c as sales_motion,
+            o.expansion_sales_motion_c as expansion_sales_motion,
+            null as demand_bucket
+        from opportunity_base o
+        left join account_base a on o.account_id = a.id
+        left join conversion_rate d on o.currency_iso_code = d.iso_code
+        where 1=1
+            and (
+                o.currency_iso_code = 'USD' or
+                (
+                    o.close_date between d.start_date and d.next_start_date - 1 and
+                    d.conversion_rate is not null
+                )
+            )
+            and o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell','CPQ Amendment', 'CPQ Renewal', 'Upsell')
+    ),
+
+    -- CMS Pipeline
+    cms_pipeline as (
+        select
+            'New Pipeline ($)' as metric_name,
+            'OPPORTUNITY' as object,
+            o.id,
+            'CS' as product,
+            'CMS' as customer_designation,
+            case
+                when cdp_pipeline_percentage_c is null then 100
+                else (100 - cdp_pipeline_percentage_c)
+            end as product_deal_percentage,
+            pipeline_date_c as metric_date_1,
+            null as metric_date_2,
+            null as metric_measure_1,
+            (total_original_piped_amount_c * (1 / d.conversion_rate)) * (product_deal_percentage / 100) as metric_measure_2,
+            (total_original_piped_amount_c * (1 / d.conversion_rate)) as metric_measure_3,
+            null as geo_c,
+            owner_region_c as region,
+            owner_sub_region_c as sub_region,
+            null as revenue,
+            case
+                when a.customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when a.customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else a.customer_segment_c
+            end as company_size,
+            case 
+                when o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell') then 'Cross-Sell'
+                when o.record_type_c in ('Upsell', 'CPQ Amendment', 'CPQ Renewal') then 'Upsell'
+                else record_type_c
+            end as record_type,
+            lead_source as leadsource,
+            case 
+                when o.lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when o.lead_source_category_c in ('Partner') then 'Partner'
+                when o.lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            o.lead_source_category_c as sub_motion,
+            o.type as opp_type,
+            a.name as account_name,
+            null as matched_account_tier_ld,
+            a.account_tier_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', o._fivetran_synced::timestamp_ntz) as sync_date,
+            o.cms_sales_motion_c as sales_motion,
+            o.expansion_sales_motion_c as expansion_sales_motion,
+            null as demand_bucket
+        from opportunity_base o
+        left join account_base a on o.account_id = a.id
+        left join conversion_rate d on o.currency_iso_code = d.iso_code
+        where 1=1
+            and (
+                o.currency_iso_code = 'USD' or
+                (
+                    o.close_date between d.start_date and d.next_start_date - 1 and
+                    d.conversion_rate is not null
+                )
+            )
+            and o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell','CPQ Amendment', 'CPQ Renewal', 'Upsell')
+    ),
+
+    -- CDP Bookings
+    cdp_bookings as (
+        select
+            'Bookings ($)' as metric_name,
+            'OPPORTUNITY' as object,
+            o.id,
+            'Lytics' as product,
+            case
+                when cdp_pipeline_percentage_c = 100 then 'CDP'
+                else 'DXP'
+            end as customer_designation,
+            cdp_deal_percentage_c as product_deal_percentage,
+            close_date as metric_date_1,
+            pipeline_date_c as metric_date_2,
+            null as metric_measure_1,
+            (opp_total_bookings_c * (1 / d.conversion_rate)) * (cdp_deal_percentage_c / 100) as metric_measure_2,
+            (opp_total_bookings_c * (1 / d.conversion_rate)) as metric_measure_3,
+            null as geo_c,
+            owner_region_c as region,
+            owner_sub_region_c as sub_region,
+            null as revenue,
+            case
+                when a.customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when a.customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else a.customer_segment_c
+            end as company_size,
+            case 
+                when o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell') then 'Cross-Sell'
+                when o.record_type_c in ('Upsell', 'CPQ Amendment', 'CPQ Renewal') then 'Upsell'
+                else record_type_c
+            end as record_type,
+            lead_source as leadsource,
+            case 
+                when o.lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when o.lead_source_category_c in ('Partner') then 'Partner'
+                when o.lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            o.lead_source_category_c as sub_motion,
+            o.type as opp_type,
+            a.name as account_name,
+            null as matched_account_tier_ld,
+            a.account_tier_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', o._fivetran_synced::timestamp_ntz) as sync_date,
+            o.cms_sales_motion_c as sales_motion,
+            o.expansion_sales_motion_c as expansion_sales_motion,
+            null as demand_bucket
+        from opportunity_base o
+        left join account_base a on o.account_id = a.id
+        left join conversion_rate d on o.currency_iso_code = d.iso_code
+        where 1=1
+            and (
+                o.currency_iso_code = 'USD' or
+                (
+                    o.close_date between d.start_date and d.next_start_date - 1 and
+                    d.conversion_rate is not null
+                )
+            )
+            and o.stage_name = 'Closed Won'
+            and o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell', 'CPQ Amendment', 'CPQ Renewal', 'Upsell')
+            and o.opp_total_bookings_c > 0
+    ),
+
+    -- CMS Bookings
+    cms_bookings as (
+        select
+            'Bookings ($)' as metric_name,
+            'OPPORTUNITY' as object,
+            o.id,
+            'CS' as product,
+            'CMS' as customer_designation,
+            case
+                when cdp_deal_percentage_c is null then 100
+                else 100 - cdp_deal_percentage_c
+            end as product_deal_percentage,
+            close_date as metric_date_1,
+            pipeline_date_c as metric_date_2,
+            null as metric_measure_1,
+            case
+                when opp_total_bookings_c is null then null
+                else (opp_total_bookings_c * (1 / d.conversion_rate)) * (product_deal_percentage / 100)
+            end as metric_measure_2,
+            (opp_total_bookings_c * (1 / d.conversion_rate)) as metric_measure_3,
+            null as geo_c,
+            owner_region_c as region,
+            owner_sub_region_c as sub_region,
+            null as revenue,
+            case
+                when a.customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when a.customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else a.customer_segment_c
+            end as company_size,
+            case 
+                when o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell') then 'Cross-Sell'
+                when o.record_type_c in ('Upsell', 'CPQ Amendment', 'CPQ Renewal') then 'Upsell'
+                else record_type_c
+            end as record_type,
+            lead_source as leadsource,
+            case 
+                when o.lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when o.lead_source_category_c in ('Partner') then 'Partner'
+                when o.lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            o.lead_source_category_c as sub_motion,
+            o.type as opp_type,
+            a.name as account_name,
+            null as matched_account_tier_ld,
+            a.account_tier_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', o._fivetran_synced::timestamp_ntz) as sync_date,
+            o.cms_sales_motion_c as sales_motion,
+            o.expansion_sales_motion_c as expansion_sales_motion,
+            null as demand_bucket
+        from opportunity_base o
+        left join account_base a on o.account_id = a.id
+        left join conversion_rate d on o.currency_iso_code = d.iso_code
+        where 1=1
+            and (
+                o.currency_iso_code = 'USD' or
+                (
+                    o.close_date between d.start_date and d.next_start_date - 1 and
+                    d.conversion_rate is not null
+                )
+            )
+            and o.stage_name = 'Closed Won'
+            and o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell', 'CPQ Amendment', 'CPQ Renewal', 'Upsell')
+            and o.opp_total_bookings_c > 0
+    ),
+
+    -- Closed Won Opps
+    closed_won_opps as (
+        select
+            'Closed Won Opps' as metric_name,
+            'OPPORTUNITY' as object,
+            o.id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            close_date as metric_date_1,
+            pipeline_date_c as metric_date_2,
+            null as metric_measure_1,
+            (opp_total_bookings_c * (1 / d.conversion_rate)) as metric_measure_2,
+            null as metric_measure_3,
+            null as geo_c,
+            owner_region_c as region,
+            owner_sub_region_c as sub_region,
+            null as revenue,
+            case
+                when a.customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when a.customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else a.customer_segment_c
+            end as company_size,
+            case 
+                when o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell') then 'Cross-Sell'
+                when o.record_type_c in ('Upsell', 'CPQ Amendment', 'CPQ Renewal') then 'Upsell'
+                else record_type_c
+            end as record_type,
+            lead_source as leadsource,
+            case 
+                when o.lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when o.lead_source_category_c in ('Partner') then 'Partner'
+                when o.lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            o.lead_source_category_c as sub_motion,
+            o.type as opp_type,
+            a.name as account_name,
+            null as matched_account_tier_ld,
+            a.account_tier_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', o._fivetran_synced::timestamp_ntz) as sync_date,
+            o.cms_sales_motion_c as sales_motion,
+            o.expansion_sales_motion_c as expansion_sales_motion,
+            null as demand_bucket
+        from opportunity_base o
+        left join account_base a on o.account_id = a.id
+        left join conversion_rate d on o.currency_iso_code = d.iso_code
+        where 1=1
+            and (
+                o.currency_iso_code = 'USD' or
+                (
+                    o.close_date between d.start_date and d.next_start_date - 1 and
+                    d.conversion_rate is not null
+                )
+            )
+            and o.stage_name = 'Closed Won'
+            and o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell', 'CPQ Amendment', 'CPQ Renewal', 'Upsell')
+    ),
+
+    -- Avg Sales Cycle (Days)
+    avg_sales_cycle as (
+        select
+            'Avg Sales Cycle (Days)' as metric_name,
+            'OPPORTUNITY' as object,
+            o.id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            pipeline_date_c as metric_date_1,
+            close_date as metric_date_2,
+            null as metric_measure_1,
+            (close_date - pipeline_date_c) as metric_measure_2,
+            null as metric_measure_3,
+            null as geo_c,
+            owner_region_c as region,
+            owner_sub_region_c as sub_region,
+            null as revenue,
+            case
+                when a.customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when a.customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else a.customer_segment_c
+            end as company_size,
+            case 
+                when o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell') then 'Cross-Sell'
+                when o.record_type_c in ('Upsell', 'CPQ Amendment', 'CPQ Renewal') then 'Upsell'
+                else record_type_c
+            end as record_type,
+            lead_source as leadsource,
+            case 
+                when o.lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when o.lead_source_category_c in ('Partner') then 'Partner'
+                when o.lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            o.lead_source_category_c as sub_motion,
+            o.type as opp_type,
+            a.name as account_name,
+            null as matched_account_tier_ld,
+            a.account_tier_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', o._fivetran_synced::timestamp_ntz) as sync_date,
+            o.cms_sales_motion_c as sales_motion,
+            o.expansion_sales_motion_c as expansion_sales_motion,
+            null as demand_bucket
+        from opportunity_base o
+        left join account_base a on o.account_id = a.id
+        where 1=1
+            and o.stage_name = 'Closed Won'
+            and o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell', 'CPQ Amendment', 'CPQ Renewal', 'Upsell')
+    ),
+
+    -- Closed Lost Reason
+    closed_lost_reason as (
+        select
+            'Closed Lost Reason' as metric_name,
+            'OPPORTUNITY' as object,
+            o.id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            close_date as metric_date_1,
+            pipeline_date_c as metric_date_2,
+            lost_reason_c as metric_measure_1,
+            (opp_total_bookings_c * (1 / d.conversion_rate)) as metric_measure_2,
+            null as metric_measure_3,
+            null as geo_c,
+            owner_region_c as region,
+            owner_sub_region_c as sub_region,
+            null as revenue,
+            case
+                when a.customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when a.customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else a.customer_segment_c
+            end as company_size,
+            case 
+                when o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell') then 'Cross-Sell'
+                when o.record_type_c in ('Upsell', 'CPQ Amendment', 'CPQ Renewal') then 'Upsell'
+                else record_type_c
+            end as record_type,
+            lead_source as leadsource,
+            case 
+                when o.lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when o.lead_source_category_c in ('Partner') then 'Partner'
+                when o.lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            o.lead_source_category_c as sub_motion,
+            o.type as opp_type,
+            a.name as account_name,
+            null as matched_account_tier_ld,
+            a.account_tier_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', o._fivetran_synced::timestamp_ntz) as sync_date,
+            o.cms_sales_motion_c as sales_motion,
+            o.expansion_sales_motion_c as expansion_sales_motion,
+            null as demand_bucket
+        from opportunity_base o
+        left join account_base a on o.account_id = a.id
+        left join conversion_rate d on o.currency_iso_code = d.iso_code
+        where 1=1
+            and (
+                o.currency_iso_code = 'USD' or
+                (
+                    o.close_date between d.start_date and d.next_start_date - 1 and
+                    d.conversion_rate is not null
+                )
+            )
+            and o.stage_name = 'Closed Lost'
+            and o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell', 'CPQ Amendment', 'CPQ Renewal', 'Upsell')
+    ),
+
+    -- Expansion Bookings
+    expansion_bookings as (
+        select
+            'Expansion Bookings' as metric_name,
+            'OPPORTUNITY' as object,
+            o.id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            close_date as metric_date_1,
+            null as metric_date_2,
+            null as metric_measure_1,
+            (opp_total_bookings_c * (1 / d.conversion_rate)) as metric_measure_2,
+            null as metric_measure_3,
+            null as geo_c,
+            owner_region_c as region,
+            owner_sub_region_c as sub_region,
+            null as revenue,
+            case
+                when a.customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when a.customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else a.customer_segment_c
+            end as company_size,
+            case 
+                when o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell') then 'Cross-Sell'
+                when o.record_type_c in ('Upsell', 'CPQ Amendment', 'CPQ Renewal') then 'Upsell'
+                else record_type_c
+            end as record_type,
+            lead_source as leadsource,
+            case 
+                when o.lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when o.lead_source_category_c in ('Partner') then 'Partner'
+                when o.lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            o.lead_source_category_c as sub_motion,
+            o.type as opp_type,
+            a.name as account_name,
+            null as matched_account_tier_ld,
+            a.account_tier_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', o._fivetran_synced::timestamp_ntz) as sync_date,
+            o.cms_sales_motion_c as sales_motion,
+            o.expansion_sales_motion_c as expansion_sales_motion,
+            null as demand_bucket
+        from opportunity_base o
+        left join account_base a on o.account_id = a.id
+        left join conversion_rate d on o.currency_iso_code = d.iso_code
+        where 1=1
+            and stage_name = 'Closed Won'
+            and o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell', 'CPQ Amendment', 'CPQ Renewal', 'Upsell')
+            and (
+                o.currency_iso_code = 'USD' or
+                (
+                    o.close_date between d.start_date and d.next_start_date - 1 and
+                    d.conversion_rate is not null
+                )
+            )
+    ),
+
+    -- Time to Deploy (Days)
+    time_to_deploy as (
+        select
+            'Time to Deploy (Days)' as metric_name,
+            'ACCOUNT' as object,
+            null as id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            license_start_date_c as metric_date_1,
+            actual_go_live_date_c as metric_date_2,
+            null as metric_measure_1,
+            (actual_go_live_date_c - license_start_date_c) as metric_measure_2,
+            null as metric_measure_3,
+            geo_c,
+            region_c as region,
+            sub_region_c as sub_region,
+            revenue_c as revenue,
+            case
+                when customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else customer_segment_c
+            end as company_size,
+            null as record_type,
+            null as leadsource,
+            null as motion,
+            null as sub_motion,
+            null as opp_type,
+            null as account_name,
+            null as matched_account_tier_ld,
+            null as account_tier,
+            deployment_status_c,
+            type,
+            convert_timezone('UTC', 'America/Los_Angeles', _fivetran_synced::timestamp_ntz) as sync_date,
+            null as sales_motion,
+            null as expansion_sales_motion,
+            null as demand_bucket
+        from account_base
+        where 1=1
+            and deployment_status_c in ('Deployed', 'Multi-Deployment')
+    ),
+
+    -- % Onboarded within Target Date
+    onboarded_within_target as (
+        select
+            '% Onboarded within Target Date' as metric_name,
+            'ACCOUNT' as object,
+            null as id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            predicted_go_live_date_c as metric_date_1,
+            actual_go_live_date_c as metric_date_2,
+            case
+                when actual_go_live_date_c <= predicted_go_live_date_c then 'Yes'
+                else 'No'
+            end as metric_measure_1,
+            null as metric_measure_2,
+            null as metric_measure_3,
+            geo_c,
+            region_c as region,
+            sub_region_c as sub_region,
+            revenue_c as revenue,
+            case
+                when customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else customer_segment_c
+            end as company_size,
+            null as record_type,
+            null as leadsource,
+            null as motion,
+            null as sub_motion,
+            null as opp_type,
+            name as account_name,
+            null as matched_account_tier_ld,
+            null as account_tier,
+            deployment_status_c,
+            type,
+            convert_timezone('UTC', 'America/Los_Angeles', _fivetran_synced::timestamp_ntz) as sync_date,
+            null as sales_motion,
+            null as expansion_sales_motion,
+            null as demand_bucket
+        from account_base
+        where 1=1
+            and actual_go_live_date_c is not null
+    ),
+
+    -- Renewals with Expansion (%)
+    renewals_with_expansion as (
+        select
+            'Renewals with Expansion (%)' as metric_name,
+            'OPPORTUNITY' as object,
+            o.id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            to_date(o.close_date) as metric_date_1,
+            null as metric_date_2,
+            null as metric_measure_1,
+            (opp_expansion_bookings_c * (1 / d.conversion_rate)) as metric_measure_2,
+            null as metric_measure_3,
+            null as geo_c,
+            owner_region_c as region,
+            owner_sub_region_c as sub_region,
+            null as revenue,
+            case
+                when a.customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when a.customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else a.customer_segment_c
+            end as company_size,
+            o.record_type_c as record_type,
+            lead_source as leadsource,
+            case 
+                when o.lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when o.lead_source_category_c in ('Partner') then 'Partner'
+                when o.lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            o.lead_source_category_c as sub_motion,
+            o.type as opp_type,
+            a.name as account_name,
+            null as matched_account_tier_ld,
+            a.account_tier_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', o._fivetran_synced::timestamp_ntz) as sync_date,
+            o.cms_sales_motion_c as sales_motion,
+            o.expansion_sales_motion_c as expansion_sales_motion,
+            null as demand_bucket
+        from opportunity_base o
+        left join account_base a on o.account_id = a.id
+        left join conversion_rate d on o.currency_iso_code = d.iso_code
+        where 1=1
+            and (
+                o.currency_iso_code = 'USD' or
+                (
+                    o.close_date between d.start_date and d.next_start_date - 1 and
+                    d.conversion_rate is not null
+                )
+            )
+            and o.record_type_c = 'CPQ Renewal'
+            and o.is_won = 'TRUE'
+            and to_date(o.close_date) >= '2024-02-01'
+    ),
+
+    -- ASC (Days) by Sales Motion (New Biz)
+    asc_sales_motion_new_biz as (
+        select
+            'ASC (Days) by Sales Motion (New Biz)' as metric_name,
+            'OPPORTUNITY' as object,
+            o.id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            pipeline_date_c as metric_date_1,
+            close_date as metric_date_2,
+            null as metric_measure_1,
+            (close_date - pipeline_date_c) as metric_measure_2,
+            null as metric_measure_3,
+            null as geo_c,
+            owner_region_c as region,
+            owner_sub_region_c as sub_region,
+            null as revenue,
+            case
+                when a.customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when a.customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else a.customer_segment_c
+            end as company_size,
+            case 
+                when o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell') then 'Cross-Sell'
+                when o.record_type_c in ('Upsell', 'CPQ Amendment', 'CPQ Renewal') then 'Upsell'
+                else record_type_c
+            end as record_type,
+            lead_source as leadsource,
+            case 
+                when o.lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when o.lead_source_category_c in ('Partner') then 'Partner'
+                when o.lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            o.lead_source_category_c as sub_motion,
+            o.type as opp_type,
+            a.name as account_name,
+            null as matched_account_tier_ld,
+            a.account_tier_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', o._fivetran_synced::timestamp_ntz) as sync_date,
+            o.cms_sales_motion_c as sales_motion,
+            o.expansion_sales_motion_c as expansion_sales_motion,
+            null as demand_bucket
+        from opportunity_base o
+        left join account_base a on o.account_id = a.id
+        where 1=1
+            and o.type = 'New Business'
+            and o.stage_name = 'Closed Won'
+            and o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell', 'CPQ Amendment', 'CPQ Renewal', 'Upsell')
+    ),
+
+    -- ASC (Days) by Expansion Motion (Existing Biz)
+    asc_expansion_motion_existing_biz as (
+        select
+            'ASC (Days) by Expansion Motion (Existing Biz)' as metric_name,
+            'OPPORTUNITY' as object,
+            o.id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            pipeline_date_c as metric_date_1,
+            close_date as metric_date_2,
+            null as metric_measure_1,
+            (close_date - pipeline_date_c) as metric_measure_2,
+            null as metric_measure_3,
+            null as geo_c,
+            owner_region_c as region,
+            owner_sub_region_c as sub_region,
+            null as revenue,
+            case
+                when a.customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when a.customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else a.customer_segment_c
+            end as company_size,
+            case 
+                when o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell') then 'Cross-Sell'
+                when o.record_type_c in ('Upsell', 'CPQ Amendment', 'CPQ Renewal') then 'Upsell'
+                else record_type_c
+            end as record_type,
+            lead_source as leadsource,
+            case 
+                when o.lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when o.lead_source_category_c in ('Partner') then 'Partner'
+                when o.lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            o.lead_source_category_c as sub_motion,
+            o.type as opp_type,
+            a.name as account_name,
+            null as matched_account_tier_ld,
+            a.account_tier_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', o._fivetran_synced::timestamp_ntz) as sync_date,
+            o.cms_sales_motion_c as sales_motion,
+            o.expansion_sales_motion_c as expansion_sales_motion,
+            null as demand_bucket
+        from opportunity_base o
+        left join account_base a on o.account_id = a.id
+        where 1=1
+            and o.type = 'Existing Business'
+            and o.stage_name = 'Closed Won'
+            and o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell', 'CPQ Amendment', 'CPQ Renewal', 'Upsell')
+    ),
+
+    -- MQO Volume
+    mqo_volume as (
+        select
+            'MQO Volume' as metric_name,
+            'OPPORTUNITY' as object,
+            o.id,
+            null as product,
+            null as customer_designation,
+            null as product_deal_percentage,
+            stage_enter_mqo_c as metric_date_1,
+            pipeline_date_c as metric_date_2,
+            null as metric_measure_1,
+            (total_original_piped_amount_c * (1 / d.conversion_rate)) as metric_measure_2,
+            null as metric_measure_3,
+            null as geo_c,
+            owner_region_c as region,
+            owner_sub_region_c as sub_region,
+            null as revenue,
+            case
+                when a.customer_segment_c = 'Enterprise Customer' then 'Revenue > $1B'
+                when a.customer_segment_c = 'MM Customer' then 'Revenue < $1B'
+                else a.customer_segment_c
+            end as company_size,
+            case 
+                when o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell') then 'Cross-Sell'
+                when o.record_type_c in ('Upsell', 'CPQ Amendment', 'CPQ Renewal') then 'Upsell'
+                else record_type_c
+            end as record_type,
+            lead_source as leadsource,
+            case 
+                when o.lead_source_category_c in ('Sales', 'Marketing') then 'GTM'
+                when o.lead_source_category_c in ('Partner') then 'Partner'
+                when o.lead_source_category_c in ('Customer') then 'Expansion'
+                else null
+            end as motion,
+            o.lead_source_category_c as sub_motion,
+            o.type as opp_type,
+            a.name as account_name,
+            null as matched_account_tier_ld,
+            a.account_tier_c as account_tier,
+            null as deployment_status_c,
+            null as type,
+            convert_timezone('UTC', 'America/Los_Angeles', o._fivetran_synced::timestamp_ntz) as sync_date,
+            o.cms_sales_motion_c as sales_motion,
+            o.expansion_sales_motion_c as expansion_sales_motion,
+            o.demand_bucket_c as demand_bucket
+        from opportunity_base o
+        left join account_base a on o.account_id = a.id
+        left join conversion_rate d on o.currency_iso_code = d.iso_code
+        where 1=1
+            and (
+                o.currency_iso_code = 'USD' or
+                (
+                    o.close_date between d.start_date and d.next_start_date - 1 and
+                    d.conversion_rate is not null
+                )
+            )
+            and o.record_type_c in ('CPQ Amendment', 'CPQ Sales')
+            and o.type = 'New Business'
+    )
+
+    -- Final UNION ALL
+    select * from mel_volume
+    union all
+    select * from mql_volume
+    union all
+    select * from sal_volume
+    union all
+    select * from sql_volume
+    union all
+    select * from mel_to_mql_conversion
+    union all
+    select * from mql_to_sal_conversion
+    union all
+    select * from sal_to_sql_conversion
+    union all
+    select * from cdp_pipeline
+    union all
+    select * from cms_pipeline
+    union all
+    select * from cdp_bookings
+    union all
+    select * from cms_bookings
+    union all
+    select * from closed_won_opps
+    union all
+    select * from avg_sales_cycle
+    union all
+    select * from closed_lost_reason
+    union all
+    select * from expansion_bookings
+    union all
+    select * from time_to_deploy
+    union all
+    select * from onboarded_within_target
+    union all
+    select * from renewals_with_expansion
+    union all
+    select * from asc_sales_motion_new_biz
+    union all
+    select * from asc_expansion_motion_existing_biz
+    union all
+    select * from mqo_volume

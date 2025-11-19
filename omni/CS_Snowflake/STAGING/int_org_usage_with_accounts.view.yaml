@@ -1,0 +1,104 @@
+# Reference this view as staging__int_org_usage_with_accounts
+schema: STAGING
+table_name: INT_ORG_USAGE_WITH_ACCOUNTS
+
+dimensions:
+  uid:
+    sql: '"UID"'
+
+  date:
+    sql: '"DATE"'
+
+  cma_bandwidth:
+    sql: '"CMA_BANDWIDTH"'
+
+  cma_count:
+    sql: '"CMA_COUNT"'
+
+  cdn_bandwidth:
+    sql: '"CDN_BANDWIDTH"'
+
+  cdn_count:
+    sql: '"CDN_COUNT"'
+
+  assets_bandwidth:
+    sql: '"ASSETS_BANDWIDTH"'
+
+  assets_count:
+    sql: '"ASSETS_COUNT"'
+
+  images_bandwidth:
+    sql: '"IMAGES_BANDWIDTH"'
+
+  images_count:
+    sql: '"IMAGES_COUNT"'
+
+  api_bandwidth:
+    sql: '"API_BANDWIDTH"'
+
+  api_count:
+    sql: '"API_COUNT"'
+
+  ui_bandwidth:
+    sql: '"UI_BANDWIDTH"'
+
+  ui_count:
+    sql: '"UI_COUNT"'
+
+  graphql_bandwidth:
+    sql: '"GRAPHQL_BANDWIDTH"'
+
+  graphql_count:
+    sql: '"GRAPHQL_COUNT"'
+
+  stacks:
+    sql: '"STACKS"'
+
+  users:
+    sql: '"USERS"'
+
+  content_types:
+    sql: '"CONTENT_TYPES"'
+
+  entries:
+    sql: '"ENTRIES"'
+
+  roles:
+    sql: '"ROLES"'
+
+  assets:
+    sql: '"ASSETS"'
+
+  locales:
+    sql: '"LOCALES"'
+
+  environments:
+    sql: '"ENVIRONMENTS"'
+
+  extensions:
+    sql: '"EXTENSIONS"'
+
+  organization_name:
+    sql: '"ORGANIZATION_NAME"'
+
+  organization_type:
+    sql: '"ORGANIZATION_TYPE"'
+
+  organization_tag:
+    sql: '"ORGANIZATION_TAG"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  account_id_15:
+    sql: '"ACCOUNT_ID_15"'
+
+  account_id_18:
+    sql: '"ACCOUNT_ID_18"'
+
+measures:
+  count:
+    aggregate_type: count

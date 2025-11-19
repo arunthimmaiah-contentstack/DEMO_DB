@@ -1,0 +1,23 @@
+# Reference this view as staging__int_mau
+schema: STAGING
+table_name: INT_MAU
+
+dimensions:
+  date:
+    sql: '"DATE"'
+
+  organization_uid:
+    sql: '"ORGANIZATION_UID"'
+
+  location:
+    sql: '"LOCATION"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+  mau:
+    sql: '"MAU"'
+
+measures:
+  count:
+    aggregate_type: count

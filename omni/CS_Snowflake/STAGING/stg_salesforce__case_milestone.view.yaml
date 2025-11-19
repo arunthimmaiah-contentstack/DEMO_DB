@@ -1,0 +1,81 @@
+# Reference this view as staging__stg_salesforce__case_milestone
+#This description was pulled from dbt.
+description: |
+  Staging model for Salesforce Case Milestones. Includes milestone details for each case, focusing on First Response SLA milestones. Maps milestone type IDs to human-readable names and tracks target/completion dates and violations.
+
+schema: STAGING
+table_name: STG_SALESFORCE__CASE_MILESTONE
+
+dimensions:
+  case_id:
+    sql: '"CASE_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Foreign key. Salesforce Case ID associated with the milestone.
+
+  milestone_type_id:
+    sql: '"MILESTONE_TYPE_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Salesforce Milestone Type ID.
+
+  milestone_type_name:
+    sql: '"MILESTONE_TYPE_NAME"'
+    #This description was pulled from dbt.
+    description: Human-readable name for the milestone type, mapped from milestone_type_id.
+
+  milestone_target_date:
+    sql: '"MILESTONE_TARGET_DATE"'
+    #This description was pulled from dbt.
+    description: Target date for the milestone to be completed.
+
+  milestone_completion_date:
+    sql: '"MILESTONE_COMPLETION_DATE"'
+    #This description was pulled from dbt.
+    description: Actual completion date of the milestone.
+
+  is_milestone_violated:
+    sql: '"IS_MILESTONE_VIOLATED"'
+    #This description was pulled from dbt.
+    description: Indicates if the milestone was violated (not met within the target date).
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__case_milestone
+  target_schema: STAGING
+  description: |
+    Staging model for Salesforce Case Milestones. Includes milestone details for each case, focusing on First Response SLA milestones. Maps milestone type IDs to human-readable names and tracks target/completion dates and violations.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    select
+        -- Foreign Key
+        case_id,
+        milestone_type_id,
+        
+        -- Milestone Details
+        CASE
+            WHEN milestone_type_id = '557Uc000008QpNKIA0' THEN 'First Response SLA - P3'
+            WHEN milestone_type_id = '557Uc000008QpNJIA0' THEN 'First Response SLA - P2'
+            WHEN milestone_type_id = '557Uc000008QpNLIA0' THEN 'First Response SLA - P4'
+            WHEN milestone_type_id = '557Uc000008QpNIIA0' THEN 'First Response SLA - P1'
+            WHEN milestone_type_id = '557Uc000008QpNFIA0' THEN 'Case Assignment - Tier 1'
+            WHEN milestone_type_id = '557Uc000008QpNGIA0' THEN 'Case Assignment - Tier 2'
+            WHEN milestone_type_id = '5578W000000CayIQAS' THEN 'DO NOT USE - 1'
+            WHEN milestone_type_id = '5578W000000CayJQAS' THEN 'DO NOT USE - 2'
+            WHEN milestone_type_id = '5578W000000CayKQAS' THEN 'DO NOT USE - 3'
+        END AS milestone_type_name,
+
+        target_date as milestone_target_date,
+        completion_date as milestone_completion_date,
+        is_violated as is_milestone_violated
+
+    from {{ source('salesforce_case', 'case_milestone') }}
+    -- Filter for only the FRT milestone to keep the model focused
+    where milestone_type_name like 'First Response SLA%'
+  referenced_by: [ fct_cases ]

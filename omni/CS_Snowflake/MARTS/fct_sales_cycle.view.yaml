@@ -1,0 +1,125 @@
+# Reference this view as marts__fct_sales_cycle
+schema: MARTS
+table_name: FCT_SALES_CYCLE
+
+dimensions:
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  industry:
+    sql: '"INDUSTRY"'
+
+  region_c:
+    sql: '"REGION_C"'
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  owner_name:
+    sql: '"OWNER_NAME"'
+
+  owner_title:
+    sql: '"OWNER_TITLE"'
+
+  owner_department:
+    sql: '"OWNER_DEPARTMENT"'
+
+  record_type_id:
+    sql: '"RECORD_TYPE_ID"'
+    format: ID
+
+  product_type:
+    sql: '"PRODUCT_TYPE"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  close_date:
+    sql: '"CLOSE_DATE"'
+
+  days_in_pipeline:
+    sql: '"DAYS_IN_PIPELINE"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_sales_cycle
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: incremental
+    tags: [ sales, cycle, fact ]
+  code: |-
+    {{ config(
+        materialized = "incremental",
+        unique_key = "opportunity_id",
+        tags = ["sales", "cycle", "fact"]
+    ) }}
+
+    with opp as (
+
+        select
+            id                                as opportunity_id,
+            account_id                         as account_id,
+            owner_id                           as owner_id,
+            stage_name                         as stage_name,
+            created_date                      as created_date,
+            close_date                         as close_date,
+            record_type_id                      as record_type_id,
+            product_type_c                   as product_type,
+            datediff(day, created_date, close_date) as days_in_pipeline
+        from {{ source('salesforce_opportunity', 'opportunity') }}
+        where is_deleted = false
+          and stage_name = 'Closed Won'
+
+    ),
+
+    dim_account as (
+        select
+            id as account_id,
+            name as account_name,
+            industry,
+            region_c
+        from {{ source('salesforce_account', 'account') }}
+    ),
+
+    dim_user as (
+        select
+            id as owner_id,
+            name as owner_name,
+            title,
+            department
+        from {{ source('salesforce_users', 'user') }}
+    )
+
+    select
+        opp.opportunity_id,
+        opp.account_id,
+        acc.account_name,
+        acc.industry,
+        acc.region_c,
+        opp.owner_id,
+        u.owner_name,
+        u.title as owner_title,
+        u.department as owner_department,
+        opp.record_type_id,
+        opp.product_type,
+        opp.created_date,
+        opp.close_date,
+        opp.days_in_pipeline
+    from opp
+    left join dim_account acc on opp.account_id = acc.account_id
+    left join dim_user u on opp.owner_id = u.owner_id
+  referenced_by: [ mrt_sales_cycle_summary ]

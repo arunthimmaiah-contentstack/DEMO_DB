@@ -1,0 +1,98 @@
+# Reference this view as marts__dim_account
+label: Account
+
+schema: MARTS
+table_name: DIM_ACCOUNT
+
+dimensions:
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+    primary_key: true
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  account_type:
+    sql: '"ACCOUNT_TYPE"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  actual_go_live_date_c:
+    sql: '"ACTUAL_GO_LIVE_DATE_C"'
+
+  license_start_date_c:
+    sql: '"LICENSE_START_DATE_C"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  license_start_date:
+    # Dimension is defined in the 'account_deployment' dbt semantic model (models/semantic_models/sem_account_deployment.yml)
+    sql: ${license_start_date_c}
+
+  actual_go_live_date:
+    # Dimension is defined in the 'account_deployment' dbt semantic model (models/semantic_models/sem_account_deployment.yml)
+    sql: ${actual_go_live_date_c}
+
+  _entity_account:
+    # Entity is defined in the 'account_deployment' dbt semantic model (models/semantic_models/sem_account_deployment.yml)
+    sql: ${account_id}
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+  total_accounts:
+    # Measure is defined in the 'account' dbt semantic model (models/semantic_models/sem_account.yml)
+    sql: ${account_id}
+    description: Total count of accounts.
+    aggregate_type: count
+
+  avg_time_to_deploy:
+    # Measure is defined in the 'account_deployment' dbt semantic model (models/semantic_models/sem_account_deployment.yml)
+    sql: DATEDIFF('day', ${license_start_date_c}, ${actual_go_live_date_c})
+    description: Average number of days between License Start and Go Live
+    aggregate_type: average
+
+  time_to_deploy:
+    # Measure is defined by the 'time_to_deploy' dbt metric (models/metrics/met_account.yml)
+    sql: DATEDIFF('day', ${license_start_date_c}, ${actual_go_live_date_c})
+    label: Average Time to Deploy
+    description: |
+      Measures average deployment duration in days between license start and actual go-live date.
+    aggregate_type: average
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: dim_account
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    -- models/dim_account.sql
+    {{ config(
+        materialized='table' 
+    ) }}
+
+    with source_data as (
+
+        
+        select *
+        from {{ source('salesforce_account', 'account') }}
+
+    )
+
+    select
+        id as account_id,
+        name as account_name,
+        type as account_type,
+        created_date,
+        ACTUAL_GO_LIVE_DATE_C,
+        license_start_date_c,
+        last_modified_date
+    from source_data
+  referenced_by: [ fct_event, fct_opportunity, fct_campaign_member ]

@@ -1,0 +1,71 @@
+# Reference this view as omni_dbt__stg_salesforce__opportunities
+schema_label: ""
+
+schema: omni_dbt
+table_name: STG_SALESFORCE__OPPORTUNITIES
+
+dimensions:
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+
+  opportunity_name:
+    sql: '"OPPORTUNITY_NAME"'
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  contact_id:
+    sql: '"CONTACT_ID"'
+    format: ID
+
+  opportunity_description:
+    sql: '"OPPORTUNITY_DESCRIPTION"'
+
+  opportunity_stage_name:
+    sql: '"OPPORTUNITY_STAGE_NAME"'
+
+  opportunity_created_date:
+    sql: '"OPPORTUNITY_CREATED_DATE"'
+
+  opportunity_close_date:
+    sql: '"OPPORTUNITY_CLOSE_DATE"'
+
+  opportunity_last_activity_date:
+    sql: '"OPPORTUNITY_LAST_ACTIVITY_DATE"'
+
+  opportunity_type:
+    sql: '"OPPORTUNITY_TYPE"'
+
+  lead_source:
+    sql: '"LEAD_SOURCE"'
+
+  opportunity_lead_source_category:
+    sql: '"OPPORTUNITY_LEAD_SOURCE_CATEGORY"'
+
+  opportunity_record_type:
+    sql: '"OPPORTUNITY_RECORD_TYPE"'
+
+  opportunity_owner_region:
+    sql: '"OPPORTUNITY_OWNER_REGION"'
+
+  opportunity_owner_sub_region:
+    sql: '"OPPORTUNITY_OWNER_SUB_REGION"'
+
+  opportunity_pipeline_date:
+    sql: '"OPPORTUNITY_PIPELINE_DATE"'
+
+  cms_sales_motion:
+    sql: '"CMS_SALES_MOTION"'
+
+  expansion_sales_motion:
+    sql: '"EXPANSION_SALES_MOTION"'
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count

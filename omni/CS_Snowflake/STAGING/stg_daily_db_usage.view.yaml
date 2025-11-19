@@ -1,0 +1,483 @@
+# Reference this view as staging__stg_daily_db_usage
+schema: STAGING
+table_name: STG_DAILY_DB_USAGE
+
+dimensions:
+  source_file_name:
+    sql: '"SOURCE_FILE_NAME"'
+
+  file_row_number:
+    sql: '"FILE_ROW_NUMBER"'
+
+  batch_number:
+    sql: '"BATCH_NUMBER"'
+
+  data_sync_date:
+    sql: '"DATA_SYNC_DATE"'
+
+  name:
+    sql: '"NAME"'
+
+  uid:
+    sql: '"UID"'
+
+  stacks:
+    sql: '"STACKS"'
+
+  users:
+    sql: '"USERS"'
+
+  content_types:
+    sql: '"CONTENT_TYPES"'
+
+  entries:
+    sql: '"ENTRIES"'
+
+  roles:
+    sql: '"ROLES"'
+
+  assets:
+    sql: '"ASSETS"'
+
+  locales:
+    sql: '"LOCALES"'
+
+  environments:
+    sql: '"ENVIRONMENTS"'
+
+  saved_searches:
+    sql: '"SAVED_SEARCHES"'
+
+  global_fields:
+    sql: '"GLOBAL_FIELDS"'
+
+  extensions:
+    sql: '"EXTENSIONS"'
+
+  webhooks:
+    sql: '"WEBHOOKS"'
+
+  purchased_apibandwidth:
+    sql: '"PURCHASED_APIBANDWIDTH"'
+
+  purchased_apirequests:
+    sql: '"PURCHASED_APIREQUESTS"'
+
+  purchased_digitalproperties:
+    sql: '"PURCHASED_DIGITALPROPERTIES"'
+
+  purchased_roles:
+    sql: '"PURCHASED_ROLES"'
+
+  purchased_users:
+    sql: '"PURCHASED_USERS"'
+
+  purchased_stacks:
+    sql: '"PURCHASED_STACKS"'
+
+  purchased_content_types:
+    sql: '"PURCHASED_CONTENT_TYPES"'
+
+  purchased_assets:
+    sql: '"PURCHASED_ASSETS"'
+
+  purchased_entries:
+    sql: '"PURCHASED_ENTRIES"'
+
+  purchased_environments:
+    sql: '"PURCHASED_ENVIRONMENTS"'
+
+  purchased_global_fields:
+    sql: '"PURCHASED_GLOBAL_FIELDS"'
+
+  purchased_locales:
+    sql: '"PURCHASED_LOCALES"'
+
+  date:
+    sql: '"DATE"'
+
+  is_over_usage_allowed:
+    sql: '"IS_OVER_USAGE_ALLOWED"'
+
+  terms:
+    sql: '"TERMS"'
+
+  branches:
+    sql: '"BRANCHES"'
+
+  taxonomies:
+    sql: '"TAXONOMIES"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+  location:
+    sql: '"LOCATION"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_daily_db_usage
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    select
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        NAME,
+        UID,
+        STACKS,
+        USERS,
+        CONTENT_TYPES,
+        ENTRIES,
+        ROLES,
+        ASSETS,
+        LOCALES,
+        ENVIRONMENTS,
+        SAVED_SEARCHES,
+        GLOBAL_FIELDS,
+        EXTENSIONS,
+        WEBHOOKS,
+        PURCHASED_APIBANDWIDTH,
+        PURCHASED_APIREQUESTS,
+        PURCHASED_DIGITALPROPERTIES,
+        PURCHASED_ROLES,
+        PURCHASED_USERS,
+        PURCHASED_STACKS,
+        PURCHASED_CONTENT_TYPES,
+        PURCHASED_ASSETS,
+        PURCHASED_ENTRIES,
+        PURCHASED_ENVIRONMENTS,
+        PURCHASED_GLOBAL_FIELDS,
+        PURCHASED_LOCALES,
+        DATE,
+        IS_OVER_USAGE_ALLOWED,
+        TERMS,
+        BRANCHES,
+        TAXONOMIES,
+    	'AWS' as PLATFORM,
+    	'NA' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('aws_db_usage_na','db_usage_na_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('aws_db_usage_na','db_usage_na_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        NAME,
+        UID,
+        STACKS,
+        USERS,
+        CONTENT_TYPES,
+        ENTRIES,
+        ROLES,
+        ASSETS,
+        LOCALES,
+        ENVIRONMENTS,
+        SAVED_SEARCHES,
+        GLOBAL_FIELDS,
+        EXTENSIONS,
+        WEBHOOKS,
+        PURCHASED_APIBANDWIDTH,
+        PURCHASED_APIREQUESTS,
+        PURCHASED_DIGITALPROPERTIES,
+        PURCHASED_ROLES,
+        PURCHASED_USERS,
+        PURCHASED_STACKS,
+        PURCHASED_CONTENT_TYPES,
+        PURCHASED_ASSETS,
+        PURCHASED_ENTRIES,
+        PURCHASED_ENVIRONMENTS,
+        PURCHASED_GLOBAL_FIELDS,
+        PURCHASED_LOCALES,
+        DATE,
+        IS_OVER_USAGE_ALLOWED,
+        TERMS,
+        BRANCHES,
+        TAXONOMIES,
+    	'AWS' as PLATFORM,
+    	'EU' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('aws_db_usage_eu','db_usage_eu_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('aws_db_usage_eu','db_usage_eu_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        NAME,
+        UID,
+        STACKS,
+        USERS,
+        CONTENT_TYPES,
+        ENTRIES,
+        ROLES,
+        ASSETS,
+        LOCALES,
+        ENVIRONMENTS,
+        SAVED_SEARCHES,
+        GLOBAL_FIELDS,
+        EXTENSIONS,
+        WEBHOOKS,
+        PURCHASED_APIBANDWIDTH,
+        PURCHASED_APIREQUESTS,
+        PURCHASED_DIGITALPROPERTIES,
+        PURCHASED_ROLES,
+        PURCHASED_USERS,
+        PURCHASED_STACKS,
+        PURCHASED_CONTENT_TYPES,
+        PURCHASED_ASSETS,
+        PURCHASED_ENTRIES,
+        PURCHASED_ENVIRONMENTS,
+        PURCHASED_GLOBAL_FIELDS,
+        PURCHASED_LOCALES,
+        DATE,
+        IS_OVER_USAGE_ALLOWED,
+        TERMS,
+        BRANCHES,
+        TAXONOMIES,
+    	'AWS' as PLATFORM,
+    	'AU' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('aws_db_usage_au','db_usage_au_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('aws_db_usage_au','db_usage_au_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        NAME,
+        UID,
+        STACKS,
+        USERS,
+        CONTENT_TYPES,
+        ENTRIES,
+        ROLES,
+        ASSETS,
+        LOCALES,
+        ENVIRONMENTS,
+        SAVED_SEARCHES,
+        GLOBAL_FIELDS,
+        EXTENSIONS,
+        WEBHOOKS,
+        PURCHASED_APIBANDWIDTH,
+        PURCHASED_APIREQUESTS,
+        PURCHASED_DIGITALPROPERTIES,
+        PURCHASED_ROLES,
+        PURCHASED_USERS,
+        PURCHASED_STACKS,
+        PURCHASED_CONTENT_TYPES,
+        PURCHASED_ASSETS,
+        PURCHASED_ENTRIES,
+        PURCHASED_ENVIRONMENTS,
+        PURCHASED_GLOBAL_FIELDS,
+        PURCHASED_LOCALES,
+        DATE,
+        IS_OVER_USAGE_ALLOWED,
+        TERMS,
+        BRANCHES,
+        TAXONOMIES,
+    	'AZ' as PLATFORM,
+    	'NA' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('az_db_usage_na','db_usage_na_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('az_db_usage_na','db_usage_na_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        NAME,
+        UID,
+        STACKS,
+        USERS,
+        CONTENT_TYPES,
+        ENTRIES,
+        ROLES,
+        ASSETS,
+        LOCALES,
+        ENVIRONMENTS,
+        SAVED_SEARCHES,
+        GLOBAL_FIELDS,
+        EXTENSIONS,
+        WEBHOOKS,
+        PURCHASED_APIBANDWIDTH,
+        PURCHASED_APIREQUESTS,
+        PURCHASED_DIGITALPROPERTIES,
+        PURCHASED_ROLES,
+        PURCHASED_USERS,
+        PURCHASED_STACKS,
+        PURCHASED_CONTENT_TYPES,
+        PURCHASED_ASSETS,
+        PURCHASED_ENTRIES,
+        PURCHASED_ENVIRONMENTS,
+        PURCHASED_GLOBAL_FIELDS,
+        PURCHASED_LOCALES,
+        DATE,
+        IS_OVER_USAGE_ALLOWED,
+        TERMS,
+        BRANCHES,
+        TAXONOMIES,
+    	'AZ' as PLATFORM,
+    	'EU' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('az_db_usage_eu','db_usage_eu_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('az_db_usage_eu','db_usage_eu_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        NAME,
+        UID,
+        STACKS,
+        USERS,
+        CONTENT_TYPES,
+        ENTRIES,
+        ROLES,
+        ASSETS,
+        LOCALES,
+        ENVIRONMENTS,
+        SAVED_SEARCHES,
+        GLOBAL_FIELDS,
+        EXTENSIONS,
+        WEBHOOKS,
+        PURCHASED_APIBANDWIDTH,
+        PURCHASED_APIREQUESTS,
+        PURCHASED_DIGITALPROPERTIES,
+        PURCHASED_ROLES,
+        PURCHASED_USERS,
+        PURCHASED_STACKS,
+        PURCHASED_CONTENT_TYPES,
+        PURCHASED_ASSETS,
+        PURCHASED_ENTRIES,
+        PURCHASED_ENVIRONMENTS,
+        PURCHASED_GLOBAL_FIELDS,
+        PURCHASED_LOCALES,
+        DATE,
+        IS_OVER_USAGE_ALLOWED,
+        TERMS,
+        BRANCHES,
+        TAXONOMIES,
+    	'GCP' as PLATFORM,
+    	'NA' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('gcp_db_usage_na','db_usage_na_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('gcp_db_usage_na','db_usage_na_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        NAME,
+        UID,
+        STACKS,
+        USERS,
+        CONTENT_TYPES,
+        ENTRIES,
+        ROLES,
+        ASSETS,
+        LOCALES,
+        ENVIRONMENTS,
+        SAVED_SEARCHES,
+        GLOBAL_FIELDS,
+        EXTENSIONS,
+        WEBHOOKS,
+        PURCHASED_APIBANDWIDTH,
+        PURCHASED_APIREQUESTS,
+        PURCHASED_DIGITALPROPERTIES,
+        PURCHASED_ROLES,
+        PURCHASED_USERS,
+        PURCHASED_STACKS,
+        PURCHASED_CONTENT_TYPES,
+        PURCHASED_ASSETS,
+        PURCHASED_ENTRIES,
+        PURCHASED_ENVIRONMENTS,
+        PURCHASED_GLOBAL_FIELDS,
+        PURCHASED_LOCALES,
+        DATE,
+        IS_OVER_USAGE_ALLOWED,
+        TERMS,
+        BRANCHES,
+        TAXONOMIES,
+    	'GCP' as PLATFORM,
+    	'EU' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('gcp_db_usage_eu','db_usage_eu_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('gcp_db_usage_eu','db_usage_eu_f')}} ) 
+    )
+    where rn = 1
+  referenced_by: [ int_summary_db_usage ]

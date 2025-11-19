@@ -1,0 +1,14 @@
+# Reference this view as staging__lead_conversion_rate
+schema: STAGING
+table_name: LEAD_CONVERSION_RATE
+
+dimensions:
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  lead_conversion_rate:
+    sql: '"LEAD_CONVERSION_RATE"'
+
+measures:
+  count:
+    aggregate_type: count

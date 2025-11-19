@@ -1,0 +1,13 @@
+# Reference this view as omni_dbt__int_salesforce__date_spine
+schema_label: ""
+
+schema: omni_dbt
+table_name: INT_SALESFORCE__DATE_SPINE
+
+dimensions:
+  date_day:
+    sql: '"DATE_DAY"'
+
+measures:
+  count:
+    aggregate_type: count

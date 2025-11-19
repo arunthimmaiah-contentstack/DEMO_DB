@@ -1,0 +1,121 @@
+# Reference this view as staging__salesforce__contact_enhanced
+schema: STAGING
+table_name: SALESFORCE__CONTACT_ENHANCED
+
+dimensions:
+  contact_id:
+    sql: '"CONTACT_ID"'
+    format: ID
+
+  contact_name:
+    sql: '"CONTACT_NAME"'
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  department:
+    sql: '"DEPARTMENT"'
+
+  contact_description:
+    sql: '"CONTACT_DESCRIPTION"'
+
+  email:
+    sql: '"EMAIL"'
+
+  individual_id:
+    sql: '"INDIVIDUAL_ID"'
+    format: ID
+
+  contact_is_deleted:
+    sql: '"CONTACT_IS_DELETED"'
+
+  last_activity_date:
+    sql: '"LAST_ACTIVITY_DATE"'
+
+  lead_source:
+    sql: '"LEAD_SOURCE"'
+
+  mailing_city:
+    sql: '"MAILING_CITY"'
+
+  mailing_country:
+    sql: '"MAILING_COUNTRY"'
+
+  mailing_country_code:
+    sql: '"MAILING_COUNTRY_CODE"'
+
+  mailing_postal_code:
+    sql: '"MAILING_POSTAL_CODE"'
+
+  mailing_state:
+    sql: '"MAILING_STATE"'
+
+  mailing_state_code:
+    sql: '"MAILING_STATE_CODE"'
+
+  mailing_street:
+    sql: '"MAILING_STREET"'
+
+  master_record_id:
+    sql: '"MASTER_RECORD_ID"'
+    format: ID
+
+  mobile_phone:
+    sql: '"MOBILE_PHONE"'
+
+  contact_owner_id:
+    sql: '"CONTACT_OWNER_ID"'
+    format: ID
+
+  phone:
+    sql: '"PHONE"'
+
+  reports_to_id:
+    sql: '"REPORTS_TO_ID"'
+    format: ID
+
+  contact_owner_name:
+    sql: '"CONTACT_OWNER_NAME"'
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  account_number:
+    sql: '"ACCOUNT_NUMBER"'
+
+  account_source:
+    sql: '"ACCOUNT_SOURCE"'
+
+  account_annual_revenue:
+    sql: '"ACCOUNT_ANNUAL_REVENUE"'
+
+  account_description:
+    sql: '"ACCOUNT_DESCRIPTION"'
+
+  account_industry:
+    sql: '"ACCOUNT_INDUSTRY"'
+
+  account_is_deleted:
+    sql: '"ACCOUNT_IS_DELETED"'
+
+  account_number_of_employees:
+    sql: '"ACCOUNT_NUMBER_OF_EMPLOYEES"'
+
+  account_owner_id:
+    sql: '"ACCOUNT_OWNER_ID"'
+    format: ID
+
+  account_parent_id:
+    sql: '"ACCOUNT_PARENT_ID"'
+    format: ID
+
+  account_rating:
+    sql: '"ACCOUNT_RATING"'
+
+  account_type:
+    sql: '"ACCOUNT_TYPE"'
+
+measures:
+  count:
+    aggregate_type: count

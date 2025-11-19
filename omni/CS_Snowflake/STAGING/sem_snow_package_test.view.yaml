@@ -1,0 +1,26 @@
+# Reference this view as staging__sem_snow_package_test
+schema: STAGING
+table_name: SEM_SNOW_PACKAGE_TEST
+
+dimensions:
+  stage_name:
+    sql: '"STAGE_NAME"'
+
+  type:
+    sql: '"TYPE"'
+
+  owner_region:
+    sql: '"OWNER_REGION"'
+
+  total_pipeline:
+    sql: '"TOTAL_PIPELINE"'
+
+  closed_won_bookings:
+    sql: '"CLOSED_WON_BOOKINGS"'
+
+  win_rate:
+    sql: '"WIN_RATE"'
+
+measures:
+  count:
+    aggregate_type: count

@@ -1,0 +1,90 @@
+# Reference this view as omni_dbt_staging__stg_salesforce__subscription
+schema_label: ""
+#This description was pulled from dbt.
+description: |
+  Staging model for Salesforce Subscriptions. This model selects and renames key fields from the Salesforce 'sbqq_subscription_c' source table, filtering out deleted records. It provides details on subscription attributes, billing, discounts, and account associations for downstream analytics.
+
+schema: omni_dbt_staging
+table_name: STG_SALESFORCE__SUBSCRIPTION
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Salesforce ID of the subscription.
+    primary_key: true
+
+  name:
+    sql: '"NAME"'
+    #This description was pulled from dbt.
+    description: Name of the subscription.
+
+  currency_iso_code:
+    sql: '"CURRENCY_ISO_CODE"'
+    #This description was pulled from dbt.
+    description: Currency ISO code for the subscription.
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+    #This description was pulled from dbt.
+    description: Timestamp when the subscription was last modified.
+
+  created_date:
+    sql: '"CREATED_DATE"'
+    #This description was pulled from dbt.
+    description: Timestamp when the subscription was created.
+
+  sbqq_account:
+    sql: '"SBQQ_ACCOUNT"'
+    #This description was pulled from dbt.
+    description: "Custom field: Associated account for the subscription."
+
+  sbqq_additional_discount_amount:
+    sql: '"SBQQ_ADDITIONAL_DISCOUNT_AMOUNT"'
+    #This description was pulled from dbt.
+    description: "Custom field: Additional discount amount applied to the subscription."
+
+  sbqq_billing_frequency:
+    sql: '"SBQQ_BILLING_FREQUENCY"'
+    #This description was pulled from dbt.
+    description: "Custom field: Billing frequency for the subscription."
+
+  sbqq_bundled:
+    sql: '"SBQQ_BUNDLED"'
+    #This description was pulled from dbt.
+    description: "Custom field: Indicates if the subscription is bundled."
+
+  sbqq_bundled_quantity:
+    sql: '"SBQQ_BUNDLED_QUANTITY"'
+    #This description was pulled from dbt.
+    description: "Custom field: Quantity of bundled items in the subscription."
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__subscription
+  target_schema: STAGING
+  description: |
+    Staging model for Salesforce Subscriptions. This model selects and renames key fields from the Salesforce 'sbqq_subscription_c' source table, filtering out deleted records. It provides details on subscription attributes, billing, discounts, and account associations for downstream analytics.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    select
+        id,
+        name,
+        currency_iso_code,
+        last_modified_date,
+        created_date,
+        sbqq_account_c as sbqq_account,
+        sbqq_additional_discount_amount_c as sbqq_additional_discount_amount,
+        sbqq_billing_frequency_c as sbqq_billing_frequency,
+        sbqq_bundled_c as sbqq_bundled,
+        sbqq_bundled_quantity_c as sbqq_bundled_quantity
+    from {{source('sfdc_subscription','sbqq_subscription_c')}}
+    where 1=1
+        and is_deleted = 'false'

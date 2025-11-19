@@ -1,0 +1,45 @@
+# Reference this view as staging__fct_hard_coded_references
+#This description was pulled from dbt.
+description: This table shows each model that has hard coded references.
+
+schema: STAGING
+table_name: FCT_HARD_CODED_REFERENCES
+
+dimensions:
+  model:
+    sql: '"MODEL"'
+
+  hard_coded_references:
+    sql: '"HARD_CODED_REFERENCES"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_hard_coded_references
+  target_schema: STAGING
+  description: This table shows each model that has hard coded references.
+  config:
+    materialized: table
+  code: |-
+    -- this model finds cases where a model has hard coded references
+
+    with models as (
+        select * from {{ ref('int_all_graph_resources') }}
+        where resource_type = 'model'
+        and not is_excluded
+    ),
+
+    final as (
+        select
+            resource_name as model,
+            hard_coded_references
+        from models
+        where hard_coded_references != ''
+    )
+
+    select * from final
+
+    {{ filter_exceptions() }}

@@ -1,0 +1,121 @@
+# Reference this view as staging__stg_analytics__sa_all_organizations_a
+schema: STAGING
+table_name: STG_ANALYTICS__SA_ALL_ORGANIZATIONS_A
+
+dimensions:
+  uid:
+    sql: '"UID"'
+
+  name:
+    sql: '"NAME"'
+
+  plan_id:
+    sql: '"PLAN_ID"'
+    format: ID
+
+  owner:
+    sql: '"OWNER"'
+
+  created_at:
+    sql: '"CREATED_AT"'
+
+  expires_on:
+    sql: '"EXPIRES_ON"'
+
+  is_over_usage_allowed:
+    sql: '"IS_OVER_USAGE_ALLOWED"'
+
+  enabled:
+    sql: '"ENABLED"'
+
+  created_by:
+    sql: '"CREATED_BY"'
+
+  deleted_at:
+    sql: '"DELETED_AT"'
+
+  cluster:
+    sql: '"CLUSTER"'
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  updated_at:
+    sql: '"UPDATED_AT"'
+
+  tags:
+    sql: '"TAGS"'
+
+  updated_by:
+    sql: '"UPDATED_BY"'
+
+  settings:
+    sql: '"SETTINGS"'
+
+  sso_enforced:
+    sql: '"SSO_ENFORCED"'
+
+  sso_enabled:
+    sql: '"SSO_ENABLED"'
+
+  twofa_enabled:
+    sql: '"TWOFA_ENABLED"'
+
+  location:
+    sql: '"LOCATION"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_analytics__sa_all_organizations_a
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with 
+
+    source as (
+
+        select * from {{ source('analytics', 'sa_all_organizations_a') }}
+
+    ),
+
+    renamed as (
+
+        select
+            uid,
+            name,
+            plan_id,
+            owner,
+            created_at,
+            expires_on,
+            is_over_usage_allowed,
+            enabled,
+            created_by,
+            deleted_at,
+            cluster,
+            account_id,
+            updated_at,
+            tags,
+            updated_by,
+            settings,
+            sso_enforced,
+            sso_enabled,
+            twofa_enabled,
+            location,
+            platform
+
+        from source
+
+    )
+
+    select * from renamed
+  referenced_by: [ dbt_query_refactoring ]

@@ -1,0 +1,83 @@
+# Reference this view as omni_dbt__dim_date
+schema_label: ""
+
+schema: omni_dbt
+table_name: DIM_DATE
+
+dimensions:
+  date_id:
+    sql: '"DATE_ID"'
+    format: ID
+
+  year:
+    sql: '"YEAR"'
+
+  quarter:
+    sql: '"QUARTER"'
+
+  month:
+    sql: '"MONTH"'
+
+  week:
+    sql: '"WEEK"'
+
+  day_of_month:
+    sql: '"DAY_OF_MONTH"'
+
+  day_of_week:
+    sql: '"DAY_OF_WEEK"'
+
+  year_label:
+    sql: '"YEAR_LABEL"'
+
+  quarter_label:
+    sql: '"QUARTER_LABEL"'
+
+  month_label:
+    sql: '"MONTH_LABEL"'
+
+  date_label:
+    sql: '"DATE_LABEL"'
+
+  quarter_start_date:
+    sql: '"QUARTER_START_DATE"'
+
+  month_start_date:
+    sql: '"MONTH_START_DATE"'
+
+  week_start_date:
+    sql: '"WEEK_START_DATE"'
+
+  cal_year:
+    sql: '"CAL_YEAR"'
+
+  cal_month:
+    sql: '"CAL_MONTH"'
+
+  fiscal_month_in_year:
+    sql: '"FISCAL_MONTH_IN_YEAR"'
+
+  fiscal_quarter:
+    sql: '"FISCAL_QUARTER"'
+
+  fiscal_year:
+    sql: '"FISCAL_YEAR"'
+
+  fiscal_year_label:
+    sql: '"FISCAL_YEAR_LABEL"'
+
+  fiscal_quarter_label:
+    sql: '"FISCAL_QUARTER_LABEL"'
+
+  fiscal_year_start_calendar_year:
+    sql: '"FISCAL_YEAR_START_CALENDAR_YEAR"'
+
+  fiscal_year_start_date:
+    sql: '"FISCAL_YEAR_START_DATE"'
+
+  fiscal_year_end_date:
+    sql: '"FISCAL_YEAR_END_DATE"'
+
+measures:
+  count:
+    aggregate_type: count

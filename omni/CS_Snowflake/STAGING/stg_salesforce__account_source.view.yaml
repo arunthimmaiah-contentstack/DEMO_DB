@@ -1,0 +1,21 @@
+# Reference this view as staging__stg_salesforce__account_source
+schema: STAGING
+table_name: STG_SALESFORCE__ACCOUNT_SOURCE
+
+dimensions:
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  name:
+    sql: '"NAME"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+measures:
+  count:
+    aggregate_type: count

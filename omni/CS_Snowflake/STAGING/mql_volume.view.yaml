@@ -1,0 +1,100 @@
+# Reference this view as staging__mql_volume
+schema: STAGING
+table_name: MQL_VOLUME
+
+dimensions:
+  metric_name:
+    sql: '"METRIC_NAME"'
+
+  object:
+    sql: '"OBJECT"'
+
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  product:
+    sql: '"PRODUCT"'
+
+  customer_designation:
+    sql: '"CUSTOMER_DESIGNATION"'
+
+  product_deal_percentage:
+    sql: '"PRODUCT_DEAL_PERCENTAGE"'
+
+  metric_date_1:
+    sql: '"METRIC_DATE_1"'
+
+  metric_date_2:
+    sql: '"METRIC_DATE_2"'
+
+  metric_measure_1:
+    sql: '"METRIC_MEASURE_1"'
+
+  metric_measure_2:
+    sql: '"METRIC_MEASURE_2"'
+
+  metric_measure_3:
+    sql: '"METRIC_MEASURE_3"'
+
+  geo_c:
+    sql: '"GEO_C"'
+
+  region:
+    sql: '"REGION"'
+
+  sub_region:
+    sql: '"SUB_REGION"'
+
+  revenue:
+    sql: '"REVENUE"'
+
+  company_size:
+    sql: '"COMPANY_SIZE"'
+
+  record_type:
+    sql: '"RECORD_TYPE"'
+
+  leadsource:
+    sql: '"LEADSOURCE"'
+
+  motion:
+    sql: '"MOTION"'
+
+  sub_motion:
+    sql: '"SUB_MOTION"'
+
+  opp_type:
+    sql: '"OPP_TYPE"'
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  matched_account_tier_ld:
+    sql: '"MATCHED_ACCOUNT_TIER_LD"'
+
+  account_tier:
+    sql: '"ACCOUNT_TIER"'
+
+  deployment_status_c:
+    sql: '"DEPLOYMENT_STATUS_C"'
+
+  type:
+    sql: '"TYPE"'
+
+  sync_date:
+    sql: '"SYNC_DATE"'
+
+  sales_motion:
+    sql: '"SALES_MOTION"'
+
+  expansion_sales_motion:
+    sql: '"EXPANSION_SALES_MOTION"'
+
+  demand_bucket:
+    sql: '"DEMAND_BUCKET"'
+
+measures:
+  count:
+    aggregate_type: count

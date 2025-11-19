@@ -1,0 +1,116 @@
+# Reference this view as omni_dbt_staging__academy_user_learning_paths
+schema_label: ""
+
+schema: omni_dbt_staging
+table_name: ACADEMY_USER_LEARNING_PATHS
+
+dimensions:
+  data_sync_date:
+    sql: '"DATA_SYNC_DATE"'
+
+  uid:
+    sql: '"UID"'
+
+  date_enrolled:
+    sql: '"DATE_ENROLLED"'
+
+  course_id:
+    sql: '"COURSE_ID"'
+    format: ID
+
+  course_name:
+    sql: '"COURSE_NAME"'
+
+  is_bookmarked:
+    sql: '"IS_BOOKMARKED"'
+
+  is_liked:
+    sql: '"IS_LIKED"'
+
+  is_subscribed:
+    sql: '"IS_SUBSCRIBED"'
+
+  last_viewed:
+    sql: '"LAST_VIEWED"'
+
+  assessment_last_attempted_at:
+    sql: '"ASSESSMENT_LAST_ATTEMPTED_AT"'
+
+  assessment_max_percentage_achieved:
+    sql: '"ASSESSMENT_MAX_PERCENTAGE_ACHIEVED"'
+
+  assessment_total_attempts:
+    sql: '"ASSESSMENT_TOTAL_ATTEMPTS"'
+
+  completed_at:
+    sql: '"COMPLETED_AT"'
+
+  has_started:
+    sql: '"HAS_STARTED"'
+
+  is_completed:
+    sql: '"IS_COMPLETED"'
+
+  is_learning_material_completed:
+    sql: '"IS_LEARNING_MATERIAL_COMPLETED"'
+
+  percentage_completed:
+    sql: '"PERCENTAGE_COMPLETED"'
+
+  updated_at:
+    sql: '"UPDATED_AT"'
+
+  company:
+    sql: '"COMPANY"'
+
+  email:
+    sql: '"EMAIL"'
+
+  first_name:
+    sql: '"FIRST_NAME"'
+
+  last_name:
+    sql: '"LAST_NAME"'
+
+  user_uid:
+    sql: '"USER_UID"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: academy_user_learning_paths
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    select
+        CONVERT_TIMEZONE('UTC', 'America/Los_Angeles', current_timestamp()::timestamp_ntz) AS data_sync_date,
+        REPLACE(user_learning_path:uid::string, '"', '') AS uid,
+        replace(user_learning_path:createdAt, '"', '') as date_enrolled,
+        replace(user_learning_path:entryUid:entryMetadata:entryUid, '"','') as course_id,
+        replace(user_learning_path:entryUid:entryMetadata:title,'"','') as course_name,
+        user_learning_path:isBookmarked as is_bookmarked,
+        user_learning_path:isLiked as is_liked,
+        user_learning_path:isSubscribed as is_subscribed,
+        replace(user_learning_path:lastViewedAt, '"','') as last_viewed,
+        --user_learning_path:progress:assessment:attemptLog, --placeholder for attempt logs if needed
+        user_learning_path:assessment:lastAttemptedAt as assessment_last_attempted_at,
+        coalesce(user_learning_path:assessment:maxPercentageAchieved, 0) as assessment_max_percentage_achieved,
+        coalesce(user_learning_path:assessment:totalAttempts, 0) as assessment_total_attempts,
+        replace(user_learning_path:progress:completedAt, '"','') as completed_at,
+        user_learning_path:progress:hasStarted as has_started,
+        user_learning_path:progress:isCompleted as is_completed,
+        user_learning_path:progress:isLearningMaterialCompleted as is_learning_material_completed,
+        round(user_learning_path:progress:percentage,0) as percentage_completed,
+        REPLACE(user_learning_path:updatedAt::string, '"', '') AS updated_at,
+        REPLACE(user_learning_path:userUid:company::string, '"', '') AS company,
+        REPLACE(user_learning_path:userUid:email::string, '"', '') AS email,
+        REPLACE(user_learning_path:userUid:firstName::string, '"', '') AS first_name,
+        REPLACE(user_learning_path:userUid:lastName::string, '"', '') AS last_name,
+        REPLACE(user_learning_path:userUid:uid::string, '"', '') AS user_uid
+    from {{ source('academy','academy_user_learning_path') }}
+  referenced_by: [ academy_partner_enrollments ]

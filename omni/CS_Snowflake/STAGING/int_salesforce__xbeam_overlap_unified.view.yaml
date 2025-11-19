@@ -1,0 +1,146 @@
+# Reference this view as staging__int_salesforce__xbeam_overlap_unified
+#This description was pulled from dbt.
+description: |
+  Crossbeam overlap model mapping partner and customer accounts with overlap status for identifying joint customers.
+
+schema: STAGING
+table_name: INT_SALESFORCE__XBEAM_OVERLAP_UNIFIED
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Unique identifier for Crossbeam overlap record.
+    primary_key: true
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+    #This description was pulled from dbt.
+    description: Indicates if overlap record was deleted.
+
+  name:
+    sql: '"NAME"'
+
+  currency_iso_code:
+    sql: '"CURRENCY_ISO_CODE"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+
+  system_modstamp:
+    sql: '"SYSTEM_MODSTAMP"'
+
+  xbeamprod_account_c:
+    sql: '"XBEAMPROD_ACCOUNT_C"'
+
+  xbeamprod_crossbeam_eid_c:
+    sql: '"XBEAMPROD_CROSSBEAM_EID_C"'
+
+  xbeamprod_lead_c:
+    sql: '"XBEAMPROD_LEAD_C"'
+
+  xbeamprod_opportunity_c:
+    sql: '"XBEAMPROD_OPPORTUNITY_C"'
+
+  xbeamprod_partner_name_c:
+    sql: '"XBEAMPROD_PARTNER_NAME_C"'
+
+  xbeamprod_partner_populations_c:
+    sql: '"XBEAMPROD_PARTNER_POPULATIONS_C"'
+
+  xbeamprod_partner_record_name_c:
+    sql: '"XBEAMPROD_PARTNER_RECORD_NAME_C"'
+
+  xbeamprod_partner_record_owner_email_c:
+    sql: '"XBEAMPROD_PARTNER_RECORD_OWNER_EMAIL_C"'
+
+  xbeamprod_partner_record_owner_name_c:
+    sql: '"XBEAMPROD_PARTNER_RECORD_OWNER_NAME_C"'
+
+  xbeamprod_partner_record_owner_phone_c:
+    sql: '"XBEAMPROD_PARTNER_RECORD_OWNER_PHONE_C"'
+
+  xbeamprod_partner_standard_populations_c:
+    sql: '"XBEAMPROD_PARTNER_STANDARD_POPULATIONS_C"'
+
+  xbeamprod_populations_c:
+    sql: '"XBEAMPROD_POPULATIONS_C"'
+
+  xbeamprod_standard_populations_c:
+    sql: '"XBEAMPROD_STANDARD_POPULATIONS_C"'
+
+  xbeamprod_partner_record_country_c:
+    sql: '"XBEAMPROD_PARTNER_RECORD_COUNTRY_C"'
+
+  xbeamprod_partner_record_employees_c:
+    sql: '"XBEAMPROD_PARTNER_RECORD_EMPLOYEES_C"'
+
+  xbeamprod_partner_record_industry_c:
+    sql: '"XBEAMPROD_PARTNER_RECORD_INDUSTRY_C"'
+
+  xbeamprod_partner_record_owner_title_c:
+    sql: '"XBEAMPROD_PARTNER_RECORD_OWNER_TITLE_C"'
+
+  xbeamprod_partner_record_type_c:
+    sql: '"XBEAMPROD_PARTNER_RECORD_TYPE_C"'
+
+  xbeamprod_partner_record_website_c:
+    sql: '"XBEAMPROD_PARTNER_RECORD_WEBSITE_C"'
+
+  account_owner_c:
+    sql: '"ACCOUNT_OWNER_C"'
+
+  account_tier_c:
+    sql: '"ACCOUNT_TIER_C"'
+
+  partner_account_c:
+    sql: '"PARTNER_ACCOUNT_C"'
+
+  _fivetran_deleted:
+    sql: '"_FIVETRAN_DELETED"'
+    hidden: true
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: int_salesforce__xbeam_overlap_unified
+  target_schema: STAGING
+  description: |
+    Crossbeam overlap model mapping partner and customer accounts with overlap status for identifying joint customers.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    {{ config(materialized='view') }}
+
+    with xbeam_overlap as (
+        select * from {{ ref('stg_salesforce__xbeam_overlap') }}
+    )
+
+    select
+        *
+    from xbeam_overlap
+  referenced_by: [ fct_partner360_summary ]

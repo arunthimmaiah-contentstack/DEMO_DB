@@ -1,0 +1,50 @@
+# Reference this view as staging__fct_undocumented_models
+#This description was pulled from dbt.
+description: |
+  This model contains all models that do not have a description configured in a YML file. 
+
+schema: STAGING
+table_name: FCT_UNDOCUMENTED_MODELS
+
+dimensions:
+  resource_name:
+    sql: '"RESOURCE_NAME"'
+
+  model_type:
+    sql: '"MODEL_TYPE"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_undocumented_models
+  target_schema: STAGING
+  description: |
+    This model contains all models that do not have a description configured in a YML file. 
+  config:
+    materialized: view
+  code: |-
+    with
+
+    all_resources as (
+        select * from {{ ref('int_all_graph_resources') }}
+        where not is_excluded
+
+    ),
+
+    final as (
+
+        select
+            resource_name,
+            model_type
+
+        from all_resources
+        where not is_described and resource_type = 'model'
+
+    )
+
+    select * from final
+
+    {{ filter_exceptions() }}

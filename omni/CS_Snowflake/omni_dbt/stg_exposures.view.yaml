@@ -1,0 +1,88 @@
+# Reference this view as omni_dbt__stg_exposures
+schema_label: ""
+
+schema: omni_dbt
+table_name: STG_EXPOSURES
+
+dimensions:
+  unique_id:
+    sql: '"UNIQUE_ID"'
+    format: ID
+
+  name:
+    sql: '"NAME"'
+
+  resource_type:
+    sql: '"RESOURCE_TYPE"'
+
+  file_path:
+    sql: '"FILE_PATH"'
+
+  is_described:
+    sql: '"IS_DESCRIBED"'
+
+  exposure_type:
+    sql: '"EXPOSURE_TYPE"'
+
+  maturity:
+    sql: '"MATURITY"'
+
+  package_name:
+    sql: '"PACKAGE_NAME"'
+
+  url:
+    sql: '"URL"'
+
+  owner_name:
+    sql: '"OWNER_NAME"'
+
+  owner_email:
+    sql: '"OWNER_EMAIL"'
+
+  meta:
+    sql: '"META"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_exposures
+  target_schema: STAGING
+  config:
+    materialized: table
+  code: |-
+    {{
+        config(
+            materialized='table',
+            post_hook="{{ insert_resources_from_graph(this, resource_type='exposures') }}"
+        )
+    }}
+
+    {% if execute %}
+        {{ check_model_is_table(model) }}
+    {% endif %}
+    /* Bigquery won't let us `where` without `from` so we use this workaround */
+    with dummy_cte as (
+        select 1 as foo
+    )
+
+    select 
+
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as unique_id,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as name,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as resource_type,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as file_path,
+        cast(True as {{ dbt.type_boolean() }}) as is_described,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as exposure_type,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as maturity,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as package_name,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as url,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as owner_name,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as owner_email,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as meta
+
+    from dummy_cte
+    where false
+  referenced_by: [ int_all_graph_resources ]

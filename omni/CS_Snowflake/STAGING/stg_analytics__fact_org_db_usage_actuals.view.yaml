@@ -1,0 +1,167 @@
+# Reference this view as staging__stg_analytics__fact_org_db_usage_actuals
+schema: STAGING
+table_name: STG_ANALYTICS__FACT_ORG_DB_USAGE_ACTUALS
+
+dimensions:
+  name:
+    sql: '"NAME"'
+
+  uid:
+    sql: '"UID"'
+
+  stacks:
+    sql: '"STACKS"'
+
+  users:
+    sql: '"USERS"'
+
+  content_types:
+    sql: '"CONTENT_TYPES"'
+
+  entries:
+    sql: '"ENTRIES"'
+
+  roles:
+    sql: '"ROLES"'
+
+  assets:
+    sql: '"ASSETS"'
+
+  locales:
+    sql: '"LOCALES"'
+
+  environments:
+    sql: '"ENVIRONMENTS"'
+
+  saved_searches:
+    sql: '"SAVED_SEARCHES"'
+
+  global_fields:
+    sql: '"GLOBAL_FIELDS"'
+
+  extensions:
+    sql: '"EXTENSIONS"'
+
+  webhooks:
+    sql: '"WEBHOOKS"'
+
+  purchased_users:
+    sql: '"PURCHASED_USERS"'
+
+  purchased_stacks:
+    sql: '"PURCHASED_STACKS"'
+
+  purchased_content_types:
+    sql: '"PURCHASED_CONTENT_TYPES"'
+
+  purchased_global_fields:
+    sql: '"PURCHASED_GLOBAL_FIELDS"'
+
+  purchased_assets:
+    sql: '"PURCHASED_ASSETS"'
+
+  purchased_entries:
+    sql: '"PURCHASED_ENTRIES"'
+
+  purchased_environments:
+    sql: '"PURCHASED_ENVIRONMENTS"'
+
+  purchased_locales:
+    sql: '"PURCHASED_LOCALES"'
+
+  purchased_apibandwidth:
+    sql: '"PURCHASED_APIBANDWIDTH"'
+
+  purchased_apirequests:
+    sql: '"PURCHASED_APIREQUESTS"'
+
+  purchased_digitalproperties:
+    sql: '"PURCHASED_DIGITALPROPERTIES"'
+
+  purchased_roles:
+    sql: '"PURCHASED_ROLES"'
+
+  date:
+    sql: '"DATE"'
+
+  is_over_usage_allowed:
+    sql: '"IS_OVER_USAGE_ALLOWED"'
+
+  terms:
+    sql: '"TERMS"'
+
+  branches:
+    sql: '"BRANCHES"'
+
+  taxonomies:
+    sql: '"TAXONOMIES"'
+
+  location:
+    sql: '"LOCATION"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_analytics__fact_org_db_usage_actuals
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with 
+
+    source as (
+
+        select * from {{ source('analytics', 'fact_org_db_usage_actuals') }}
+
+    ),
+
+    renamed as (
+
+        select
+            name,
+            uid,
+            stacks,
+            users,
+            content_types,
+            entries,
+            roles,
+            assets,
+            locales,
+            environments,
+            saved_searches,
+            global_fields,
+            extensions,
+            webhooks,
+            purchased_users,
+            purchased_stacks,
+            purchased_content_types,
+            purchased_global_fields,
+            purchased_assets,
+            purchased_entries,
+            purchased_environments,
+            purchased_locales,
+            purchased_apibandwidth,
+            purchased_apirequests,
+            purchased_digitalproperties,
+            purchased_roles,
+            date,
+            is_over_usage_allowed,
+            terms,
+            branches,
+            taxonomies,
+            location,
+            platform
+
+        from source
+
+    )
+
+    select * from renamed
+  referenced_by: [ dbt_query_refactoring, int_org_usage_with_accounts ]

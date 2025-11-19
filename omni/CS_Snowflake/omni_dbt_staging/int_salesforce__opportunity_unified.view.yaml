@@ -1,0 +1,329 @@
+# Reference this view as omni_dbt_staging__int_salesforce__opportunity_unified
+schema_label: ""
+#This description was pulled from dbt.
+description: |
+  Unified Salesforce Opportunity model combining base opportunity, finance, and related reference data. Used for opportunity-level analytics across Co-Sell, Sourced, and Partner-Influenced metrics.
+
+schema: omni_dbt_staging
+table_name: INT_SALESFORCE__OPPORTUNITY_UNIFIED
+
+dimensions:
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Primary key for opportunity records.
+
+  opportunity_name:
+    sql: '"OPPORTUNITY_NAME"'
+    #This description was pulled from dbt.
+    description: Opportunity name from Salesforce.
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Foreign key linking to the Account model.
+
+  contact_id:
+    sql: '"CONTACT_ID"'
+    format: ID
+
+  is_won:
+    sql: '"IS_WON"'
+
+  is_closed:
+    sql: '"IS_CLOSED"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+    #This description was pulled from dbt.
+    description: Boolean flag indicating if the record is deleted in Salesforce.
+
+  opportunity_description:
+    sql: '"OPPORTUNITY_DESCRIPTION"'
+
+  opportunity_stage_name:
+    sql: '"OPPORTUNITY_STAGE_NAME"'
+    #This description was pulled from dbt.
+    description: Stage of the opportunity (e.g., Closed Won, Pipeline).
+
+  opportunity_created_date:
+    sql: '"OPPORTUNITY_CREATED_DATE"'
+    #This description was pulled from dbt.
+    description: Opportunity creation date in Salesforce.
+
+  opportunity_close_date:
+    sql: '"OPPORTUNITY_CLOSE_DATE"'
+    #This description was pulled from dbt.
+    description: Opportunity close date (actual or forecasted).
+
+  opportunity_last_activity_date:
+    sql: '"OPPORTUNITY_LAST_ACTIVITY_DATE"'
+
+  license_start_c:
+    sql: '"LICENSE_START_C"'
+
+  license_end_c:
+    sql: '"LICENSE_END_C"'
+
+  opportunity_type:
+    sql: '"OPPORTUNITY_TYPE"'
+
+  contraction_amount_c:
+    sql: '"CONTRACTION_AMOUNT_C"'
+
+  fiscal_quarter:
+    sql: '"FISCAL_QUARTER"'
+
+  fiscal_year:
+    sql: '"FISCAL_YEAR"'
+
+  lead_source:
+    sql: '"LEAD_SOURCE"'
+
+  probability:
+    sql: '"PROBABILITY"'
+
+  amount:
+    sql: '"AMOUNT"'
+
+  total_original_piped_amount_c:
+    sql: '"TOTAL_ORIGINAL_PIPED_AMOUNT_C"'
+
+  opp_expansion_bookings_c:
+    sql: '"OPP_EXPANSION_BOOKINGS_C"'
+
+  opportunity_lead_source_category:
+    sql: '"OPPORTUNITY_LEAD_SOURCE_CATEGORY"'
+
+  opportunity_record_type:
+    sql: '"OPPORTUNITY_RECORD_TYPE"'
+    #This description was pulled from dbt.
+    description: Record type name (e.g., CPQ Sales, Renewal, Cross-Sell).
+
+  opportunity_owner_region:
+    sql: '"OPPORTUNITY_OWNER_REGION"'
+
+  opportunity_owner_sub_region:
+    sql: '"OPPORTUNITY_OWNER_SUB_REGION"'
+
+  opportunity_pipeline_date:
+    sql: '"OPPORTUNITY_PIPELINE_DATE"'
+
+  cms_sales_motion:
+    sql: '"CMS_SALES_MOTION"'
+
+  expansion_sales_motion:
+    sql: '"EXPANSION_SALES_MOTION"'
+
+  renewal_opt_out_date_c:
+    sql: '"RENEWAL_OPT_OUT_DATE_C"'
+
+  renewal_opp_prior_contract_end_arr_c:
+    sql: '"RENEWAL_OPP_PRIOR_CONTRACT_END_ARR_C"'
+
+  renewal_opp_prior_contract_arr_cumulative_c:
+    sql: '"RENEWAL_OPP_PRIOR_CONTRACT_ARR_CUMULATIVE_C"'
+
+  finance_product:
+    sql: '"FINANCE_PRODUCT"'
+
+  finance_customer_designation:
+    sql: '"FINANCE_CUSTOMER_DESIGNATION"'
+
+  finance_converted_total_original_piped_amount:
+    sql: '"FINANCE_CONVERTED_TOTAL_ORIGINAL_PIPED_AMOUNT"'
+    #This description was pulled from dbt.
+    description: Pipeline value in USD (converted).
+
+  finance_converted_opp_total_bookings:
+    sql: '"FINANCE_CONVERTED_OPP_TOTAL_BOOKINGS"'
+    #This description was pulled from dbt.
+    description: Booked revenue value in USD (converted).
+
+  opportunity_lost_reason:
+    sql: '"OPPORTUNITY_LOST_REASON"'
+
+  opportunity_lost_reason_other_explanation:
+    sql: '"OPPORTUNITY_LOST_REASON_OTHER_EXPLANATION"'
+
+  stage_before_lost:
+    sql: '"STAGE_BEFORE_LOST"'
+
+  date_stage_enter_closed_lost:
+    sql: '"DATE_STAGE_ENTER_CLOSED_LOST"'
+
+  cs_opportunity_owner_id:
+    sql: '"CS_OPPORTUNITY_OWNER_ID"'
+    format: ID
+
+  cs_opportunity_owner_name:
+    sql: '"CS_OPPORTUNITY_OWNER_NAME"'
+
+  cs_last_activity_date:
+    sql: '"CS_LAST_ACTIVITY_DATE"'
+
+  cs_opportunity_stage_name:
+    sql: '"CS_OPPORTUNITY_STAGE_NAME"'
+
+  cs_last_stage_change_date:
+    sql: '"CS_LAST_STAGE_CHANGE_DATE"'
+
+  cs_days_without_activity:
+    sql: '"CS_DAYS_WITHOUT_ACTIVITY"'
+
+  cs_opportunity_success_tier:
+    sql: '"CS_OPPORTUNITY_SUCCESS_TIER"'
+
+  contactrole_contact_id:
+    sql: '"CONTACTROLE_CONTACT_ID"'
+    format: ID
+
+  contactrole_role:
+    sql: '"CONTACTROLE_ROLE"'
+
+  contactrole_is_primary:
+    sql: '"CONTACTROLE_IS_PRIMARY"'
+
+  data_built_ts:
+    sql: '"DATA_BUILT_TS"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: int_salesforce__opportunity_unified
+  target_schema: STAGING
+  description: |
+    Unified Salesforce Opportunity model combining base opportunity, finance, and related reference data. Used for opportunity-level analytics across Co-Sell, Sourced, and Partner-Influenced metrics.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    {{ config(materialized='view') }}
+
+    -- Base opportunity
+    with opp as (
+        select * from {{ ref('stg_salesforce__opportunity') }}
+    ),
+
+    -- Finance details (CDP & CS segments)
+    fin as (
+        select
+            opportunity_id,
+            product,
+            customer_designation,
+            converted_total_original_piped_amount,
+            converted_opp_total_bookings
+        from {{ ref('stg_salesforce__opportunity_finance') }}
+    ),
+
+    -- Lost reason and related fields
+    lost as (
+        select
+            oppotunity_id,
+            opportunity_lost_reason,
+            opportunity_lost_reason_other_explanation,
+            stage_before_lost,
+            date_stage_enter_closed_lost
+        from {{ ref('stg_salesforce__opportunity_lost_info') }}
+    ),
+
+    -- Customer success data
+    cs as (
+        select
+            oppotunity_id,
+            opportunity_owner_id,
+            opportunity_owner_name,
+            last_activity_date,
+            opportunity_stage_name,
+            last_stage_change_date,
+            days_without_activity,
+            opportunity_success_tier
+        from {{ ref('stg_salesforce__opportunity_customer_success') }}
+    ),
+
+    -- Contact roles
+    cr as (
+        select
+            opportunity_id,
+            contact_id,
+            role,
+            is_primary
+        from {{ ref('stg_salesforce__opportunity_contactrole') }}
+    )
+
+    -- Final unified opportunity record
+    select
+        -- Primary opportunity fields
+        o.opportunity_id,
+        o.opportunity_name,
+        o.account_id,
+        o.contact_id,
+        o.is_won,
+        o.is_closed,
+        o.is_deleted,
+        o.opportunity_description,
+        o.opportunity_stage_name,
+        o.opportunity_created_date,
+        o.opportunity_close_date,
+        o.opportunity_last_activity_date,
+        o.license_start_c,
+        o.license_end_c,
+        o.opportunity_type,
+        o.contraction_amount_c,
+        o.fiscal_quarter,
+        o.fiscal_year,
+        o.lead_source,
+        o.probability,
+        o.amount,
+        o.total_original_piped_amount_c,
+        o.opp_expansion_bookings_c,
+        o.opportunity_lead_source_category,
+        o.opportunity_record_type,
+        o.opportunity_owner_region,
+        o.opportunity_owner_sub_region,
+        o.opportunity_pipeline_date,
+        o.cms_sales_motion,
+        o.expansion_sales_motion,
+        o.renewal_opt_out_date_c,
+        o.renewal_opp_prior_contract_end_arr_c,
+        o.renewal_opp_prior_contract_arr_cumulative_c,
+
+        -- Finance fields
+        f.product as finance_product,
+        f.customer_designation as finance_customer_designation,
+        f.converted_total_original_piped_amount as finance_converted_total_original_piped_amount,
+        f.converted_opp_total_bookings as finance_converted_opp_total_bookings,
+
+        -- Lost info
+        l.opportunity_lost_reason,
+        l.opportunity_lost_reason_other_explanation,
+        l.stage_before_lost,
+        l.date_stage_enter_closed_lost,
+
+        -- Customer Success info
+        c.opportunity_owner_id as cs_opportunity_owner_id,
+        c.opportunity_owner_name as cs_opportunity_owner_name,
+        c.last_activity_date as cs_last_activity_date,
+        c.opportunity_stage_name as cs_opportunity_stage_name,
+        c.last_stage_change_date as cs_last_stage_change_date,
+        c.days_without_activity as cs_days_without_activity,
+        c.opportunity_success_tier as cs_opportunity_success_tier,
+
+        -- Contact Role
+        cr.contact_id as contactrole_contact_id,
+        cr.role as contactrole_role,
+        cr.is_primary as contactrole_is_primary,
+
+        current_timestamp() as data_built_ts
+
+    from opp o
+    left join fin f on o.opportunity_id = f.opportunity_id
+    left join lost l on o.opportunity_id = l.oppotunity_id
+    left join cs c on o.opportunity_id = c.oppotunity_id
+    left join cr on o.opportunity_id = cr.opportunity_id
+  referenced_by: [ fct_partner360_summary ]

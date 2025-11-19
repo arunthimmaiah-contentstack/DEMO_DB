@@ -1,0 +1,102 @@
+# Reference this view as staging__all_users_partner
+schema: STAGING
+table_name: ALL_USERS_PARTNER
+
+dimensions:
+  source:
+    sql: '"SOURCE"'
+
+  source_file_name:
+    sql: '"SOURCE_FILE_NAME"'
+
+  file_row_number:
+    sql: '"FILE_ROW_NUMBER"'
+
+  batch_number:
+    sql: '"BATCH_NUMBER"'
+
+  data_sync_date:
+    sql: '"DATA_SYNC_DATE"'
+
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  first_name:
+    sql: '"FIRST_NAME"'
+
+  last_name:
+    sql: '"LAST_NAME"'
+
+  email:
+    sql: '"EMAIL"'
+
+  sign_in_count:
+    sql: '"SIGN_IN_COUNT"'
+
+  number_of_enrollments:
+    sql: '"NUMBER_OF_ENROLLMENTS"'
+
+  number_of_enrollments_accessed:
+    sql: '"NUMBER_OF_ENROLLMENTS_ACCESSED"'
+
+  created_at:
+    sql: '"CREATED_AT"'
+
+  last_sign_in_at:
+    sql: '"LAST_SIGN_IN_AT"'
+
+  account_expires:
+    sql: '"ACCOUNT_EXPIRES"'
+
+  sf_user_id:
+    sql: '"SF_USER_ID"'
+    format: ID
+
+  sf_contact_id:
+    sql: '"SF_CONTACT_ID"'
+    format: ID
+
+  is_salesforce_contact:
+    sql: '"IS_SALESFORCE_CONTACT"'
+
+  customdata:
+    sql: '"CUSTOMDATA"'
+
+  customdatafieldvalues:
+    sql: '"CUSTOMDATAFIELDVALUES"'
+
+  locale:
+    sql: '"LOCALE"'
+
+  enabled:
+    sql: '"ENABLED"'
+
+  user_type:
+    sql: '"USER_TYPE"'
+
+  can_enroll:
+    sql: '"CAN_ENROLL"'
+
+  can_delete_users:
+    sql: '"CAN_DELETE_USERS"'
+
+  can_unenroll_users:
+    sql: '"CAN_UNENROLL_USERS"'
+
+  can_move_groups:
+    sql: '"CAN_MOVE_GROUPS"'
+
+  can_mark_complete:
+    sql: '"CAN_MARK_COMPLETE"'
+
+  tutor_can_edit_their_courses:
+    sql: '"TUTOR_CAN_EDIT_THEIR_COURSES"'
+
+  tutor_can_create_courses:
+    sql: '"TUTOR_CAN_CREATE_COURSES"'
+
+measures:
+  count:
+    aggregate_type: count

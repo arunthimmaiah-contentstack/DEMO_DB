@@ -1,0 +1,147 @@
+# Reference this view as omni_dbt_staging__dim_quota_assignments
+schema_label: ""
+
+schema: omni_dbt_staging
+table_name: DIM_QUOTA_ASSIGNMENTS
+
+dimensions:
+  user_id:
+    sql: '"USER_ID"'
+    format: ID
+
+  user_name:
+    sql: '"USER_NAME"'
+
+  user_email:
+    sql: '"USER_EMAIL"'
+
+  quota_period:
+    sql: '"QUOTA_PERIOD"'
+
+  assigned_quota:
+    sql: '"ASSIGNED_QUOTA"'
+
+  quota_start_date:
+    sql: '"QUOTA_START_DATE"'
+
+  quota_end_date:
+    sql: '"QUOTA_END_DATE"'
+
+  manager_id:
+    sql: '"MANAGER_ID"'
+    format: ID
+
+  role_name:
+    sql: '"ROLE_NAME"'
+
+  team_name:
+    sql: '"TEAM_NAME"'
+
+  territory_name:
+    sql: '"TERRITORY_NAME"'
+
+  is_active:
+    sql: '"IS_ACTIVE"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: dim_quota_assignments
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    WITH salesforce_users AS (
+        SELECT
+            id AS user_id,
+            name AS user_name,
+            email AS user_email,
+            user_role_id,
+            manager_id,
+            is_active
+        FROM fivetran_database.salesforce.user
+        WHERE is_active = TRUE
+    ),
+
+    -- Create quarterly quota periods for active sales users
+    quota_periods AS (
+        SELECT
+            DATEADD(
+                'quarter',
+                SEQ4(),
+                DATE_TRUNC('quarter', CURRENT_DATE - INTERVAL '2 years')
+            ) AS quota_period
+        FROM table(generator(rowcount => 12)) -- Generate 3 years of quarters
+    ),
+
+    -- Assign default quotas
+    user_quotas AS (
+        SELECT
+            u.user_id,
+            u.user_name,
+            u.user_email,
+            u.user_role_id,
+            qp.quota_period,
+            qp.quota_period AS quota_start_date,
+            DATEADD('day', -1, DATEADD('quarter', 1, qp.quota_period)) AS quota_end_date,
+            u.manager_id,
+            -- Default quota assignment - adjust as needed
+            CASE
+                WHEN u.user_name ILIKE '%sales%' OR u.user_name ILIKE '%account%' THEN 1000000
+                WHEN u.user_name ILIKE '%manager%' THEN 2000000
+                ELSE 500000
+            END AS assigned_quota,
+            u.is_active
+        FROM salesforce_users u
+        CROSS JOIN quota_periods qp
+        WHERE qp.quota_period <= CURRENT_DATE
+    ),
+
+    role_hierarchy AS (
+        SELECT
+            id AS role_id,
+            name AS role_name,
+            parent_role_id
+        FROM fivetran_database.salesforce.user_role
+    ),
+
+    -- Simple team mapping
+    team_mapping AS (
+        SELECT
+            user_id,
+            CASE
+                WHEN user_name ILIKE '%enterprise%' THEN 'Enterprise Sales'
+                WHEN user_name ILIKE '%commercial%' THEN 'Commercial Sales'
+                WHEN user_name ILIKE '%inside%' THEN 'Inside Sales'
+                ELSE 'General Sales'
+            END AS team_name,
+            CASE
+                WHEN user_name ILIKE '%west%' THEN 'West'
+                WHEN user_name ILIKE '%east%' THEN 'East'
+                WHEN user_name ILIKE '%emea%' THEN 'EMEA'
+                ELSE 'North America'
+            END AS territory_name
+        FROM salesforce_users
+    )
+
+    SELECT
+        uq.user_id,
+        uq.user_name,
+        uq.user_email,
+        uq.quota_period,
+        uq.assigned_quota,
+        uq.quota_start_date,
+        uq.quota_end_date,
+        uq.manager_id,
+        COALESCE(rh.role_name, 'Sales Rep') AS role_name,
+        tm.team_name,
+        tm.territory_name,
+        uq.is_active
+    FROM user_quotas uq
+    LEFT JOIN role_hierarchy rh ON uq.user_role_id = rh.role_id
+    LEFT JOIN team_mapping tm ON uq.user_id = tm.user_id
+  referenced_by: [ fct_quota_attainment ]

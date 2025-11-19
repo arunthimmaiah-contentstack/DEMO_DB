@@ -1,0 +1,46 @@
+# Reference this view as staging__int_salesforce__currency_conversion
+#This description was pulled from dbt.
+description: |
+  Currency conversion table used for transforming pipeline and booking values from local currencies to USD for unified reporting.
+
+schema: STAGING
+table_name: INT_SALESFORCE__CURRENCY_CONVERSION
+
+dimensions:
+  iso_code:
+    sql: '"ISO_CODE"'
+    #This description was pulled from dbt.
+    description: ISO code of the currency (e.g., USD, EUR, INR).
+
+  conversion_rate:
+    sql: '"CONVERSION_RATE"'
+    #This description was pulled from dbt.
+    description: Conversion rate to USD.
+
+  start_date:
+    sql: '"START_DATE"'
+
+  next_start_date:
+    sql: '"NEXT_START_DATE"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: int_salesforce__currency_conversion
+  target_schema: STAGING
+  description: |
+    Currency conversion table used for transforming pipeline and booking values from local currencies to USD for unified reporting.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    -- models/staging/stg_dated_conversion_rate.sql
+    select
+        iso_code,
+        conversion_rate,
+        start_date,
+        next_start_date
+    from fivetran_database.salesforce.dated_conversion_rate

@@ -1,0 +1,79 @@
+# Reference this view as omni_dbt_staging__stg_salesforce__partner_accelerator
+schema_label: ""
+#This description was pulled from dbt.
+description: Staging model for Salesforce Partner Accelerator object. Cleans,
+  standardizes, and filters active partner accelerator records for downstream
+  analytics and reporting.
+
+schema: omni_dbt_staging
+table_name: STG_SALESFORCE__PARTNER_ACCELERATOR
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Unique identifier for each Partner Accelerator record.
+    primary_key: true
+
+  customer_c:
+    sql: '"CUSTOMER_C"'
+    #This description was pulled from dbt.
+    description: Customer ID associated with the Partner Accelerator record.
+
+  opportunity_c:
+    sql: '"OPPORTUNITY_C"'
+    #This description was pulled from dbt.
+    description: Opportunity ID linked to this Partner Accelerator record.
+
+  partner_solution_c:
+    sql: '"PARTNER_SOLUTION_C"'
+    #This description was pulled from dbt.
+    description: Partner solution associated with the record.
+
+  name:
+    sql: '"NAME"'
+    #This description was pulled from dbt.
+    description: Name of the Partner Accelerator record.
+
+  created_date:
+    sql: '"CREATED_DATE"'
+    #This description was pulled from dbt.
+    description: Date when the record was created in Salesforce.
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    #This description was pulled from dbt.
+    description: Timestamp indicating when the record was last synced via Fivetran.
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__partner_accelerator
+  target_schema: STAGING
+  description: Staging model for Salesforce Partner Accelerator object. Cleans,
+    standardizes, and filters active partner accelerator records for downstream
+    analytics and reporting.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('partner_accelerator', 'partner_accelerator_c') }} where is_deleted != 'true'
+    )
+
+
+    select
+        id,
+        CUSTOMER_C,
+        OPPORTUNITY_C,
+        PARTNER_SOLUTION_C,
+        NAME,
+        CREATED_DATE,
+        LAST_MODIFIED_DATE
+        _fivetran_synced
+    from source

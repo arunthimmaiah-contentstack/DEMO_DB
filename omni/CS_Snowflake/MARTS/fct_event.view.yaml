@@ -1,0 +1,52 @@
+# Reference this view as marts__fct_event
+schema: MARTS
+table_name: FCT_EVENT
+
+dimensions:
+  event_id:
+    sql: '"EVENT_ID"'
+    format: ID
+
+  subject:
+    sql: '"SUBJECT"'
+
+  activity_date:
+    sql: '"ACTIVITY_DATE"'
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_event
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    with e as (
+        select * from {{ ref('stg_salesforce__events') }}
+    ),
+    er as (
+        select * from {{ ref('dim_event_relation') }}
+    ),
+    acct as (
+        select * from {{ ref('dim_account') }}
+    )
+    select
+        e.event_id,
+        e.subject,
+        e.activity_date,
+        er.account_id,
+        acct.account_name
+    from e
+    left join er using (event_id)
+    left join acct using (account_id)

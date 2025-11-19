@@ -1,0 +1,25 @@
+# Reference this view as staging__int_opencases
+schema: STAGING
+table_name: INT_OPENCASES
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  name:
+    sql: '"NAME"'
+
+  date:
+    sql: '"DATE"'
+
+  open_cases_bugs:
+    sql: '"OPEN_CASES_BUGS"'
+
+  open_cases_break_fix:
+    sql: '"OPEN_CASES_BREAK_FIX"'
+
+measures:
+  count:
+    aggregate_type: count

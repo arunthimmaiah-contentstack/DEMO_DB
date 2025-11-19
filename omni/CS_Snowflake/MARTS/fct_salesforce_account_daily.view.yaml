@@ -1,0 +1,104 @@
+# Reference this view as marts__fct_salesforce_account_daily
+#This description was pulled from dbt.
+description: Daily account metrics fact table showing customer counts, churn,
+  prospects, and customer designation metrics
+
+schema: MARTS
+table_name: FCT_SALESFORCE_ACCOUNT_DAILY
+
+dimensions:
+  as_of_date:
+    sql: '"AS_OF_DATE"'
+
+  no_of_customers:
+    sql: '"NO_OF_CUSTOMERS"'
+    #This description was pulled from dbt.
+    description: Count of customer accounts
+
+  no_of_churned_customers:
+    sql: '"NO_OF_CHURNED_CUSTOMERS"'
+    #This description was pulled from dbt.
+    description: Count of churned accounts
+
+  no_of_cms:
+    sql: '"NO_OF_CMS"'
+
+  no_of_dxp:
+    sql: '"NO_OF_DXP"'
+
+  no_of_cdp:
+    sql: '"NO_OF_CDP"'
+
+  no_of_prospects:
+    sql: '"NO_OF_PROSPECTS"'
+    #This description was pulled from dbt.
+    description: Count of prospect accounts
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_salesforce_account_daily
+  target_schema: STAGING
+  description: Daily account metrics fact table showing customer counts, churn,
+    prospects, and customer designation metrics
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    {{ config(materialized='table') }}
+
+    with snapshot_rows as (
+        select
+            id,
+            type,
+            customer_designation_c,
+            cast(dbt_valid_from as date) as valid_from_date,
+            cast(coalesce(dbt_valid_to, dateadd(day, 1, current_date)) as date) as valid_to_date
+        from {{ ref('snp_salesforce_account_v2') }}
+    ),
+
+    bounds as (
+        select
+            min(valid_from_date) as start_day,
+            current_date as end_day
+        from snapshot_rows
+    ),
+
+    days as (
+        select s.date_day
+        from {{ ref('time_spine_daily') }} s
+        cross join bounds b
+        where s.date_day >= b.start_day
+        and s.date_day <= b.end_day
+    ),
+
+    exploded as (
+        select
+            d.date_day as as_of_date,
+            s.id,
+            s.type,
+            s.customer_designation_c
+        from days d
+        join snapshot_rows s
+          on d.date_day >= s.valid_from_date
+         and d.date_day <  s.valid_to_date
+    ),
+
+    final as (
+        select
+            as_of_date,
+            sum(case when type = 'Customer' then 1 else 0 end) as no_of_customers,
+            sum(case when type = 'Churned'  then 1 else 0 end) as no_of_churned_customers,
+            sum(case when type = 'Customer' and customer_designation_c = 'CMS' then 1 else 0 end) as no_of_cms,
+            sum(case when type = 'Customer' and customer_designation_c = 'DXP' then 1 else 0 end) as no_of_dxp,
+            sum(case when type = 'Customer' and customer_designation_c = 'CDP' then 1 else 0 end) as no_of_cdp,
+            sum(case when type = 'Prospect' then 1 else 0 end) as no_of_prospects
+        from exploded
+        group by 1
+    )
+
+    select * from final
+    order by as_of_date

@@ -1,0 +1,289 @@
+# Reference this view as staging__stg_salesforce__events
+#This description was pulled from dbt.
+description: Staging model for Salesforce Event object. Cleans, standardizes,
+  and filters active event records for downstream analytics and reporting.
+
+schema: STAGING
+table_name: STG_SALESFORCE__EVENTS
+
+dimensions:
+  event_id:
+    sql: '"EVENT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Unique identifier for the Salesforce Event record.
+
+  who_id:
+    sql: '"WHO_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: ID of the related Contact or Lead associated with the event.
+
+  what_id:
+    sql: '"WHAT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: ID of the related Account, Opportunity, or custom object associated
+      with the event.
+
+  who_count:
+    sql: '"WHO_COUNT"'
+    #This description was pulled from dbt.
+    description: Number of related contacts/leads associated with the event.
+
+  what_count:
+    sql: '"WHAT_COUNT"'
+    #This description was pulled from dbt.
+    description: Number of related objects (accounts, opportunities, etc.)
+      associated with the event.
+
+  subject:
+    sql: '"SUBJECT"'
+    #This description was pulled from dbt.
+    description: Subject or title of the event.
+
+  location:
+    sql: '"LOCATION"'
+    #This description was pulled from dbt.
+    description: Location where the event is scheduled.
+
+  is_all_day_event:
+    sql: '"IS_ALL_DAY_EVENT"'
+    #This description was pulled from dbt.
+    description: Indicates whether the event lasts all day (TRUE/FALSE).
+
+  activity_date_time:
+    sql: '"ACTIVITY_DATE_TIME"'
+    #This description was pulled from dbt.
+    description: Exact datetime of the event occurrence.
+
+  activity_date:
+    sql: '"ACTIVITY_DATE"'
+    #This description was pulled from dbt.
+    description: Date of the event.
+
+  start_date_time:
+    sql: '"START_DATE_TIME"'
+    #This description was pulled from dbt.
+    description: Event start datetime.
+
+  end_date_time:
+    sql: '"END_DATE_TIME"'
+    #This description was pulled from dbt.
+    description: Event end datetime.
+
+  end_date:
+    sql: '"END_DATE"'
+    #This description was pulled from dbt.
+    description: Event end date.
+
+  description:
+    sql: '"DESCRIPTION"'
+    #This description was pulled from dbt.
+    description: Detailed description of the event.
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: User ID of the owner of the event.
+
+  is_private:
+    sql: '"IS_PRIVATE"'
+    #This description was pulled from dbt.
+    description: Indicates whether the event is private.
+
+  is_child:
+    sql: '"IS_CHILD"'
+    #This description was pulled from dbt.
+    description: Indicates if this event is a child event.
+
+  is_group_event:
+    sql: '"IS_GROUP_EVENT"'
+    #This description was pulled from dbt.
+    description: Indicates if this event is a group event.
+
+  group_event_type:
+    sql: '"GROUP_EVENT_TYPE"'
+    #This description was pulled from dbt.
+    description: Type of group event, if applicable.
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: User ID of the creator of the event.
+
+  is_archived:
+    sql: '"IS_ARCHIVED"'
+    #This description was pulled from dbt.
+    description: Indicates whether the event is archived.
+
+  reminder_date_time:
+    sql: '"REMINDER_DATE_TIME"'
+    #This description was pulled from dbt.
+    description: Datetime for the event reminder.
+
+  is_reminder_set:
+    sql: '"IS_REMINDER_SET"'
+    #This description was pulled from dbt.
+    description: Indicates whether a reminder has been set.
+
+  event_subtype:
+    sql: '"EVENT_SUBTYPE"'
+    #This description was pulled from dbt.
+    description: Subtype of the event (meeting, call, task, etc.).
+
+  what_id_object_c:
+    sql: '"WHAT_ID_OBJECT_C"'
+    #This description was pulled from dbt.
+    description: Custom field for the related object type.
+
+  meeting_origination_c:
+    sql: '"MEETING_ORIGINATION_C"'
+    #This description was pulled from dbt.
+    description: Source from which the meeting originated.
+
+  meeting_status_c:
+    sql: '"MEETING_STATUS_C"'
+    #This description was pulled from dbt.
+    description: Status of the meeting (planned, completed, cancelled, etc.).
+
+  meeting_type_c:
+    sql: '"MEETING_TYPE_C"'
+    #This description was pulled from dbt.
+    description: Type of meeting (internal, external, etc.).
+
+  service_task_type_c:
+    sql: '"SERVICE_TASK_TYPE_C"'
+    #This description was pulled from dbt.
+    description: Service task type associated with the event.
+
+  contentstack_survey_response_c:
+    sql: '"CONTENTSTACK_SURVEY_RESPONSE_C"'
+    #This description was pulled from dbt.
+    description: Indicates any Contentstack survey response linked to the event.
+
+  meeting_rating_c:
+    sql: '"MEETING_RATING_C"'
+    #This description was pulled from dbt.
+    description: Rating of the meeting if captured.
+
+  team_c:
+    sql: '"TEAM_C"'
+    #This description was pulled from dbt.
+    description: Team associated with the event.
+
+  gong_activity_source_c:
+    sql: '"GONG_ACTIVITY_SOURCE_C"'
+    #This description was pulled from dbt.
+    description: Gong activity source linked to the event.
+
+  gong_associated_accounts_c:
+    sql: '"GONG_ASSOCIATED_ACCOUNTS_C"'
+    #This description was pulled from dbt.
+    description: Gong-associated accounts linked to the event.
+
+  gong_associated_opportunities_c:
+    sql: '"GONG_ASSOCIATED_OPPORTUNITIES_C"'
+    #This description was pulled from dbt.
+    description: Gong-associated opportunities linked to the event.
+
+  meeting_outcome_c:
+    sql: '"MEETING_OUTCOME_C"'
+    #This description was pulled from dbt.
+    description: Outcome of the meeting (won, lost, follow-up, etc.).
+
+  meeting_owner_c:
+    sql: '"MEETING_OWNER_C"'
+    #This description was pulled from dbt.
+    description: Owner of the meeting.
+
+  most_recent_campaign_c:
+    sql: '"MOST_RECENT_CAMPAIGN_C"'
+    #This description was pulled from dbt.
+    description: Most recent campaign associated with the event.
+
+  gong_call_outcome_c:
+    sql: '"GONG_CALL_OUTCOME_C"'
+    #This description was pulled from dbt.
+    description: Outcome of Gong call if applicable.
+
+  call_status_c:
+    sql: '"CALL_STATUS_C"'
+    #This description was pulled from dbt.
+    description: Status of the call (completed, scheduled, cancelled).
+
+  supporting_task_c:
+    sql: '"SUPPORTING_TASK_C"'
+    #This description was pulled from dbt.
+    description: Indicates supporting tasks linked to the event.
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    #This description was pulled from dbt.
+    description: Timestamp indicating when the record was last synced via Fivetran.
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__events
+  target_schema: STAGING
+  description: Staging model for Salesforce Event object. Cleans, standardizes,
+    and filters active event records for downstream analytics and reporting.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('events', 'event') }} where is_deleted != 'true'
+    )
+    select
+        id as event_id,
+        who_id,
+        what_id,
+        who_count,
+        what_count,
+        subject,
+        location,
+        is_all_day_event,
+        activity_date_time,
+        activity_date,
+        start_date_time,
+        end_date_time,
+        end_date,
+        description,
+        owner_id,
+        is_private,
+        is_child,
+        is_group_event,
+        group_event_type,
+        created_by_id,
+        is_archived,
+        reminder_date_time,
+        is_reminder_set,
+        event_subtype,
+        what_id_object_c,
+        meeting_origination_c,
+        meeting_status_c,
+        meeting_type_c,
+        service_task_type_c,
+        contentstack_survey_response_c,
+        meeting_rating_c,
+        team_c,
+        gong_activity_source_c,
+        gong_associated_accounts_c,
+        gong_associated_opportunities_c,
+        meeting_outcome_c,
+        meeting_owner_c,
+        most_recent_campaign_c,
+        gong_call_outcome_c,
+        call_status_c,
+        supporting_task_c,
+        _fivetran_synced
+    from source
+  referenced_by: [ fct_event ]

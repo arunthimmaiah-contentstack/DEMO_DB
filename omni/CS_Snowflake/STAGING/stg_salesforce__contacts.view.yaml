@@ -1,0 +1,97 @@
+# Reference this view as staging__stg_salesforce__contacts
+#This description was pulled from dbt.
+description: Staging model for Salesforce Contact object. Cleans, standardizes,
+  and filters active contacts for downstream analytics and reporting.
+
+schema: STAGING
+table_name: STG_SALESFORCE__CONTACTS
+
+dimensions:
+  contact_id:
+    sql: '"CONTACT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Unique Salesforce Contact ID.
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  name:
+    sql: '"NAME"'
+    #This description was pulled from dbt.
+    description: Full name of the contact.
+
+  email:
+    sql: '"EMAIL"'
+    #This description was pulled from dbt.
+    description: Email address of the contact.
+
+  title:
+    sql: '"TITLE"'
+    #This description was pulled from dbt.
+    description: Job title of the contact.
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+    #This description was pulled from dbt.
+    description: Indicates whether the contact is deleted (TRUE/FALSE).
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: User ID who created the contact record.
+
+  created_date:
+    sql: '"CREATED_DATE"'
+    #This description was pulled from dbt.
+    description: Date when the contact was created in Salesforce.
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: User ID of the owner of the contact.
+
+  last_activity_date:
+    sql: '"LAST_ACTIVITY_DATE"'
+    #This description was pulled from dbt.
+    description: Date of the last activity related to the contact.
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__contacts
+  target_schema: STAGING
+  description: Staging model for Salesforce Contact object. Cleans, standardizes,
+    and filters active contacts for downstream analytics and reporting.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('sfdc_contact', 'contact') }} where is_deleted = 'FALSE'
+    )
+
+    select
+        id as contact_id,
+        account_id,
+        name,
+        email,
+        title,
+        is_deleted,
+        created_by_id,
+        created_date,
+        owner_id,
+        last_activity_date
+    from source
+  referenced_by:
+    [
+      fct_campaign_influence,
+      academy_partner_enrollments,
+      learnupon_partner_enrollments
+    ]

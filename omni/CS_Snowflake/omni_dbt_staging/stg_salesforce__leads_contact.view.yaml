@@ -1,0 +1,103 @@
+# Reference this view as omni_dbt_staging__stg_salesforce__leads_contact
+schema_label: ""
+#This description was pulled from dbt.
+description: Staging model for Salesforce Lead object. Cleans, standardizes, and
+  filters active lead records for downstream analytics and reporting.
+
+schema: omni_dbt_staging
+table_name: STG_SALESFORCE__LEADS_CONTACT
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Composite unique identifier for the lead record (concatenation of
+      Salesforce ID and name).
+    primary_key: true
+
+  lead_id:
+    sql: '"LEAD_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Original Salesforce Lead ID.
+
+  lead_id_case_safe_c:
+    sql: '"LEAD_ID_CASE_SAFE_C"'
+    #This description was pulled from dbt.
+    description: Custom case-safe Lead ID used for mapping and joins.
+
+  name:
+    sql: '"NAME"'
+    #This description was pulled from dbt.
+    description: Full name of the lead.
+
+  city:
+    sql: '"CITY"'
+    #This description was pulled from dbt.
+    description: City of the lead.
+
+  email:
+    sql: '"EMAIL"'
+
+  country:
+    sql: '"COUNTRY"'
+    #This description was pulled from dbt.
+    description: Country of the lead.
+
+  phone:
+    sql: '"PHONE"'
+    #This description was pulled from dbt.
+    description: Phone number of the lead.
+
+  created_date:
+    sql: '"CREATED_DATE"'
+    #This description was pulled from dbt.
+    description: Date when the lead was created in Salesforce.
+
+  has_opted_out_of_email:
+    sql: '"HAS_OPTED_OUT_OF_EMAIL"'
+    #This description was pulled from dbt.
+    description: Indicates whether the lead has opted out of email communication.
+    all_values: [ "TRUE", "FALSE", "true", "false" ]
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__leads_contact
+  target_schema: STAGING
+  description: Staging model for Salesforce Lead object. Cleans, standardizes, and
+    filters active lead records for downstream analytics and reporting.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('sfdc_lead', 'lead') }} where is_deleted != 'TRUE'
+    )
+
+    select
+        concat (id,'|',name) as id,
+        id as lead_id,
+        lead_id_case_safe_c,
+        name,
+        city,
+        email,
+        country,
+        phone,
+        created_date,
+        has_opted_out_of_email
+    from source
+  referenced_by:
+    [
+      mel_volume,
+      mql_volume,
+      sal_volume,
+      sql_volume,
+      mel_to_mql_conversion,
+      mql_to_sal_conversion,
+      sal_to_sql_conversion
+    ]

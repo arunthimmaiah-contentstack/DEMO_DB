@@ -1,0 +1,118 @@
+# Reference this view as omni_dbt__stg_salesforce__account
+schema_label: ""
+
+schema: omni_dbt
+table_name: STG_SALESFORCE__ACCOUNT
+
+dimensions:
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  account_number:
+    sql: '"ACCOUNT_NUMBER"'
+
+  account_source:
+    sql: '"ACCOUNT_SOURCE"'
+
+  annual_revenue:
+    sql: '"ANNUAL_REVENUE"'
+
+  billing_city:
+    sql: '"BILLING_CITY"'
+
+  billing_country:
+    sql: '"BILLING_COUNTRY"'
+
+  billing_postal_code:
+    sql: '"BILLING_POSTAL_CODE"'
+
+  billing_state:
+    sql: '"BILLING_STATE"'
+
+  billing_state_code:
+    sql: '"BILLING_STATE_CODE"'
+
+  billing_street:
+    sql: '"BILLING_STREET"'
+
+  account_description:
+    sql: '"ACCOUNT_DESCRIPTION"'
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  industry:
+    sql: '"INDUSTRY"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  last_activity_date:
+    sql: '"LAST_ACTIVITY_DATE"'
+
+  last_referenced_date:
+    sql: '"LAST_REFERENCED_DATE"'
+
+  last_viewed_date:
+    sql: '"LAST_VIEWED_DATE"'
+
+  master_record_id:
+    sql: '"MASTER_RECORD_ID"'
+    format: ID
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  number_of_employees:
+    sql: '"NUMBER_OF_EMPLOYEES"'
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  ownership:
+    sql: '"OWNERSHIP"'
+
+  parent_id:
+    sql: '"PARENT_ID"'
+    format: ID
+
+  rating:
+    sql: '"RATING"'
+
+  record_type_id:
+    sql: '"RECORD_TYPE_ID"'
+    format: ID
+
+  shipping_city:
+    sql: '"SHIPPING_CITY"'
+
+  shipping_country:
+    sql: '"SHIPPING_COUNTRY"'
+
+  shipping_country_code:
+    sql: '"SHIPPING_COUNTRY_CODE"'
+
+  shipping_postal_code:
+    sql: '"SHIPPING_POSTAL_CODE"'
+
+  shipping_state:
+    sql: '"SHIPPING_STATE"'
+
+  shipping_state_code:
+    sql: '"SHIPPING_STATE_CODE"'
+
+  shipping_street:
+    sql: '"SHIPPING_STREET"'
+
+  type:
+    sql: '"TYPE"'
+
+  website:
+    sql: '"WEBSITE"'
+
+measures:
+  count:
+    aggregate_type: count

@@ -1,0 +1,130 @@
+# Reference this view as staging__stg_salesforce__order
+schema: STAGING
+table_name: STG_SALESFORCE__ORDER
+
+dimensions:
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  order_id:
+    sql: '"ORDER_ID"'
+    format: ID
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  activated_by_id:
+    sql: '"ACTIVATED_BY_ID"'
+    format: ID
+
+  activated_date:
+    sql: '"ACTIVATED_DATE"'
+
+  billing_city:
+    sql: '"BILLING_CITY"'
+
+  billing_country:
+    sql: '"BILLING_COUNTRY"'
+
+  billing_country_code:
+    sql: '"BILLING_COUNTRY_CODE"'
+
+  billing_postal_code:
+    sql: '"BILLING_POSTAL_CODE"'
+
+  billing_state:
+    sql: '"BILLING_STATE"'
+
+  billing_state_code:
+    sql: '"BILLING_STATE_CODE"'
+
+  billing_street:
+    sql: '"BILLING_STREET"'
+
+  contract_id:
+    sql: '"CONTRACT_ID"'
+    format: ID
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  order_description:
+    sql: '"ORDER_DESCRIPTION"'
+
+  end_date:
+    sql: '"END_DATE"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  last_referenced_date:
+    sql: '"LAST_REFERENCED_DATE"'
+
+  last_viewed_date:
+    sql: '"LAST_VIEWED_DATE"'
+
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+
+  order_number:
+    sql: '"ORDER_NUMBER"'
+
+  original_order_id:
+    sql: '"ORIGINAL_ORDER_ID"'
+    format: ID
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  pricebook_2_id:
+    sql: '"PRICEBOOK_2_ID"'
+    format: ID
+
+  shipping_city:
+    sql: '"SHIPPING_CITY"'
+
+  shipping_country:
+    sql: '"SHIPPING_COUNTRY"'
+
+  shipping_country_code:
+    sql: '"SHIPPING_COUNTRY_CODE"'
+
+  shipping_postal_code:
+    sql: '"SHIPPING_POSTAL_CODE"'
+
+  shipping_state:
+    sql: '"SHIPPING_STATE"'
+
+  shipping_state_code:
+    sql: '"SHIPPING_STATE_CODE"'
+
+  shipping_street:
+    sql: '"SHIPPING_STREET"'
+
+  status:
+    sql: '"STATUS"'
+
+  total_amount:
+    sql: '"TOTAL_AMOUNT"'
+
+  type:
+    sql: '"TYPE"'
+
+measures:
+  count:
+    aggregate_type: count

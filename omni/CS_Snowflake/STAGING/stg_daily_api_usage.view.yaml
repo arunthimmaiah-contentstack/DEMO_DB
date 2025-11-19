@@ -1,0 +1,343 @@
+# Reference this view as staging__stg_daily_api_usage
+schema: STAGING
+table_name: STG_DAILY_API_USAGE
+
+dimensions:
+  name:
+    sql: '"NAME"'
+
+  uid:
+    sql: '"UID"'
+
+  cdn_bandwidth:
+    sql: '"CDN_BANDWIDTH"'
+
+  cdn_count:
+    sql: '"CDN_COUNT"'
+
+  assets_bandwidth:
+    sql: '"ASSETS_BANDWIDTH"'
+
+  assets_count:
+    sql: '"ASSETS_COUNT"'
+
+  images_bandwidth:
+    sql: '"IMAGES_BANDWIDTH"'
+
+  images_count:
+    sql: '"IMAGES_COUNT"'
+
+  api_bandwidth:
+    sql: '"API_BANDWIDTH"'
+
+  api_count:
+    sql: '"API_COUNT"'
+
+  ui_bandwidth:
+    sql: '"UI_BANDWIDTH"'
+
+  ui_count:
+    sql: '"UI_COUNT"'
+
+  cma_bandwidth:
+    sql: '"CMA_BANDWIDTH"'
+
+  cma_count:
+    sql: '"CMA_COUNT"'
+
+  graphql_bandwidth:
+    sql: '"GRAPHQL_BANDWIDTH"'
+
+  graphql_count:
+    sql: '"GRAPHQL_COUNT"'
+
+  date:
+    sql: '"DATE"'
+
+  batch_number:
+    sql: '"BATCH_NUMBER"'
+
+  data_sync_date:
+    sql: '"DATA_SYNC_DATE"'
+
+  source_file_name:
+    sql: '"SOURCE_FILE_NAME"'
+
+  file_row_number:
+    sql: '"FILE_ROW_NUMBER"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+  location:
+    sql: '"LOCATION"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_daily_api_usage
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    select
+        NAME ,
+    	UID ,
+    	CDN_BANDWIDTH,
+    	CDN_COUNT,
+    	ASSETS_BANDWIDTH,
+    	ASSETS_COUNT,
+    	IMAGES_BANDWIDTH,
+    	IMAGES_COUNT,
+    	API_BANDWIDTH,
+    	API_COUNT,
+    	UI_BANDWIDTH,
+    	UI_COUNT,
+    	CMA_BANDWIDTH,
+    	CMA_COUNT,
+    	GRAPHQL_BANDWIDTH,
+    	GRAPHQL_COUNT,
+    	DATE,
+    	BATCH_NUMBER,
+    	DATA_SYNC_DATE,
+    	SOURCE_FILE_NAME,
+    	FILE_ROW_NUMBER,
+    	'AWS' as PLATFORM,
+    	'NA' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('aws_api_usage_na','api_usage_na_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('aws_api_usage_na','api_usage_na_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        NAME ,
+    	UID ,
+    	CDN_BANDWIDTH,
+    	CDN_COUNT,
+    	ASSETS_BANDWIDTH,
+    	ASSETS_COUNT,
+    	IMAGES_BANDWIDTH,
+    	IMAGES_COUNT,
+    	API_BANDWIDTH,
+    	API_COUNT,
+    	UI_BANDWIDTH,
+    	UI_COUNT,
+    	CMA_BANDWIDTH,
+    	CMA_COUNT,
+    	GRAPHQL_BANDWIDTH,
+    	GRAPHQL_COUNT,
+    	DATE,
+    	BATCH_NUMBER,
+    	DATA_SYNC_DATE,
+    	SOURCE_FILE_NAME,
+    	FILE_ROW_NUMBER,
+    	'AWS' as PLATFORM,
+    	'EU' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('aws_api_usage_eu','api_usage_eu_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('aws_api_usage_eu','api_usage_eu_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        NAME ,
+    	UID ,
+    	CDN_BANDWIDTH,
+    	CDN_COUNT,
+    	ASSETS_BANDWIDTH,
+    	ASSETS_COUNT,
+    	IMAGES_BANDWIDTH,
+    	IMAGES_COUNT,
+    	API_BANDWIDTH,
+    	API_COUNT,
+    	UI_BANDWIDTH,
+    	UI_COUNT,
+    	CMA_BANDWIDTH,
+    	CMA_COUNT,
+    	GRAPHQL_BANDWIDTH,
+    	GRAPHQL_COUNT,
+    	DATE,
+    	BATCH_NUMBER,
+    	DATA_SYNC_DATE,
+    	SOURCE_FILE_NAME,
+    	FILE_ROW_NUMBER,
+    	'AWS' as PLATFORM,
+    	'AU' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('aws_api_usage_au','api_usage_au_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('aws_api_usage_au','api_usage_au_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        NAME ,
+    	UID ,
+    	CDN_BANDWIDTH,
+    	CDN_COUNT,
+    	ASSETS_BANDWIDTH,
+    	ASSETS_COUNT,
+    	IMAGES_BANDWIDTH,
+    	IMAGES_COUNT,
+    	API_BANDWIDTH,
+    	API_COUNT,
+    	UI_BANDWIDTH,
+    	UI_COUNT,
+    	CMA_BANDWIDTH,
+    	CMA_COUNT,
+    	GRAPHQL_BANDWIDTH,
+    	GRAPHQL_COUNT,
+    	DATE,
+    	BATCH_NUMBER,
+    	DATA_SYNC_DATE,
+    	SOURCE_FILE_NAME,
+    	FILE_ROW_NUMBER,
+    	'AZ' as PLATFORM,
+    	'NA' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('az_api_usage_na','api_usage_na_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('az_api_usage_na','api_usage_na_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        NAME ,
+    	UID ,
+    	CDN_BANDWIDTH,
+    	CDN_COUNT,
+    	ASSETS_BANDWIDTH,
+    	ASSETS_COUNT,
+    	IMAGES_BANDWIDTH,
+    	IMAGES_COUNT,
+    	API_BANDWIDTH,
+    	API_COUNT,
+    	UI_BANDWIDTH,
+    	UI_COUNT,
+    	CMA_BANDWIDTH,
+    	CMA_COUNT,
+    	GRAPHQL_BANDWIDTH,
+    	GRAPHQL_COUNT,
+    	DATE,
+    	BATCH_NUMBER,
+    	DATA_SYNC_DATE,
+    	SOURCE_FILE_NAME,
+    	FILE_ROW_NUMBER,
+    	'AZ' as PLATFORM,
+    	'EU' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('az_api_usage_eu','api_usage_eu_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('az_api_usage_eu','api_usage_eu_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        NAME ,
+    	UID ,
+    	CDN_BANDWIDTH,
+    	CDN_COUNT,
+    	ASSETS_BANDWIDTH,
+    	ASSETS_COUNT,
+    	IMAGES_BANDWIDTH,
+    	IMAGES_COUNT,
+    	API_BANDWIDTH,
+    	API_COUNT,
+    	UI_BANDWIDTH,
+    	UI_COUNT,
+    	CMA_BANDWIDTH,
+    	CMA_COUNT,
+    	GRAPHQL_BANDWIDTH,
+    	GRAPHQL_COUNT,
+    	DATE,
+    	BATCH_NUMBER,
+    	DATA_SYNC_DATE,
+    	SOURCE_FILE_NAME,
+    	FILE_ROW_NUMBER,
+    	'GCP' as PLATFORM,
+    	'NA' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('gcp_api_usage_na','api_usage_na_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('gcp_api_usage_na','api_usage_na_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        NAME ,
+    	UID ,
+    	CDN_BANDWIDTH,
+    	CDN_COUNT,
+    	ASSETS_BANDWIDTH,
+    	ASSETS_COUNT,
+    	IMAGES_BANDWIDTH,
+    	IMAGES_COUNT,
+    	API_BANDWIDTH,
+    	API_COUNT,
+    	UI_BANDWIDTH,
+    	UI_COUNT,
+    	CMA_BANDWIDTH,
+    	CMA_COUNT,
+    	GRAPHQL_BANDWIDTH,
+    	GRAPHQL_COUNT,
+    	DATE,
+    	BATCH_NUMBER,
+    	DATA_SYNC_DATE,
+    	SOURCE_FILE_NAME,
+    	FILE_ROW_NUMBER,
+    	'GCP' as PLATFORM,
+    	'EU' as LOCATION
+    from
+    (
+        select 
+        * ,
+        row_number() over (partition by date, uid, name order by data_sync_date desc) as rn
+        from {{source('gcp_api_usage_eu','api_usage_eu_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('gcp_api_usage_eu','api_usage_eu_f')}} ) 
+    )
+    where rn = 1
+  referenced_by: [ int_summary_api_usage ]

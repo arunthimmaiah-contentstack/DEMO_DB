@@ -1,0 +1,4 @@
+base_view: marts__fct_org_daily_usage
+label: BI Team Internal Error Monitoring
+
+joins: {}

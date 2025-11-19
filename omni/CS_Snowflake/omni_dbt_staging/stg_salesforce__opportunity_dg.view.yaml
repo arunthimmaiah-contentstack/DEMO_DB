@@ -1,0 +1,125 @@
+# Reference this view as omni_dbt_staging__stg_salesforce__opportunity_dg
+schema_label: ""
+
+schema: omni_dbt_staging
+table_name: STG_SALESFORCE__OPPORTUNITY_DG
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  record_type_c:
+    sql: '"RECORD_TYPE_C"'
+
+  type:
+    sql: '"TYPE"'
+
+  lead_source:
+    sql: '"LEAD_SOURCE"'
+
+  lead_source_category_c:
+    sql: '"LEAD_SOURCE_CATEGORY_C"'
+
+  owner_region_c:
+    sql: '"OWNER_REGION_C"'
+
+  owner_sub_region_c:
+    sql: '"OWNER_SUB_REGION_C"'
+
+  currency_iso_code:
+    sql: '"CURRENCY_ISO_CODE"'
+
+  total_original_piped_amount_c:
+    sql: '"TOTAL_ORIGINAL_PIPED_AMOUNT_C"'
+
+  cdp_pipeline_percentage_c:
+    sql: '"CDP_PIPELINE_PERCENTAGE_C"'
+
+  cdp_deal_percentage_c:
+    sql: '"CDP_DEAL_PERCENTAGE_C"'
+
+  pipeline_date_c:
+    sql: '"PIPELINE_DATE_C"'
+
+  close_date:
+    sql: '"CLOSE_DATE"'
+
+  stage_name:
+    sql: '"STAGE_NAME"'
+
+  opp_total_bookings_c:
+    sql: '"OPP_TOTAL_BOOKINGS_C"'
+
+  opp_expansion_bookings_c:
+    sql: '"OPP_EXPANSION_BOOKINGS_C"'
+
+  lost_reason_c:
+    sql: '"LOST_REASON_C"'
+
+  is_won:
+    sql: '"IS_WON"'
+
+  stage_enter_mqo_c:
+    sql: '"STAGE_ENTER_MQO_C"'
+
+  demand_bucket_c:
+    sql: '"DEMAND_BUCKET_C"'
+
+  cms_sales_motion_c:
+    sql: '"CMS_SALES_MOTION_C"'
+
+  expansion_sales_motion_c:
+    sql: '"EXPANSION_SALES_MOTION_C"'
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__opportunity_dg
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    {{ config(materialized='view') }}
+
+    select
+        o.id,
+        o.account_id,
+        o.record_type_c,
+        o.type,
+        o.lead_source,
+        o.lead_source_category_c,
+        o.owner_region_c,
+        o.owner_sub_region_c,
+        o.currency_iso_code,
+        o.total_original_piped_amount_c,
+        o.cdp_pipeline_percentage_c,
+        o.cdp_deal_percentage_c,
+        o.pipeline_date_c,
+        o.close_date,
+        o.stage_name,
+        o.opp_total_bookings_c,
+        o.opp_expansion_bookings_c,
+        o.lost_reason_c,
+        o.is_won,
+        o.stage_enter_mqo_c,
+        o.demand_bucket_c,
+        o.cms_sales_motion_c,
+        o.expansion_sales_motion_c,
+        o._fivetran_synced
+    from {{ source('salesforce_opportunity', 'opportunity') }} o
+    where o.is_deleted != 'TRUE'
+  referenced_by: [ fact_dreamguard_all, fact_dreamguard_main, fact_dreamguard_main_fiscal ]

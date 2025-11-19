@@ -1,0 +1,28 @@
+# Reference this view as omni_dbt__int_account_metric_summary
+schema_label: ""
+
+schema: omni_dbt
+table_name: INT_ACCOUNT_METRIC_SUMMARY
+
+dimensions:
+  snapshot_date:
+    sql: '"SNAPSHOT_DATE"'
+
+  no_of_customers:
+    sql: '"NO_OF_CUSTOMERS"'
+
+  no_of_churned_customers:
+    sql: '"NO_OF_CHURNED_CUSTOMERS"'
+
+  no_of_cms_customers:
+    sql: '"NO_OF_CMS_CUSTOMERS"'
+
+  no_of_dxp_customers:
+    sql: '"NO_OF_DXP_CUSTOMERS"'
+
+  no_of_cdp_customers:
+    sql: '"NO_OF_CDP_CUSTOMERS"'
+
+measures:
+  count:
+    aggregate_type: count

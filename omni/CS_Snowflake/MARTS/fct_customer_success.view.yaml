@@ -1,0 +1,106 @@
+# Reference this view as marts__fct_customer_success
+label: Customer Success
+
+schema: MARTS
+table_name: FCT_CUSTOMER_SUCCESS
+
+dimensions:
+  customer_id:
+    sql: '"CUSTOMER_ID"'
+    format: ID
+    primary_key: true
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  segment:
+    sql: '"SEGMENT"'
+
+  region:
+    sql: '"REGION"'
+
+  industry:
+    sql: '"INDUSTRY"'
+
+  license_start_date:
+    sql: '"LICENSE_START_DATE"'
+
+  renewal_date:
+    sql: '"RENEWAL_DATE"'
+
+  _entity_customer:
+    # Entity is defined in the 'customer_success' dbt semantic model (models/semantic_models/sem_customer_success.yml)
+    sql: ${customer_id}
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_customer_success
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+    tags: [ customer_success, deployment, onboarding ]
+  code: |-
+    {{ config(
+        materialized = 'table',
+        tags = ['customer_success', 'deployment', 'onboarding']
+    ) }}
+
+    -- ===============================================================
+    -- fct_customer_success
+    -- Measures onboarding and go-live performance of customers.
+    -- ===============================================================
+
+    with base as (
+        select
+            c.id as customer_id,
+            c.account_name,
+            c.segment,
+            c.region,
+            c.industry,
+
+            -- License & Onboarding dates
+            c.license_start_date,
+            -- Renewal anchor
+            c.renewal_date,
+
+            -- Optional: flags or source system references
+            c.source_system,
+            c.created_date,
+            c.last_modified_date
+
+        from {{ ref('stg_salesforce_customer') }} c
+    ),
+
+    metrics_prep as (
+        select
+            customer_id,
+            account_name,
+            segment,
+            region,
+            industry,
+            license_start_date,
+            renewal_date
+
+
+            -- Derived measures
+            --datediff(actual_go_live_date, license_start_date, day) as time_to_deploy_days,
+
+
+        from base
+    )
+
+    select
+        customer_id,
+        account_name,
+        segment,
+        region,
+        industry,
+        license_start_date,
+        renewal_date
+    from metrics_prep

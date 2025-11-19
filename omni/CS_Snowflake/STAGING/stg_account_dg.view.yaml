@@ -1,0 +1,88 @@
+# Reference this view as staging__stg_account_dg
+schema: STAGING
+table_name: STG_ACCOUNT_DG
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: The primary key for the account.
+    primary_key: true
+
+  name:
+    sql: '"NAME"'
+
+  customer_segment_c:
+    sql: '"CUSTOMER_SEGMENT_C"'
+
+  account_tier_c:
+    sql: '"ACCOUNT_TIER_C"'
+
+  geo_c:
+    sql: '"GEO_C"'
+
+  region_c:
+    sql: '"REGION_C"'
+
+  sub_region_c:
+    sql: '"SUB_REGION_C"'
+
+  revenue_c:
+    sql: '"REVENUE_C"'
+
+  type:
+    sql: '"TYPE"'
+
+  deployment_status_c:
+    sql: '"DEPLOYMENT_STATUS_C"'
+
+  license_start_date_c:
+    sql: '"LICENSE_START_DATE_C"'
+
+  actual_go_live_date_c:
+    sql: '"ACTUAL_GO_LIVE_DATE_C"'
+
+  predicted_go_live_date_c:
+    sql: '"PREDICTED_GO_LIVE_DATE_C"'
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_account_dg
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    {{ config(materialized='view') }}
+
+    select
+        id,
+        name,
+        customer_segment_c,
+        account_tier_c,
+        geo_c,
+        region_c,
+        sub_region_c,
+        revenue_c,
+        type,
+        deployment_status_c,
+        license_start_date_c,
+        actual_go_live_date_c,
+        predicted_go_live_date_c,
+        _fivetran_synced,
+        is_deleted
+    from {{ source('salesforce_account', 'account') }}
+    where is_deleted = 'FALSE'
+  referenced_by: [ fact_dreamguard_all, fact_dreamguard_main, fact_dreamguard_main_fiscal ]

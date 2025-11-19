@@ -1,0 +1,68 @@
+# Reference this view as staging__fct_undocumented_public_models
+#This description was pulled from dbt.
+description: This table shows each public model that does not have both a model
+  level description, and a description for each of the columns in the model
+
+schema: STAGING
+table_name: FCT_UNDOCUMENTED_PUBLIC_MODELS
+
+dimensions:
+  resource_name:
+    sql: '"RESOURCE_NAME"'
+
+  access:
+    sql: '"ACCESS"'
+
+  is_described:
+    sql: '"IS_DESCRIBED"'
+
+  total_defined_columns:
+    sql: '"TOTAL_DEFINED_COLUMNS"'
+
+  total_described_columns:
+    sql: '"TOTAL_DESCRIBED_COLUMNS"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_undocumented_public_models
+  target_schema: STAGING
+  description: This table shows each public model that does not have both a model
+    level description, and a description for each of the columns in the model
+  config:
+    materialized: view
+  code: |-
+    with 
+
+    all_resources as (
+        select * from {{ ref('int_all_graph_resources') }}
+        where not is_excluded
+    ),
+
+    final as (
+        select 
+            resource_name,
+            access, 
+            is_described, 
+            total_defined_columns,
+            total_described_columns
+        
+        from all_resources
+        where 
+            is_public 
+            and (
+                -- no model level description
+                not is_described
+                -- not all columns defined have descriptions
+                or total_described_columns < total_defined_columns
+                -- no columns defined at all
+                or total_defined_columns = 0
+            )
+    )
+
+    select * from final
+
+    {{ filter_exceptions() }}

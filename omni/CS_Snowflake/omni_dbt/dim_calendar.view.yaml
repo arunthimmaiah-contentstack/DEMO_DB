@@ -1,0 +1,53 @@
+# Reference this view as omni_dbt__dim_calendar
+schema_label: ""
+
+schema: omni_dbt
+table_name: DIM_CALENDAR
+
+dimensions:
+  date_id:
+    sql: '"DATE_ID"'
+    format: ID
+
+  year:
+    sql: '"YEAR"'
+
+  quarter:
+    sql: '"QUARTER"'
+
+  month:
+    sql: '"MONTH"'
+
+  week:
+    sql: '"WEEK"'
+
+  day_of_month:
+    sql: '"DAY_OF_MONTH"'
+
+  day_of_week:
+    sql: '"DAY_OF_WEEK"'
+
+  year_label:
+    sql: '"YEAR_LABEL"'
+
+  quarter_label:
+    sql: '"QUARTER_LABEL"'
+
+  month_label:
+    sql: '"MONTH_LABEL"'
+
+  date_label:
+    sql: '"DATE_LABEL"'
+
+  quarter_start_date:
+    sql: '"QUARTER_START_DATE"'
+
+  month_start_date:
+    sql: '"MONTH_START_DATE"'
+
+  week_start_date:
+    sql: '"WEEK_START_DATE"'
+
+measures:
+  count:
+    aggregate_type: count

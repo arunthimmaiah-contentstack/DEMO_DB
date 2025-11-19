@@ -1,0 +1,25 @@
+# Reference this view as omni_dbt__int_dau
+schema_label: ""
+
+schema: omni_dbt
+table_name: INT_DAU
+
+dimensions:
+  date:
+    sql: '"DATE"'
+
+  organization_uid:
+    sql: '"ORGANIZATION_UID"'
+
+  location:
+    sql: '"LOCATION"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+  dau:
+    sql: '"DAU"'
+
+measures:
+  count:
+    aggregate_type: count

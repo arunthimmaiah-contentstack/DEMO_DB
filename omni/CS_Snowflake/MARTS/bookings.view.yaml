@@ -1,0 +1,164 @@
+# Reference this view as marts__bookings
+schema: MARTS
+table_name: BOOKINGS
+
+dimensions:
+  metric_name:
+    sql: '"METRIC_NAME"'
+
+  object:
+    sql: '"OBJECT"'
+
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  product:
+    sql: '"PRODUCT"'
+
+  customer_designation:
+    sql: '"CUSTOMER_DESIGNATION"'
+
+  product_deal_percentage:
+    sql: '"PRODUCT_DEAL_PERCENTAGE"'
+
+  metric_date_1:
+    sql: '"METRIC_DATE_1"'
+
+  metric_date_2:
+    sql: '"METRIC_DATE_2"'
+
+  metric_measure_1:
+    sql: '"METRIC_MEASURE_1"'
+
+  metric_measure_2:
+    sql: '"METRIC_MEASURE_2"'
+
+  metric_measure_3:
+    sql: '"METRIC_MEASURE_3"'
+
+  geo_c:
+    sql: '"GEO_C"'
+
+  region:
+    sql: '"REGION"'
+
+  sub_region:
+    sql: '"SUB_REGION"'
+
+  revenue:
+    sql: '"REVENUE"'
+
+  company_size:
+    sql: '"COMPANY_SIZE"'
+
+  record_type:
+    sql: '"RECORD_TYPE"'
+
+  leadsource:
+    sql: '"LEADSOURCE"'
+
+  motion:
+    sql: '"MOTION"'
+
+  sub_motion:
+    sql: '"SUB_MOTION"'
+
+  opp_type:
+    sql: '"OPP_TYPE"'
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  matched_account_tier_ld:
+    sql: '"MATCHED_ACCOUNT_TIER_LD"'
+
+  account_tier:
+    sql: '"ACCOUNT_TIER"'
+
+  deployment_status_c:
+    sql: '"DEPLOYMENT_STATUS_C"'
+
+  type:
+    sql: '"TYPE"'
+
+  sync_date:
+    sql: '"SYNC_DATE"'
+
+  sales_motion:
+    sql: '"SALES_MOTION"'
+
+  expansion_sales_motion:
+    sql: '"EXPANSION_SALES_MOTION"'
+
+  demand_bucket:
+    sql: '"DEMAND_BUCKET"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: bookings
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    SELECT
+        'Bookings ($)' AS METRIC_NAME,
+        'OPPORTUNITY' AS OBJECT,
+        O.opportunity_id AS ID,
+        oc.product as product,
+        oc.customer_designation as customer_designation,
+        oc.product_deal_percentage as product_deal_percentage,
+        o.opportunity_close_date AS METRIC_DATE_1,
+        o.opportunity_pipeline_date AS METRIC_DATE_2,
+        NULL AS metric_measure_1,
+        oc.converted_opp_total_bookings AS metric_measure_2,
+        oc.opp_total_bookings AS metric_measure_3,
+        NULL AS GEO_C,
+        opportunity_owner_region AS REGION,
+        opportunity_owner_sub_region AS SUB_REGION,
+        NULL AS REVENUE,
+        CASE
+            WHEN A.CUSTOMER_SEGMENT = 'Enterprise Customer' THEN 'Revenue > $1B'
+            WHEN A.CUSTOMER_SEGMENT = 'MM Customer' THEN 'Revenue < $1B'
+            ELSE A.CUSTOMER_SEGMENT
+        END COMPANY_SIZE,
+        CASE 
+            WHEN O.opportunity_record_type IN ('CPQ Sales', 'Sales', 'Cross-Sell') THEN 'Cross-Sell'
+            WHEN O.opportunity_record_type IN ('Upsell', 'CPQ Amendment', 'CPQ Renewal') THEN 'Upsell'
+            ELSE o.opportunity_record_type
+        END RECORD_TYPE,
+        o.LEAD_SOURCE AS LeadSource,
+        CASE 
+          WHEN O.opportunity_lead_source_category IN ('Sales', 'Marketing') THEN 'GTM'
+          WHEN O.opportunity_lead_source_category IN ('Partner') THEN 'Partner'
+          WHEN O.opportunity_lead_source_category IN ('Customer') THEN 'Expansion'
+          ELSE NULL
+        END AS MOTION,
+        O.opportunity_lead_source_category AS SUB_MOTION,
+        O.opportunity_type AS OPP_TYPE,
+        A.account_name AS ACCOUNT_NAME,
+        NULL AS Matched_Account_Tier_LD,
+        A.account_tier AS Account_Tier,
+        NULL AS DEPLOYMENT_STATUS_C,
+        NULL AS TYPE
+      ,CONVERT_TIMEZONE('UTC', 'America/Los_Angeles', O._FIVETRAN_SYNCED::timestamp_ntz) AS SYNC_DATE,
+       O.CMS_SALES_MOTION AS SALES_MOTION, --THIS IS A NEW FIELD ADDED IN ASC (OBI-1404 & 1405)
+       O.EXPANSION_SALES_MOTION AS EXPANSION_SALES_MOTION, --THIS IS A NEW FIELD ADDED IN ASC (OBI-1404 & 1405)
+       NULL AS DEMAND_BUCKET
+    FROM _omni_ref_sub_ O
+    LEFT JOIN
+        _omni_ref_sub_ A ON O.account_id = A.account_id
+    LEFT JOIN
+        {{ref('stg_salesforce__opportunity_finance')}} oc ON o.opportunity_id = oc.opportunity_id
+
+    where
+        1=1
+        AND O.opportunity_stage_name = 'Closed Won'
+        AND O.opportunity_record_type IN ('CPQ Sales', 'Sales', 'Cross-Sell',  'CPQ Amendment', 'CPQ Renewal', 'Upsell')
+        AND oc.OPP_TOTAL_BOOKINGS > 0

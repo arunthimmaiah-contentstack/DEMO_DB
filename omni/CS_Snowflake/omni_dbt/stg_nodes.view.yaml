@@ -1,0 +1,153 @@
+# Reference this view as omni_dbt__stg_nodes
+schema_label: ""
+
+schema: omni_dbt
+table_name: STG_NODES
+
+dimensions:
+  unique_id:
+    sql: '"UNIQUE_ID"'
+    format: ID
+
+  name:
+    sql: '"NAME"'
+
+  resource_type:
+    sql: '"RESOURCE_TYPE"'
+
+  file_path:
+    sql: '"FILE_PATH"'
+
+  is_enabled:
+    sql: '"IS_ENABLED"'
+
+  materialized:
+    sql: '"MATERIALIZED"'
+
+  on_schema_change:
+    sql: '"ON_SCHEMA_CHANGE"'
+
+  model_group:
+    sql: '"MODEL_GROUP"'
+
+  access:
+    sql: '"ACCESS"'
+
+  latest_version:
+    sql: '"LATEST_VERSION"'
+
+  version:
+    sql: '"VERSION"'
+
+  deprecation_date:
+    sql: '"DEPRECATION_DATE"'
+
+  is_contract_enforced:
+    sql: '"IS_CONTRACT_ENFORCED"'
+
+  total_defined_columns:
+    sql: '"TOTAL_DEFINED_COLUMNS"'
+
+  total_described_columns:
+    sql: '"TOTAL_DESCRIBED_COLUMNS"'
+
+  database:
+    sql: '"DATABASE"'
+
+  schema:
+    sql: '"SCHEMA"'
+
+  package_name:
+    sql: '"PACKAGE_NAME"'
+
+  alias:
+    sql: '"ALIAS"'
+
+  is_described:
+    sql: '"IS_DESCRIBED"'
+
+  column_name:
+    sql: '"COLUMN_NAME"'
+
+  meta:
+    sql: '"META"'
+
+  hard_coded_references:
+    sql: '"HARD_CODED_REFERENCES"'
+
+  number_lines:
+    sql: '"NUMBER_LINES"'
+
+  sql_complexity:
+    sql: '"SQL_COMPLEXITY"'
+
+  macro_dependencies:
+    sql: '"MACRO_DEPENDENCIES"'
+
+  is_generic_test:
+    sql: '"IS_GENERIC_TEST"'
+
+  is_excluded:
+    sql: '"IS_EXCLUDED"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_nodes
+  target_schema: STAGING
+  config:
+    materialized: table
+  code: |-
+    {{
+        config(
+            materialized='table',
+            post_hook="{{ insert_resources_from_graph(this, resource_type='nodes') }}"
+        )
+    }}
+
+    {% if execute %}
+        {{ check_model_is_table(model) }}
+    {% endif %}
+
+    /* Bigquery won't let us `where` without `from` so we use this workaround */
+    with dummy_cte as (
+        select 1 as foo
+    )
+
+    select 
+
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as unique_id,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as name,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as resource_type,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as file_path,
+        cast(True as {{ dbt.type_boolean() }}) as is_enabled,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as materialized,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as on_schema_change,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as model_group,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as access,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as latest_version,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as version,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as deprecation_date,
+        cast(True as {{ dbt.type_boolean() }}) as is_contract_enforced,
+        cast(0 as {{ dbt.type_int() }}) as total_defined_columns,
+        cast(0 as {{ dbt.type_int() }}) as total_described_columns,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as database,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as schema,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as package_name,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as alias,
+        cast(True as {{ dbt.type_boolean() }}) as is_described,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as column_name,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as meta,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as hard_coded_references,
+        cast(null as {{ dbt.type_int() }}) as number_lines,
+        cast(null as {{ dbt.type_float() }}) as sql_complexity,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as macro_dependencies,
+        cast(True as {{ dbt.type_boolean() }}) as is_generic_test,
+        cast(True as {{ dbt.type_boolean() }}) as is_excluded
+
+    from dummy_cte
+    where false
+  referenced_by: [ int_all_graph_resources ]

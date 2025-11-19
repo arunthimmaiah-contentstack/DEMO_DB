@@ -1,0 +1,74 @@
+# Reference this view as staging__int_salesforce__user_unified
+#This description was pulled from dbt.
+description: |
+  Unified Salesforce User model used to enrich other models with user metadata such as full name, email, and role.
+
+schema: STAGING
+table_name: INT_SALESFORCE__USER_UNIFIED
+
+dimensions:
+  user_id:
+    sql: '"USER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Unique Salesforce user identifier.
+
+  user_name:
+    sql: '"USER_NAME"'
+    #This description was pulled from dbt.
+    description: Full name of the user.
+
+  company_name:
+    sql: '"COMPANY_NAME"'
+
+  email:
+    sql: '"EMAIL"'
+
+  phone:
+    sql: '"PHONE"'
+
+  is_active:
+    sql: '"IS_ACTIVE"'
+    #This description was pulled from dbt.
+    description: Boolean indicating if the user is active.
+
+  time_zone_sid_key:
+    sql: '"TIME_ZONE_SID_KEY"'
+
+  user_role_id:
+    sql: '"USER_ROLE_ID"'
+    format: ID
+
+  region:
+    sql: '"REGION"'
+
+  sub_region:
+    sql: '"SUB_REGION"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: int_salesforce__user_unified
+  target_schema: STAGING
+  description: |
+    Unified Salesforce User model used to enrich other models with user metadata such as full name, email, and role.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    {{ config(materialized='view') }}
+
+    with user as (
+        select * from {{ ref('stg_salesforce__users') }}
+    )
+
+    select
+        *
+    from user
+  referenced_by: [ fct_partner360_summary ]

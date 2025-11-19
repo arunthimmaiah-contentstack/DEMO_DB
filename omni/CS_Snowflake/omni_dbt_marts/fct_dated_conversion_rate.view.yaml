@@ -1,0 +1,43 @@
+# Reference this view as omni_dbt_marts__fct_dated_conversion_rate
+schema_label: ""
+
+schema: omni_dbt_marts
+table_name: FCT_DATED_CONVERSION_RATE
+
+dimensions:
+  fiscal_year:
+    sql: '"FISCAL_YEAR"'
+
+  fiscal_quarter:
+    sql: '"FISCAL_QUARTER"'
+
+  conversion_rate:
+    sql: '"CONVERSION_RATE"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_dated_conversion_rate
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    -- Example placeholder: conversion rate by month
+    with opp as (
+        select
+            fiscal_year,
+            fiscal_quarter,
+            count(case when is_won = 1 then 1 end) as won_count,
+            count(*) as total_count
+        from {{ ref('fct_opportunity') }}
+        group by 1,2
+    )
+    select
+        fiscal_year,
+        fiscal_quarter,
+        case when total_count = 0 then 0 else won_count / total_count end as conversion_rate
+    from opp

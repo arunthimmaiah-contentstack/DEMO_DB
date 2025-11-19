@@ -1,0 +1,96 @@
+# Reference this view as omni_dbt_staging__stg_salesforce__organizations
+schema_label: ""
+#This description was pulled from dbt.
+description: Staging model for Salesforce Organization object
+
+schema: omni_dbt_staging
+table_name: STG_SALESFORCE__ORGANIZATIONS
+
+dimensions:
+  organization_id:
+    sql: '"ORGANIZATION_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Primary key of the Salesforce Organization
+
+  organization_name:
+    sql: '"ORGANIZATION_NAME"'
+    #This description was pulled from dbt.
+    description: Name of the Salesforce Organization
+
+  salesforce_instance:
+    sql: '"SALESFORCE_INSTANCE"'
+    #This description was pulled from dbt.
+    description: Salesforce instance hosting the org (e.g., NA123, EU45)
+
+  organization_type:
+    sql: '"ORGANIZATION_TYPE"'
+    #This description was pulled from dbt.
+    description: Type of org (Production, Sandbox, Developer, Trial)
+
+  organization_tag:
+    sql: '"ORGANIZATION_TAG"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+    #This description was pulled from dbt.
+    description: Date the org was created in Salesforce
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+    #This description was pulled from dbt.
+    description: Last time org metadata was updated
+
+  account_id_15:
+    sql: '"ACCOUNT_ID_15"'
+
+  account_id_18:
+    sql: '"ACCOUNT_ID_18"'
+
+  organization_id_c:
+    sql: '"ORGANIZATION_ID_C"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__organizations
+  target_schema: STAGING
+  description: Staging model for Salesforce Organization object
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    {{ config(
+        materialized = "view"
+    ) }}
+
+    with source as (
+
+        select * 
+        from {{ source('salesforce_orgs', 'contentstack_organizations_c') }}
+        where is_deleted = FALSE
+
+    ),
+
+    renamed as (
+
+        select
+            id                                as organization_id,
+            name                              as organization_name,
+            instance_c                    as salesforce_instance,
+            plan_name_c                   as organization_type, -- e.g. Production, Developer, Trial
+            organization_tag_c            as organization_tag,
+            created_date                      as created_date,
+            last_modified_date                as last_modified_date,
+            account_id_c                   as account_id_15,
+            account_c                      as account_id_18,
+            organization_id_c                 as organization_id_c
+
+        from source
+    )
+
+    select * from renamed
+  referenced_by: [ int_org_usage_with_accounts ]

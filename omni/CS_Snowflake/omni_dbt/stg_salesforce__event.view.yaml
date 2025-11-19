@@ -1,0 +1,102 @@
+# Reference this view as omni_dbt__stg_salesforce__event
+schema_label: ""
+
+schema: omni_dbt
+table_name: STG_SALESFORCE__EVENT
+
+dimensions:
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  event_id:
+    sql: '"EVENT_ID"'
+    format: ID
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  activity_date:
+    sql: '"ACTIVITY_DATE"'
+
+  activity_date_time:
+    sql: '"ACTIVITY_DATE_TIME"'
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  event_description:
+    sql: '"EVENT_DESCRIPTION"'
+
+  end_date:
+    sql: '"END_DATE"'
+
+  end_date_time:
+    sql: '"END_DATE_TIME"'
+
+  event_subtype:
+    sql: '"EVENT_SUBTYPE"'
+
+  group_event_type:
+    sql: '"GROUP_EVENT_TYPE"'
+
+  is_archived:
+    sql: '"IS_ARCHIVED"'
+
+  is_child:
+    sql: '"IS_CHILD"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  is_group_event:
+    sql: '"IS_GROUP_EVENT"'
+
+  is_recurrence:
+    sql: '"IS_RECURRENCE"'
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  location:
+    sql: '"LOCATION"'
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  start_date_time:
+    sql: '"START_DATE_TIME"'
+
+  subject:
+    sql: '"SUBJECT"'
+
+  type:
+    sql: '"TYPE"'
+
+  what_count:
+    sql: '"WHAT_COUNT"'
+
+  what_id:
+    sql: '"WHAT_ID"'
+    format: ID
+
+  who_count:
+    sql: '"WHO_COUNT"'
+
+  who_id:
+    sql: '"WHO_ID"'
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

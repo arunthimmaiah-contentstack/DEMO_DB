@@ -1,0 +1,88 @@
+# Reference this view as staging__daily_stack_api_usage
+schema: STAGING
+table_name: DAILY_STACK_API_USAGE
+
+dimensions:
+  source_file_name:
+    sql: '"SOURCE_FILE_NAME"'
+
+  file_row_number:
+    sql: '"FILE_ROW_NUMBER"'
+
+  batch_number:
+    sql: '"BATCH_NUMBER"'
+
+  data_sync_date:
+    sql: '"DATA_SYNC_DATE"'
+
+  date:
+    sql: '"DATE"'
+
+  _id:
+    sql: '"_ID"'
+    format: ID
+    hidden: true
+
+  stack_name:
+    sql: '"STACK_NAME"'
+
+  org_uid:
+    sql: '"ORG_UID"'
+
+  api_key:
+    sql: '"API_KEY"'
+
+  name:
+    sql: '"NAME"'
+
+  cdn_bandwidth:
+    sql: '"CDN_BANDWIDTH"'
+
+  cdn_count:
+    sql: '"CDN_COUNT"'
+
+  assets_bandwidth:
+    sql: '"ASSETS_BANDWIDTH"'
+
+  assets_count:
+    sql: '"ASSETS_COUNT"'
+
+  images_bandwidth:
+    sql: '"IMAGES_BANDWIDTH"'
+
+  images_count:
+    sql: '"IMAGES_COUNT"'
+
+  api_bandwidth:
+    sql: '"API_BANDWIDTH"'
+
+  api_count:
+    sql: '"API_COUNT"'
+
+  ui_bandwidth:
+    sql: '"UI_BANDWIDTH"'
+
+  ui_count:
+    sql: '"UI_COUNT"'
+
+  cma_bandwidth:
+    sql: '"CMA_BANDWIDTH"'
+
+  cma_count:
+    sql: '"CMA_COUNT"'
+
+  graphql_bandwidth:
+    sql: '"GRAPHQL_BANDWIDTH"'
+
+  graphql_count:
+    sql: '"GRAPHQL_COUNT"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+  location:
+    sql: '"LOCATION"'
+
+measures:
+  count:
+    aggregate_type: count

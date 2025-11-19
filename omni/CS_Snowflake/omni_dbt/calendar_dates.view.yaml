@@ -1,0 +1,13 @@
+# Reference this view as omni_dbt__calendar_dates
+schema_label: ""
+
+schema: omni_dbt
+table_name: CALENDAR_DATES
+
+dimensions:
+  calendar_date:
+    sql: '"CALENDAR_DATE"'
+
+measures:
+  count:
+    aggregate_type: count

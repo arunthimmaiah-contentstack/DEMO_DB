@@ -1,0 +1,46 @@
+# Reference this view as omni_dbt__salesforce__daily_activity
+schema_label: ""
+
+schema: omni_dbt
+table_name: SALESFORCE__DAILY_ACTIVITY
+
+dimensions:
+  date_day:
+    sql: '"DATE_DAY"'
+
+  leads_created:
+    sql: '"LEADS_CREATED"'
+
+  leads_converted:
+    sql: '"LEADS_CONVERTED"'
+
+  tasks_completed:
+    sql: '"TASKS_COMPLETED"'
+
+  events_completed:
+    sql: '"EVENTS_COMPLETED"'
+
+  opportunities_created:
+    sql: '"OPPORTUNITIES_CREATED"'
+
+  opportunities_created_amount:
+    sql: '"OPPORTUNITIES_CREATED_AMOUNT"'
+
+  opportunities_won:
+    sql: '"OPPORTUNITIES_WON"'
+
+  opportunities_won_amount:
+    sql: '"OPPORTUNITIES_WON_AMOUNT"'
+
+  opportunities_lost:
+    sql: '"OPPORTUNITIES_LOST"'
+
+  opportunities_lost_amount:
+    sql: '"OPPORTUNITIES_LOST_AMOUNT"'
+
+  pipeline_amount:
+    sql: '"PIPELINE_AMOUNT"'
+
+measures:
+  count:
+    aggregate_type: count

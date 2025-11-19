@@ -1,0 +1,86 @@
+# Reference this view as omni_dbt_marts__mrt_sales_cycle_summary
+schema_label: ""
+
+schema: omni_dbt_marts
+table_name: MRT_SALES_CYCLE_SUMMARY
+
+dimensions:
+  close_month:
+    sql: '"CLOSE_MONTH"'
+
+  product_type:
+    sql: '"PRODUCT_TYPE"'
+
+  owner_name:
+    sql: '"OWNER_NAME"'
+
+  record_type_id:
+    sql: '"RECORD_TYPE_ID"'
+    format: ID
+
+  closed_won_count:
+    sql: '"CLOSED_WON_COUNT"'
+
+  avg_sales_cycle_days:
+    sql: '"AVG_SALES_CYCLE_DAYS"'
+
+  min_sales_cycle_days:
+    sql: '"MIN_SALES_CYCLE_DAYS"'
+
+  max_sales_cycle_days:
+    sql: '"MAX_SALES_CYCLE_DAYS"'
+
+  median_sales_cycle_days:
+    sql: '"MEDIAN_SALES_CYCLE_DAYS"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: mrt_sales_cycle_summary
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+    tags: [ sales, cycle, mart ]
+  code: |-
+    {{ config(
+        materialized = "table",
+        tags = ["sales", "cycle", "mart"]
+    ) }}
+
+    with base as (
+
+        select
+            opportunity_id,
+            product_type,
+            owner_name,
+            record_type_id,
+            created_date,
+            close_date,
+            days_in_pipeline
+        from {{ ref('fct_sales_cycle') }}
+
+    ),
+
+    summary as (
+
+        select
+            date_trunc('month', close_date)       as close_month,
+            product_type,
+            owner_name,
+            record_type_id,
+
+            count(*)                              as closed_won_count,
+            avg(days_in_pipeline)                 as avg_sales_cycle_days,
+            min(days_in_pipeline)                 as min_sales_cycle_days,
+            max(days_in_pipeline)                 as max_sales_cycle_days,
+            percentile_cont(0.5) within group (order by days_in_pipeline) as median_sales_cycle_days
+
+        from base
+        group by 1,2,3,4
+    )
+
+    select * from summary

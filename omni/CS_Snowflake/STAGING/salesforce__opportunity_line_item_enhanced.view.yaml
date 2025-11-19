@@ -1,0 +1,109 @@
+# Reference this view as staging__salesforce__opportunity_line_item_enhanced
+schema: STAGING
+table_name: SALESFORCE__OPPORTUNITY_LINE_ITEM_ENHANCED
+
+dimensions:
+  opportunity_line_item_id:
+    sql: '"OPPORTUNITY_LINE_ITEM_ID"'
+    format: ID
+
+  opportunity_line_item_name:
+    sql: '"OPPORTUNITY_LINE_ITEM_NAME"'
+
+  opportunity_line_item_description:
+    sql: '"OPPORTUNITY_LINE_ITEM_DESCRIPTION"'
+
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+
+  line_item_index:
+    sql: '"LINE_ITEM_INDEX"'
+
+  total_line_items:
+    sql: '"TOTAL_LINE_ITEMS"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  service_date:
+    sql: '"SERVICE_DATE"'
+
+  pricebook_entry_id:
+    sql: '"PRICEBOOK_ENTRY_ID"'
+    format: ID
+
+  product_2_id:
+    sql: '"PRODUCT_2_ID"'
+    format: ID
+
+  list_price:
+    sql: '"LIST_PRICE"'
+
+  quantity:
+    sql: '"QUANTITY"'
+
+  unit_price:
+    sql: '"UNIT_PRICE"'
+
+  total_price:
+    sql: '"TOTAL_PRICE"'
+
+  has_quantity_schedule:
+    sql: '"HAS_QUANTITY_SCHEDULE"'
+
+  has_revenue_schedule:
+    sql: '"HAS_REVENUE_SCHEDULE"'
+
+  product_2_name:
+    sql: '"PRODUCT_2_NAME"'
+
+  product_code:
+    sql: '"PRODUCT_CODE"'
+
+  product_2_description:
+    sql: '"PRODUCT_2_DESCRIPTION"'
+
+  product_external_id:
+    sql: '"PRODUCT_EXTERNAL_ID"'
+    format: ID
+
+  product_family:
+    sql: '"PRODUCT_FAMILY"'
+
+  product_is_active:
+    sql: '"PRODUCT_IS_ACTIVE"'
+
+  product_is_archived:
+    sql: '"PRODUCT_IS_ARCHIVED"'
+
+  product_is_deleted:
+    sql: '"PRODUCT_IS_DELETED"'
+
+  product_number_of_quantity_installments:
+    sql: '"PRODUCT_NUMBER_OF_QUANTITY_INSTALLMENTS"'
+
+  product_quantity_installment_period:
+    sql: '"PRODUCT_QUANTITY_INSTALLMENT_PERIOD"'
+
+  product_quantity_schedule_type:
+    sql: '"PRODUCT_QUANTITY_SCHEDULE_TYPE"'
+
+  product_quantity_unit_of_measure:
+    sql: '"PRODUCT_QUANTITY_UNIT_OF_MEASURE"'
+
+  product_number_of_revenue_installments:
+    sql: '"PRODUCT_NUMBER_OF_REVENUE_INSTALLMENTS"'
+
+  product_revenue_installment_period:
+    sql: '"PRODUCT_REVENUE_INSTALLMENT_PERIOD"'
+
+  product_revenue_schedule_type:
+    sql: '"PRODUCT_REVENUE_SCHEDULE_TYPE"'
+
+measures:
+  count:
+    aggregate_type: count

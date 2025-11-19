@@ -1,0 +1,111 @@
+# Reference this view as staging__stg_sources
+schema: STAGING
+table_name: STG_SOURCES
+
+dimensions:
+  unique_id:
+    sql: '"UNIQUE_ID"'
+    format: ID
+
+  name:
+    sql: '"NAME"'
+
+  file_path:
+    sql: '"FILE_PATH"'
+
+  alias:
+    sql: '"ALIAS"'
+
+  resource_type:
+    sql: '"RESOURCE_TYPE"'
+
+  source_name:
+    sql: '"SOURCE_NAME"'
+
+  is_source_described:
+    sql: '"IS_SOURCE_DESCRIBED"'
+
+  is_described:
+    sql: '"IS_DESCRIBED"'
+
+  is_enabled:
+    sql: '"IS_ENABLED"'
+
+  loaded_at_field:
+    sql: '"LOADED_AT_FIELD"'
+
+  is_freshness_enabled:
+    sql: '"IS_FRESHNESS_ENABLED"'
+
+  database:
+    sql: '"DATABASE"'
+
+  schema:
+    sql: '"SCHEMA"'
+
+  package_name:
+    sql: '"PACKAGE_NAME"'
+
+  loader:
+    sql: '"LOADER"'
+
+  identifier:
+    sql: '"IDENTIFIER"'
+
+  meta:
+    sql: '"META"'
+
+  is_excluded:
+    sql: '"IS_EXCLUDED"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_sources
+  target_schema: STAGING
+  config:
+    materialized: table
+  code: |-
+    {{
+        config(
+            materialized='table',
+            post_hook="{{ insert_resources_from_graph(this, resource_type='sources') }}"
+        )
+    }}
+
+    {% if execute %}
+        {{ check_model_is_table(model) }}
+    {% endif %}
+
+    /* Bigquery won't let us `where` without `from` so we use this workaround */
+    with dummy_cte as (
+        select 1 as foo
+    )
+
+    select 
+
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as unique_id,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as name,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as file_path,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as alias,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as resource_type,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as source_name,
+        cast(True as {{ dbt.type_boolean() }}) as is_source_described,
+        cast(True as {{ dbt.type_boolean() }}) as is_described,
+        cast(True as {{ dbt.type_boolean() }}) as is_enabled,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as loaded_at_field,
+        cast(True as {{ dbt.type_boolean() }}) as is_freshness_enabled,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as database,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as schema,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as package_name,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as loader,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as identifier,
+        cast(null as {{ dbt_project_evaluator.type_string_dpe() }})  as meta,
+        cast(True as {{ dbt.type_boolean() }}) as is_excluded
+
+    from dummy_cte
+    where false
+  referenced_by: [ int_all_graph_resources ]

@@ -1,0 +1,46 @@
+# Reference this view as staging__fct_undocumented_sources
+#This description was pulled from dbt.
+description: |
+  This model contains all sources that do not have a description configured in a YML file. 
+
+schema: STAGING
+table_name: FCT_UNDOCUMENTED_SOURCES
+
+dimensions:
+  source_name:
+    sql: '"SOURCE_NAME"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_undocumented_sources
+  target_schema: STAGING
+  description: |
+    This model contains all sources that do not have a description configured in a YML file. 
+  config:
+    materialized: view
+  code: |-
+    with
+
+    all_resources as (
+        select * from {{ ref('int_all_graph_resources') }}
+        where not is_excluded
+
+    ),
+
+    final as (
+
+        select distinct
+            source_name
+
+        from all_resources
+        where not is_source_described and resource_type = 'source'
+
+    )
+
+    select * from final
+
+    {{ filter_exceptions() }}

@@ -1,0 +1,127 @@
+# Reference this view as omni_dbt_staging__stg_salesforce__case_detail
+schema_label: ""
+#This description was pulled from dbt.
+description: |
+  Staging model for Salesforce Case details.  Includes key case fields, escalation information, Jira integration, and status tracking. Only non-deleted cases are included.
+
+schema: omni_dbt_staging
+table_name: STG_SALESFORCE__CASE_DETAIL
+
+dimensions:
+  case_id:
+    sql: '"CASE_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Primary key. Salesforce Case ID.
+
+  type:
+    sql: '"TYPE"'
+    #This description was pulled from dbt.
+    description: Type of the case (e.g., Question, Problem, Feature Request).
+
+  subject:
+    sql: '"SUBJECT"'
+    #This description was pulled from dbt.
+    description: Subject or title of the case.
+
+  description:
+    sql: '"DESCRIPTION"'
+    #This description was pulled from dbt.
+    description: Detailed description of the case.
+
+  categories:
+    sql: '"CATEGORIES"'
+    #This description was pulled from dbt.
+    description: Categories assigned to the case (custom field).
+
+  is_escalated:
+    sql: '"IS_ESCALATED"'
+    #This description was pulled from dbt.
+    description: Indicates if the case is currently escalated.
+
+  last_escalated:
+    sql: '"LAST_ESCALATED"'
+    #This description was pulled from dbt.
+    description: Timestamp of the last escalation (custom field).
+
+  escalated_to_tier2:
+    sql: '"ESCALATED_TO_TIER2"'
+    #This description was pulled from dbt.
+    description: Indicates if the case was escalated to Tier 2 support (custom field).
+
+  escalated_to_tier2_date_time:
+    sql: '"ESCALATED_TO_TIER2_DATE_TIME"'
+    #This description was pulled from dbt.
+    description: Date and time when the case was escalated to Tier 2 (custom field).
+
+  jira_key:
+    sql: '"JIRA_KEY"'
+    #This description was pulled from dbt.
+    description: Jira issue key linked to the case (custom field).
+
+  jira_status:
+    sql: '"JIRA_STATUS"'
+    #This description was pulled from dbt.
+    description: Status of the linked Jira issue (custom field).
+
+  microservices:
+    sql: '"MICROSERVICES"'
+    #This description was pulled from dbt.
+    description: Microservices related to the case (custom field).
+
+  status:
+    sql: '"STATUS"'
+    #This description was pulled from dbt.
+    description: Current status of the case (e.g., New, In Progress, Closed).
+
+  priority:
+    sql: '"PRIORITY"'
+    #This description was pulled from dbt.
+    description: Priority of the case (e.g., High, Medium, Low).
+
+  origin:
+    sql: '"ORIGIN"'
+    #This description was pulled from dbt.
+    description: Origin of the case (e.g., Web, Phone, Email).
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__case_detail
+  target_schema: STAGING
+  description: |
+    Staging model for Salesforce Case details.  Includes key case fields, escalation information, Jira integration, and status tracking. Only non-deleted cases are included.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('salesforce_case', 'case') }}
+    ),
+
+    renamed as (
+        select
+            id as case_id,
+            type,
+            subject,
+            description,
+            categories_c as categories ,
+            is_escalated,
+            last_escalated_c as last_escalated,
+            escalated_to_tier_2_c as escalated_to_tier2,
+            escalated_to_tier_2_date_time_c as escalated_to_tier2_date_time,
+            jira_key_c as jira_key,
+            jira_status_c as jira_status,
+            microservices_c as microservices,
+            status,
+            priority,
+            origin
+
+        from source
+        where is_deleted = false
+    )
+
+    select * from renamed

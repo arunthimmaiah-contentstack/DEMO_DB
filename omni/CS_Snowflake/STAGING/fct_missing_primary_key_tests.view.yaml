@@ -1,0 +1,68 @@
+# Reference this view as staging__fct_missing_primary_key_tests
+#This description was pulled from dbt.
+description: this model has one record for every model without unique and not
+  null tests configured on a single column
+
+schema: STAGING
+table_name: FCT_MISSING_PRIMARY_KEY_TESTS
+
+dimensions:
+  resource_name:
+    sql: '"RESOURCE_NAME"'
+
+  resource_type:
+    sql: '"RESOURCE_TYPE"'
+
+  model_type:
+    sql: '"MODEL_TYPE"'
+
+  is_primary_key_tested:
+    sql: '"IS_PRIMARY_KEY_TESTED"'
+
+  number_of_tests_on_model:
+    sql: '"NUMBER_OF_TESTS_ON_MODEL"'
+
+  number_of_constraints_on_model:
+    sql: '"NUMBER_OF_CONSTRAINTS_ON_MODEL"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_missing_primary_key_tests
+  target_schema: STAGING
+  description: this model has one record for every model without unique and not
+    null tests configured on a single column
+  config:
+    materialized: view
+  code: |-
+    with
+
+    tests as (
+        select * from {{ ref('int_model_test_summary') }}
+        where resource_type in
+        (
+            {% for resource_type in var('enforced_primary_key_node_types') %}'{{ resource_type }}'{% if not loop.last %},{% endif %}
+            {% endfor %}
+        )
+    ),
+
+    final as (
+
+        select
+            resource_name,
+            resource_type,
+            model_type,
+            is_primary_key_tested,
+            number_of_tests_on_model,
+            number_of_constraints_on_model
+        from tests
+        where not(is_primary_key_tested)
+
+    )
+
+    select * from final
+
+    {{ filter_exceptions() }}

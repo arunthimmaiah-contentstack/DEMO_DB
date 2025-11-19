@@ -1,0 +1,11 @@
+# Reference this view as staging__time_spine
+schema: STAGING
+table_name: TIME_SPINE
+
+dimensions:
+  date_day:
+    sql: '"DATE_DAY"'
+
+measures:
+  count:
+    aggregate_type: count

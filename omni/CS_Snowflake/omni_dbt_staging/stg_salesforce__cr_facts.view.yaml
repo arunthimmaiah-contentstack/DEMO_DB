@@ -1,0 +1,55 @@
+# Reference this view as omni_dbt_staging__stg_salesforce__cr_facts
+schema_label: ""
+#This description was pulled from dbt.
+description: Staging model for Salesforce Catalyst Relationship object. Cleans,
+  standardizes, and filters active relationship records for downstream analytics
+  and reporting.
+
+schema: omni_dbt_staging
+table_name: STG_SALESFORCE__CR_FACTS
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Unique identifier for each Catalyst Relationship record.
+    primary_key: true
+
+  catalyst_role_c:
+    sql: '"CATALYST_ROLE_C"'
+
+  qualified_pso_c:
+    sql: '"QUALIFIED_PSO_C"'
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__cr_facts
+  target_schema: STAGING
+  description: Staging model for Salesforce Catalyst Relationship object. Cleans,
+    standardizes, and filters active relationship records for downstream
+    analytics and reporting.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('catalyst_relationship', 'catalyst_relationship_c') }} where is_deleted != 'true'
+    )
+
+
+    select
+        id,
+        CATALYST_ROLE_C,
+        QUALIFIED_PSO_C,
+        _fivetran_synced
+    from source
+  referenced_by: [ int_salesforce__catalyst_relationship_unified ]

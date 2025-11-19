@@ -1,0 +1,75 @@
+# Reference this view as staging__fct_sales_activities
+schema: STAGING
+table_name: FCT_SALES_ACTIVITIES
+
+dimensions:
+  activity_key:
+    sql: '"ACTIVITY_KEY"'
+
+  activity_id:
+    sql: '"ACTIVITY_ID"'
+    format: ID
+
+  contact_id:
+    sql: '"CONTACT_ID"'
+    format: ID
+
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  subject:
+    sql: '"SUBJECT"'
+
+  activity_date:
+    sql: '"ACTIVITY_DATE"'
+
+  activity_type:
+    sql: '"ACTIVITY_TYPE"'
+
+  status:
+    sql: '"STATUS"'
+
+  priority:
+    sql: '"PRIORITY"'
+
+  description:
+    sql: '"DESCRIPTION"'
+
+  is_closed:
+    sql: '"IS_CLOSED"'
+
+  activity_week:
+    sql: '"ACTIVITY_WEEK"'
+
+  activity_month:
+    sql: '"ACTIVITY_MONTH"'
+
+  activity_quarter:
+    sql: '"ACTIVITY_QUARTER"'
+
+  activity_year:
+    sql: '"ACTIVITY_YEAR"'
+
+  activity_count:
+    sql: '"ACTIVITY_COUNT"'
+
+  completed_activity_count:
+    sql: '"COMPLETED_ACTIVITY_COUNT"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  dbt_updated_at:
+    sql: '"DBT_UPDATED_AT"'
+
+measures:
+  count:
+    aggregate_type: count

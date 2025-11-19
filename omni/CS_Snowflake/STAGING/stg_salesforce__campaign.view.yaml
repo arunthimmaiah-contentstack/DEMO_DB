@@ -1,0 +1,124 @@
+# Reference this view as staging__stg_salesforce__campaign
+#This description was pulled from dbt.
+description: |
+  Staging model for Salesforce Campaign object.  Contains campaign-level metrics such as number of responses, contacts, converted leads, and won opportunities. Filters out deleted records.
+
+schema: STAGING
+table_name: STG_SALESFORCE__CAMPAIGN
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Unique identifier for each Salesforce Campaign record.
+    primary_key: true
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  name:
+    sql: '"NAME"'
+
+  parent_id:
+    sql: '"PARENT_ID"'
+    format: ID
+
+  type:
+    sql: '"TYPE"'
+
+  status:
+    sql: '"STATUS"'
+
+  start_date:
+    sql: '"START_DATE"'
+
+  end_date:
+    sql: '"END_DATE"'
+
+  currency_iso_code:
+    sql: '"CURRENCY_ISO_CODE"'
+
+  expected_revenue:
+    sql: '"EXPECTED_REVENUE"'
+
+  budgeted_cost:
+    sql: '"BUDGETED_COST"'
+
+  actual_cost:
+    sql: '"ACTUAL_COST"'
+
+  is_active:
+    sql: '"IS_ACTIVE"'
+
+  description:
+    sql: '"DESCRIPTION"'
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  campaign_member_record_type_id:
+    sql: '"CAMPAIGN_MEMBER_RECORD_TYPE_ID"'
+    format: ID
+
+  x_1_click_trial_c:
+    sql: '"X_1_CLICK_TRIAL_C"'
+
+  webform_origin_c:
+    sql: '"WEBFORM_ORIGIN_C"'
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    #This description was pulled from dbt.
+    description: Timestamp indicating when the record was last synced via Fivetran.
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__campaign
+  target_schema: STAGING
+  description: |
+    Staging model for Salesforce Campaign object.  Contains campaign-level metrics such as number of responses, contacts, converted leads, and won opportunities. Filters out deleted records.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('campaign', 'campaign') }} where is_deleted != 'true'
+    )
+
+    select
+        id,
+        is_deleted,
+        name,
+        parent_id,
+        type,
+        status,
+        start_date,
+        end_date,
+        currency_iso_code,
+        expected_revenue,
+        budgeted_cost,
+        actual_cost,
+        is_active,
+        description,
+        owner_id,
+        created_date,
+        last_modified_date,
+        campaign_member_record_type_id,
+        x_1_click_trial_c,
+        webform_origin_c,
+        _fivetran_synced
+    from source
+  referenced_by: [ dim_campaign, fct_campaign_influence ]

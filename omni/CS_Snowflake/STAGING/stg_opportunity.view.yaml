@@ -1,0 +1,195 @@
+# Reference this view as staging__stg_opportunity
+schema: STAGING
+table_name: STG_OPPORTUNITY
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  contact_id:
+    sql: '"CONTACT_ID"'
+    format: ID
+
+  opportunity_name:
+    sql: '"OPPORTUNITY_NAME"'
+
+  stage_name:
+    sql: '"STAGE_NAME"'
+
+  type:
+    sql: '"TYPE"'
+
+  opportunity_created_date:
+    sql: '"OPPORTUNITY_CREATED_DATE"'
+
+  close_date:
+    sql: '"CLOSE_DATE"'
+
+  pipeline_date_c:
+    sql: '"PIPELINE_DATE_C"'
+
+  owner_region:
+    sql: '"OWNER_REGION"'
+
+  owner_sub_region:
+    sql: '"OWNER_SUB_REGION"'
+
+  lead_source:
+    sql: '"LEAD_SOURCE"'
+
+  lead_source_category_c:
+    sql: '"LEAD_SOURCE_CATEGORY_C"'
+
+  opportunity_record_type:
+    sql: '"OPPORTUNITY_RECORD_TYPE"'
+
+  is_won:
+    sql: '"IS_WON"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  is_closed:
+    sql: '"IS_CLOSED"'
+
+  amount:
+    sql: '"AMOUNT"'
+
+  probability:
+    sql: '"PROBABILITY"'
+
+  total_original_piped_amount_c:
+    sql: '"TOTAL_ORIGINAL_PIPED_AMOUNT_C"'
+
+  opp_total_bookings_c:
+    sql: '"OPP_TOTAL_BOOKINGS_C"'
+
+  cdp_pipeline_percentage_c:
+    sql: '"CDP_PIPELINE_PERCENTAGE_C"'
+
+  cdp_deal_percentage_c:
+    sql: '"CDP_DEAL_PERCENTAGE_C"'
+
+  opp_expansion_bookings_c:
+    sql: '"OPP_EXPANSION_BOOKINGS_C"'
+
+  cms_sales_motion:
+    sql: '"CMS_SALES_MOTION"'
+
+  expansion_sales_motion:
+    sql: '"EXPANSION_SALES_MOTION"'
+
+  license_start_c:
+    sql: '"LICENSE_START_C"'
+
+  license_end_c:
+    sql: '"LICENSE_END_C"'
+
+  fiscal_quarter:
+    sql: '"FISCAL_QUARTER"'
+
+  fiscal_year:
+    sql: '"FISCAL_YEAR"'
+
+  contraction_amount_c:
+    sql: '"CONTRACTION_AMOUNT_C"'
+
+  renewal_opt_out_date_c:
+    sql: '"RENEWAL_OPT_OUT_DATE_C"'
+
+  churn_amount_c:
+    sql: '"CHURN_AMOUNT_C"'
+
+  renewal_opp_prior_contract_end_arr_c:
+    sql: '"RENEWAL_OPP_PRIOR_CONTRACT_END_ARR_C"'
+
+  renewal_opp_prior_contract_arr_cumulative_c:
+    sql: '"RENEWAL_OPP_PRIOR_CONTRACT_ARR_CUMULATIVE_C"'
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  opportunity_lost_reason:
+    sql: '"OPPORTUNITY_LOST_REASON"'
+
+  opportunity_lost_reason_other_explanation:
+    sql: '"OPPORTUNITY_LOST_REASON_OTHER_EXPLANATION"'
+
+  stage_enter_mqo_c:
+    sql: '"STAGE_ENTER_MQO_C"'
+
+  stage_before_lost:
+    sql: '"STAGE_BEFORE_LOST"'
+
+  date_stage_enter_closed_lost:
+    sql: '"DATE_STAGE_ENTER_CLOSED_LOST"'
+
+  product:
+    sql: '"PRODUCT"'
+
+  currency_iso_code:
+    sql: '"CURRENCY_ISO_CODE"'
+
+  customer_designation:
+    sql: '"CUSTOMER_DESIGNATION"'
+
+  product_pipeline_deal_percentage:
+    sql: '"PRODUCT_PIPELINE_DEAL_PERCENTAGE"'
+
+  product_deal_percentage:
+    sql: '"PRODUCT_DEAL_PERCENTAGE"'
+
+  converted_total_original_piped_amount:
+    sql: '"CONVERTED_TOTAL_ORIGINAL_PIPED_AMOUNT"'
+
+  converted_opp_total_bookings:
+    sql: '"CONVERTED_OPP_TOTAL_BOOKINGS"'
+
+  opportunity_owner_id:
+    sql: '"OPPORTUNITY_OWNER_ID"'
+    format: ID
+
+  opportunity_owner_name:
+    sql: '"OPPORTUNITY_OWNER_NAME"'
+
+  days_without_activity:
+    sql: '"DAYS_WITHOUT_ACTIVITY"'
+
+  opportunity_success_tier:
+    sql: '"OPPORTUNITY_SUCCESS_TIER"'
+
+  last_stage_change_date:
+    sql: '"LAST_STAGE_CHANGE_DATE"'
+
+  contactrole_contact_id:
+    sql: '"CONTACTROLE_CONTACT_ID"'
+    format: ID
+
+  contactrole_role:
+    sql: '"CONTACTROLE_ROLE"'
+
+  contactrole_is_primary:
+    sql: '"CONTACTROLE_IS_PRIMARY"'
+
+  record_type_grouped:
+    sql: '"RECORD_TYPE_GROUPED"'
+
+  motion:
+    sql: '"MOTION"'
+
+  sales_cycle_days:
+    sql: '"SALES_CYCLE_DAYS"'
+
+  sync_date:
+    sql: '"SYNC_DATE"'
+
+measures:
+  count:
+    aggregate_type: count

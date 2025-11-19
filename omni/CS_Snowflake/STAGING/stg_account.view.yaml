@@ -1,0 +1,118 @@
+# Reference this view as staging__stg_account
+schema: STAGING
+table_name: STG_ACCOUNT
+
+dimensions:
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  industry:
+    sql: '"INDUSTRY"'
+
+  geo:
+    sql: '"GEO"'
+
+  region:
+    sql: '"REGION"'
+
+  sub_region:
+    sql: '"SUB_REGION"'
+
+  account_tier:
+    sql: '"ACCOUNT_TIER"'
+
+  customer_designation:
+    sql: '"CUSTOMER_DESIGNATION"'
+
+  account_type:
+    sql: '"ACCOUNT_TYPE"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  customer_segment:
+    sql: '"CUSTOMER_SEGMENT"'
+
+  parent_id:
+    sql: '"PARENT_ID"'
+    format: ID
+
+  ultimate_parent_account_name:
+    sql: '"ULTIMATE_PARENT_ACCOUNT_NAME"'
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  revenue_c:
+    sql: '"REVENUE_C"'
+
+  deployment_status_c:
+    sql: '"DEPLOYMENT_STATUS_C"'
+
+  current_arr:
+    sql: '"CURRENT_ARR"'
+
+  product_type:
+    sql: '"PRODUCT_TYPE"'
+
+  account_last_modified_date:
+    sql: '"ACCOUNT_LAST_MODIFIED_DATE"'
+
+  account_created_date:
+    sql: '"ACCOUNT_CREATED_DATE"'
+
+  account_owner_id:
+    sql: '"ACCOUNT_OWNER_ID"'
+    format: ID
+
+  actual_go_live_date_c:
+    sql: '"ACTUAL_GO_LIVE_DATE_C"'
+
+  predicted_go_live_date_c:
+    sql: '"PREDICTED_GO_LIVE_DATE_C"'
+
+  license_start_date:
+    sql: '"LICENSE_START_DATE"'
+
+  license_end_date:
+    sql: '"LICENSE_END_DATE"'
+
+  customer_success_manager_id:
+    sql: '"CUSTOMER_SUCCESS_MANAGER_ID"'
+    format: ID
+
+  sales_engineer_id:
+    sql: '"SALES_ENGINEER_ID"'
+    format: ID
+
+  solution_architect_id:
+    sql: '"SOLUTION_ARCHITECT_ID"'
+    format: ID
+
+  partner_relationship_manager_id:
+    sql: '"PARTNER_RELATIONSHIP_MANAGER_ID"'
+    format: ID
+
+  company_size:
+    sql: '"COMPANY_SIZE"'
+
+  deployment_days:
+    sql: '"DEPLOYMENT_DAYS"'
+
+  onboarded_on_time:
+    sql: '"ONBOARDED_ON_TIME"'
+
+measures:
+  count:
+    aggregate_type: count

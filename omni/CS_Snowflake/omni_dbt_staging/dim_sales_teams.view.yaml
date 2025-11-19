@@ -1,0 +1,95 @@
+# Reference this view as omni_dbt_staging__dim_sales_teams
+schema_label: ""
+
+schema: omni_dbt_staging
+table_name: DIM_SALES_TEAMS
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  user_name:
+    sql: '"USER_NAME"'
+
+  team_name:
+    sql: '"TEAM_NAME"'
+
+  territory_name:
+    sql: '"TERRITORY_NAME"'
+
+  team_lead_id:
+    sql: '"TEAM_LEAD_ID"'
+    format: ID
+
+  created_at:
+    sql: '"CREATED_AT"'
+
+  updated_at:
+    sql: '"UPDATED_AT"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: dim_sales_teams
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: table
+  code: |-
+    -- models/staging/analytics/dim_sales_teams.sql
+    {{ config(
+        materialized='table'
+    ) }}
+
+    WITH sales_team_mapping AS (
+        SELECT 
+            id,
+            username as user_name,
+            -- Team assignment logic based on user attributes
+            CASE 
+                WHEN user_name ILIKE '%enterprise%' OR user_name ILIKE '%strategic%' THEN 'Enterprise Sales'
+                WHEN user_name ILIKE '%commercial%' OR user_name ILIKE '%mid%market%' THEN 'Commercial Sales'
+                WHEN user_name ILIKE '%inside%' OR user_name ILIKE '%sdr%' OR user_name ILIKE '%bdr%' THEN 'Inside Sales'
+                WHEN user_name ILIKE '%customer%success%' OR user_name ILIKE '%csm%' THEN 'Customer Success'
+                WHEN user_name ILIKE '%manager%' OR user_name ILIKE '%director%' THEN 'Sales Management'
+                ELSE 'General Sales'
+            END AS team_name,
+            
+            -- Territory assignment logic
+            CASE 
+                WHEN user_name ILIKE '%west%' OR user_name ILIKE '%pacific%' THEN 'West'
+                WHEN user_name ILIKE '%east%' OR user_name ILIKE '%atlantic%' THEN 'East'
+                WHEN user_name ILIKE '%central%' OR user_name ILIKE '%midwest%' THEN 'Central'
+                WHEN user_name ILIKE '%emea%' OR user_name ILIKE '%europe%' THEN 'EMEA'
+                WHEN user_name ILIKE '%apac%' OR user_name ILIKE '%asia%' THEN 'APAC'
+                ELSE 'North America'
+            END AS territory_name,
+            
+            -- Team lead assignment
+            CASE 
+                WHEN user_name ILIKE '%manager%' THEN id
+                ELSE NULL
+            END AS team_lead_id,
+            
+            CURRENT_TIMESTAMP AS created_at,
+            CURRENT_TIMESTAMP AS updated_at
+            
+        FROM {{ source('salesforce_users', 'user') }}
+        WHERE is_active = TRUE
+        AND (user_name ILIKE '%sales%' OR user_name ILIKE '%success%' OR user_name ILIKE '%account%')
+    )
+
+    SELECT 
+        id,
+        user_name,
+        team_name,
+        territory_name,
+        team_lead_id,
+        created_at,
+        updated_at
+    FROM sales_team_mapping

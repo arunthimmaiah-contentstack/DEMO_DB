@@ -1,0 +1,56 @@
+# Reference this view as omni_dbt__fct_sales_cycle
+schema_label: ""
+
+schema: omni_dbt
+table_name: FCT_SALES_CYCLE
+
+dimensions:
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  industry:
+    sql: '"INDUSTRY"'
+
+  region_c:
+    sql: '"REGION_C"'
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  owner_name:
+    sql: '"OWNER_NAME"'
+
+  owner_title:
+    sql: '"OWNER_TITLE"'
+
+  owner_department:
+    sql: '"OWNER_DEPARTMENT"'
+
+  record_type_id:
+    sql: '"RECORD_TYPE_ID"'
+    format: ID
+
+  product_type:
+    sql: '"PRODUCT_TYPE"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  close_date:
+    sql: '"CLOSE_DATE"'
+
+  days_in_pipeline:
+    sql: '"DAYS_IN_PIPELINE"'
+
+measures:
+  count:
+    aggregate_type: count

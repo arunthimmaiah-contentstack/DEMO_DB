@@ -1,0 +1,91 @@
+# Reference this view as omni_dbt__stg_salesforce__product_2
+schema_label: ""
+
+schema: omni_dbt
+table_name: STG_SALESFORCE__PRODUCT_2
+
+dimensions:
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  product_2_id:
+    sql: '"PRODUCT_2_ID"'
+    format: ID
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  product_2_description:
+    sql: '"PRODUCT_2_DESCRIPTION"'
+
+  display_url:
+    sql: '"DISPLAY_URL"'
+
+  external_id:
+    sql: '"EXTERNAL_ID"'
+    format: ID
+
+  family:
+    sql: '"FAMILY"'
+
+  is_active:
+    sql: '"IS_ACTIVE"'
+
+  is_archived:
+    sql: '"IS_ARCHIVED"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  last_referenced_date:
+    sql: '"LAST_REFERENCED_DATE"'
+
+  last_viewed_date:
+    sql: '"LAST_VIEWED_DATE"'
+
+  product_2_name:
+    sql: '"PRODUCT_2_NAME"'
+
+  number_of_quantity_installments:
+    sql: '"NUMBER_OF_QUANTITY_INSTALLMENTS"'
+
+  number_of_revenue_installments:
+    sql: '"NUMBER_OF_REVENUE_INSTALLMENTS"'
+
+  product_code:
+    sql: '"PRODUCT_CODE"'
+
+  quantity_installment_period:
+    sql: '"QUANTITY_INSTALLMENT_PERIOD"'
+
+  quantity_schedule_type:
+    sql: '"QUANTITY_SCHEDULE_TYPE"'
+
+  quantity_unit_of_measure:
+    sql: '"QUANTITY_UNIT_OF_MEASURE"'
+
+  record_type_id:
+    sql: '"RECORD_TYPE_ID"'
+    format: ID
+
+  revenue_installment_period:
+    sql: '"REVENUE_INSTALLMENT_PERIOD"'
+
+  revenue_schedule_type:
+    sql: '"REVENUE_SCHEDULE_TYPE"'
+
+measures:
+  count:
+    aggregate_type: count

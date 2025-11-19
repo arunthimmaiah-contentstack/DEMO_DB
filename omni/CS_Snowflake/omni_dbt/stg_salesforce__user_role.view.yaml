@@ -1,0 +1,38 @@
+# Reference this view as omni_dbt__stg_salesforce__user_role
+schema_label: ""
+
+schema: omni_dbt
+table_name: STG_SALESFORCE__USER_ROLE
+
+dimensions:
+  _fivetran_deleted:
+    sql: '"_FIVETRAN_DELETED"'
+    hidden: true
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  developer_name:
+    sql: '"DEVELOPER_NAME"'
+
+  user_role_id:
+    sql: '"USER_ROLE_ID"'
+    format: ID
+
+  user_role_name:
+    sql: '"USER_ROLE_NAME"'
+
+  opportunity_access_for_account_owner:
+    sql: '"OPPORTUNITY_ACCESS_FOR_ACCOUNT_OWNER"'
+
+  parent_role_id:
+    sql: '"PARENT_ROLE_ID"'
+    format: ID
+
+  rollup_description:
+    sql: '"ROLLUP_DESCRIPTION"'
+
+measures:
+  count:
+    aggregate_type: count

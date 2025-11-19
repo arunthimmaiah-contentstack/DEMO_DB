@@ -1,0 +1,161 @@
+# Reference this view as omni_dbt_staging__stg_salesforce__accounts
+label: Accounts
+schema_label: ""
+#This description was pulled from dbt.
+description: Staging model for Salesforce accounts, selecting non-deleted
+  accounts and standardizing field names.
+
+schema: omni_dbt_staging
+table_name: STG_SALESFORCE__ACCOUNTS
+
+dimensions:
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Unique identifier for the account.
+    primary_key: true
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+    #This description was pulled from dbt.
+    description: Name of the account.
+
+  industry:
+    sql: '"INDUSTRY"'
+    #This description was pulled from dbt.
+    description: Industry of the account.
+
+  geo:
+    sql: '"GEO"'
+
+  region:
+    sql: '"REGION"'
+    #This description was pulled from dbt.
+    description: Region associated with the account.
+
+  sub_region:
+    sql: '"SUB_REGION"'
+    #This description was pulled from dbt.
+    description: Sub-region associated with the account.
+
+  account_tier:
+    sql: '"ACCOUNT_TIER"'
+    #This description was pulled from dbt.
+    description: Tier classification of the account.
+
+  customer_designation:
+    sql: '"CUSTOMER_DESIGNATION"'
+    #This description was pulled from dbt.
+    description: Customer designation for the account.
+
+  account_type:
+    sql: '"ACCOUNT_TYPE"'
+    #This description was pulled from dbt.
+    description: Type of the account.
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+    #This description was pulled from dbt.
+    description: Indicates if the account is deleted.
+
+  created_date:
+    sql: '"CREATED_DATE"'
+    #This description was pulled from dbt.
+    description: Date the account was created.
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+    #This description was pulled from dbt.
+    description: Date the account was last modified.
+
+  customer_segment:
+    sql: '"CUSTOMER_SEGMENT"'
+    #This description was pulled from dbt.
+    description: Customer segment classification.
+
+  parent_id:
+    sql: '"PARENT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: ID of the parent account, if any.
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  ultimate_parent_account_name:
+    sql: '"ULTIMATE_PARENT_ACCOUNT_NAME"'
+    #This description was pulled from dbt.
+    description: Name of the ultimate parent account.
+
+  name:
+    # Dimension is defined in the 'accounts' dbt semantic model (models/staging/salesforce/account/semantic_models/sem_stg_salesforce__accounts.yml)
+    sql: ${omni_dbt_staging__stg_salesforce__accounts.account_name}
+
+  tier:
+    # Dimension is defined in the 'accounts' dbt semantic model (models/staging/salesforce/account/semantic_models/sem_stg_salesforce__accounts.yml)
+    sql: ${omni_dbt_staging__stg_salesforce__accounts.account_tier}
+
+  type:
+    # Dimension is defined in the 'accounts' dbt semantic model (models/staging/salesforce/account/semantic_models/sem_stg_salesforce__accounts.yml)
+    sql: ${omni_dbt_staging__stg_salesforce__accounts.account_type}
+
+  _entity_account:
+    # Entity is defined in the 'accounts' dbt semantic model (models/staging/salesforce/account/semantic_models/sem_stg_salesforce__accounts.yml)
+    sql: ${omni_dbt_staging__stg_salesforce__accounts.account_id}
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+  count_account:
+    # Measure is defined by the 'count_account' dbt metric (models/staging/salesforce/account/semantic_models/sem_stg_salesforce__accounts.yml)
+    sql: ${omni_dbt_staging__stg_salesforce__accounts.account_id}
+    label: count_account
+    description: Metric created from measure count_account
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__accounts
+  target_schema: STAGING
+  description: Staging model for Salesforce accounts, selecting non-deleted
+    accounts and standardizing field names.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('salesforce_account', 'account') }} where is_deleted = FALSE
+    )
+
+    select
+        id as account_id,
+        name as account_name,
+        industry,
+    	geo_c as geo,
+        region_c as region,
+        sub_region_c as sub_region,
+        account_tier_c as account_tier,
+        customer_designation_c as customer_designation,
+        type as account_type,
+        is_deleted,
+        created_date,
+        last_modified_date,
+        customer_segment_c as customer_segment,
+        parent_id,
+        _fivetran_synced,
+        ultimate_parent_account_name_c as ultimate_parent_account_name
+    from source
+  referenced_by:
+    [
+      fct_cases,
+      fct_renewals,
+      fct_campaign_influence,
+      stg_salesforce__survey,
+      academy_partner_enrollments,
+      learnupon_partner_enrollments,
+      int_salesforce__account_unified
+    ]

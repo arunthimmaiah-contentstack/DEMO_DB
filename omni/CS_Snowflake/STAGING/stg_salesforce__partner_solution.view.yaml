@@ -1,0 +1,110 @@
+# Reference this view as staging__stg_salesforce__partner_solution
+#This description was pulled from dbt.
+description: Staging model for Salesforce Partner Solutions object. Cleans,
+  standardizes, and filters active partner solution records for downstream
+  analytics and reporting.
+
+schema: STAGING
+table_name: STG_SALESFORCE__PARTNER_SOLUTION
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Unique identifier for each Partner Solution record.
+    primary_key: true
+
+  name:
+    sql: '"NAME"'
+
+  accelerator_owner_c:
+    sql: '"ACCELERATOR_OWNER_C"'
+
+  commerce_c:
+    sql: '"COMMERCE_C"'
+    #This description was pulled from dbt.
+    description: Commerce platform associated with the partner solution.
+
+  search_c:
+    sql: '"SEARCH_C"'
+    #This description was pulled from dbt.
+    description: Search capabilities linked to the partner solution.
+
+  frontend_c:
+    sql: '"FRONTEND_C"'
+    #This description was pulled from dbt.
+    description: Frontend technology used in the partner solution.
+
+  dam_c:
+    sql: '"DAM_C"'
+    #This description was pulled from dbt.
+    description: Digital Asset Management (DAM) related to the partner solution.
+
+  other_c:
+    sql: '"OTHER_C"'
+
+  region_c:
+    sql: '"REGION_C"'
+
+  eta_availability_c:
+    sql: '"ETA_AVAILABILITY_C"'
+
+  b_2_b_b_2_c_b_2_b_2_c_c:
+    sql: '"B_2_B_B_2_C_B_2_B_2_C_C"'
+    #This description was pulled from dbt.
+    description: Custom B2B/B2C field for the partner solution.
+
+  notes_c:
+    sql: '"NOTES_C"'
+
+  materials_c:
+    sql: '"MATERIALS_C"'
+    #This description was pulled from dbt.
+    description: Materials associated with the partner solution.
+
+  accelerators_c:
+    sql: '"ACCELERATORS_C"'
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    #This description was pulled from dbt.
+    description: Timestamp indicating when the record was last synced via Fivetran.
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__partner_solution
+  target_schema: STAGING
+  description: Staging model for Salesforce Partner Solutions object. Cleans,
+    standardizes, and filters active partner solution records for downstream
+    analytics and reporting.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('partner_solutions', 'partner_solutions_c') }} where is_deleted != 'true'
+    )
+
+    select
+        id,
+        name,
+        accelerator_owner_c,
+        commerce_c,
+        search_c,
+        frontend_c,
+        dam_c,
+        other_c,
+        region_c,
+        eta_availability_c,
+        B_2_B_B_2_C_B_2_B_2_C_C,
+        notes_c,
+        materials_c,
+        accelerators_c,
+        _fivetran_synced
+    from source

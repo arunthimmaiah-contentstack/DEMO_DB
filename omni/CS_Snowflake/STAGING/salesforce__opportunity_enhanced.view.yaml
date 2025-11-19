@@ -1,0 +1,217 @@
+# Reference this view as staging__salesforce__opportunity_enhanced
+schema: STAGING
+table_name: SALESFORCE__OPPORTUNITY_ENHANCED
+
+dimensions:
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  amount:
+    sql: '"AMOUNT"'
+
+  campaign_id:
+    sql: '"CAMPAIGN_ID"'
+    format: ID
+
+  close_date:
+    sql: '"CLOSE_DATE"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  opportunity_description:
+    sql: '"OPPORTUNITY_DESCRIPTION"'
+
+  expected_revenue:
+    sql: '"EXPECTED_REVENUE"'
+
+  fiscal:
+    sql: '"FISCAL"'
+
+  fiscal_quarter:
+    sql: '"FISCAL_QUARTER"'
+
+  fiscal_year:
+    sql: '"FISCAL_YEAR"'
+
+  forecast_category:
+    sql: '"FORECAST_CATEGORY"'
+
+  forecast_category_name:
+    sql: '"FORECAST_CATEGORY_NAME"'
+
+  has_open_activity:
+    sql: '"HAS_OPEN_ACTIVITY"'
+
+  has_opportunity_line_item:
+    sql: '"HAS_OPPORTUNITY_LINE_ITEM"'
+
+  has_overdue_task:
+    sql: '"HAS_OVERDUE_TASK"'
+
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+
+  is_closed:
+    sql: '"IS_CLOSED"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  is_won:
+    sql: '"IS_WON"'
+
+  last_activity_date:
+    sql: '"LAST_ACTIVITY_DATE"'
+
+  last_referenced_date:
+    sql: '"LAST_REFERENCED_DATE"'
+
+  last_viewed_date:
+    sql: '"LAST_VIEWED_DATE"'
+
+  lead_source:
+    sql: '"LEAD_SOURCE"'
+
+  opportunity_name:
+    sql: '"OPPORTUNITY_NAME"'
+
+  next_step:
+    sql: '"NEXT_STEP"'
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  probability:
+    sql: '"PROBABILITY"'
+
+  record_type_id:
+    sql: '"RECORD_TYPE_ID"'
+    format: ID
+
+  stage_name:
+    sql: '"STAGE_NAME"'
+
+  synced_quote_id:
+    sql: '"SYNCED_QUOTE_ID"'
+    format: ID
+
+  type:
+    sql: '"TYPE"'
+
+  is_created_this_month:
+    sql: '"IS_CREATED_THIS_MONTH"'
+
+  is_created_this_quarter:
+    sql: '"IS_CREATED_THIS_QUARTER"'
+
+  days_since_created:
+    sql: '"DAYS_SINCE_CREATED"'
+
+  days_to_close:
+    sql: '"DAYS_TO_CLOSE"'
+
+  is_closed_this_month:
+    sql: '"IS_CLOSED_THIS_MONTH"'
+
+  is_closed_this_quarter:
+    sql: '"IS_CLOSED_THIS_QUARTER"'
+
+  account_number:
+    sql: '"ACCOUNT_NUMBER"'
+
+  account_source:
+    sql: '"ACCOUNT_SOURCE"'
+
+  industry:
+    sql: '"INDUSTRY"'
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  number_of_employees:
+    sql: '"NUMBER_OF_EMPLOYEES"'
+
+  account_type:
+    sql: '"ACCOUNT_TYPE"'
+
+  opportunity_owner_id:
+    sql: '"OPPORTUNITY_OWNER_ID"'
+    format: ID
+
+  opportunity_owner_name:
+    sql: '"OPPORTUNITY_OWNER_NAME"'
+
+  opportunity_owner_role_id:
+    sql: '"OPPORTUNITY_OWNER_ROLE_ID"'
+    format: ID
+
+  opportunity_owner_city:
+    sql: '"OPPORTUNITY_OWNER_CITY"'
+
+  opportunity_owner_state:
+    sql: '"OPPORTUNITY_OWNER_STATE"'
+
+  opportunity_manager_id:
+    sql: '"OPPORTUNITY_MANAGER_ID"'
+    format: ID
+
+  opportunity_manager_name:
+    sql: '"OPPORTUNITY_MANAGER_NAME"'
+
+  opportunity_manager_city:
+    sql: '"OPPORTUNITY_MANAGER_CITY"'
+
+  opportunity_manager_state:
+    sql: '"OPPORTUNITY_MANAGER_STATE"'
+
+  opportunity_owner_position:
+    sql: '"OPPORTUNITY_OWNER_POSITION"'
+
+  opportunity_owner_developer_name:
+    sql: '"OPPORTUNITY_OWNER_DEVELOPER_NAME"'
+
+  opportunity_owner_parent_role_id:
+    sql: '"OPPORTUNITY_OWNER_PARENT_ROLE_ID"'
+    format: ID
+
+  opportunity_owner_rollup_description:
+    sql: '"OPPORTUNITY_OWNER_ROLLUP_DESCRIPTION"'
+
+  status:
+    sql: '"STATUS"'
+
+  created_amount_this_month:
+    sql: '"CREATED_AMOUNT_THIS_MONTH"'
+
+  created_amount_this_quarter:
+    sql: '"CREATED_AMOUNT_THIS_QUARTER"'
+
+  created_count_this_month:
+    sql: '"CREATED_COUNT_THIS_MONTH"'
+
+  created_count_this_quarter:
+    sql: '"CREATED_COUNT_THIS_QUARTER"'
+
+  closed_amount_this_month:
+    sql: '"CLOSED_AMOUNT_THIS_MONTH"'
+
+  closed_amount_this_quarter:
+    sql: '"CLOSED_AMOUNT_THIS_QUARTER"'
+
+  closed_count_this_month:
+    sql: '"CLOSED_COUNT_THIS_MONTH"'
+
+  closed_count_this_quarter:
+    sql: '"CLOSED_COUNT_THIS_QUARTER"'
+
+measures:
+  count:
+    aggregate_type: count

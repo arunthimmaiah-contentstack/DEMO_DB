@@ -1,0 +1,28 @@
+# Reference this view as staging__stg_salesforce__task_source
+schema: STAGING
+table_name: STG_SALESFORCE__TASK_SOURCE
+
+dimensions:
+  task_id:
+    sql: '"TASK_ID"'
+    format: ID
+
+  related_to_id:
+    sql: '"RELATED_TO_ID"'
+    format: ID
+
+  subject:
+    sql: '"SUBJECT"'
+
+  status:
+    sql: '"STATUS"'
+
+  activity_date:
+    sql: '"ACTIVITY_DATE"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+measures:
+  count:
+    aggregate_type: count

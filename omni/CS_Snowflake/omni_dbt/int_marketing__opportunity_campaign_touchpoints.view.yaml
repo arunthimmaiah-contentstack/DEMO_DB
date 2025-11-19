@@ -1,0 +1,35 @@
+# Reference this view as omni_dbt__int_marketing__opportunity_campaign_touchpoints
+schema_label: ""
+
+schema: omni_dbt
+table_name: INT_MARKETING__OPPORTUNITY_CAMPAIGN_TOUCHPOINTS
+
+dimensions:
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+
+  opportunity_name:
+    sql: '"OPPORTUNITY_NAME"'
+
+  amount:
+    sql: '"AMOUNT"'
+
+  is_won:
+    sql: '"IS_WON"'
+
+  close_date:
+    sql: '"CLOSE_DATE"'
+
+  campaign_name:
+    sql: '"CAMPAIGN_NAME"'
+
+  campaign_type:
+    sql: '"CAMPAIGN_TYPE"'
+
+  engagement_date:
+    sql: '"ENGAGEMENT_DATE"'
+
+measures:
+  count:
+    aggregate_type: count

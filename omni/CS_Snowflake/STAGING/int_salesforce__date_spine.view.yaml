@@ -1,0 +1,11 @@
+# Reference this view as staging__int_salesforce__date_spine
+schema: STAGING
+table_name: INT_SALESFORCE__DATE_SPINE
+
+dimensions:
+  date_day:
+    sql: '"DATE_DAY"'
+
+measures:
+  count:
+    aggregate_type: count

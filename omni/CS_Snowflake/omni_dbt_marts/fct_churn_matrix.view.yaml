@@ -1,0 +1,65 @@
+# Reference this view as omni_dbt_marts__fct_churn_matrix
+schema_label: ""
+
+schema: omni_dbt_marts
+table_name: FCT_CHURN_MATRIX
+
+dimensions:
+  period_month:
+    sql: '"PERIOD_MONTH"'
+
+  churn_status:
+    sql: '"CHURN_STATUS"'
+
+  product_type_c:
+    sql: '"PRODUCT_TYPE_C"'
+
+  account_count:
+    sql: '"ACCOUNT_COUNT"'
+
+  total_arr:
+    sql: '"TOTAL_ARR"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_churn_matrix
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    with base as (
+        select * from {{ ref('int_account_subscription') }}
+    ),
+
+    labeled as (
+        select
+            id,
+            name,
+            product_type_c,
+            current_arr_c,
+            churn_reason_c,
+            churn_reason_other_description_c,
+            case 
+                when churn_date_c is not null then 'Churned'
+                when current_arr_c > 0 then 'Active'
+                else 'Inactive'
+            end as churn_status,
+            date_trunc('month', coalesce(churn_date_c, acquisition_date_c)) as period_month
+        from base
+    )
+
+    select
+        period_month,
+        churn_status,
+        product_type_c,
+        count(distinct id) as account_count,
+        sum(current_arr_c) as total_arr
+    from labeled
+    group by 1,2,3
+    order by 1,2,3
+  referenced_by: [ fct_churn_rate ]

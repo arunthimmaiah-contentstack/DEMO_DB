@@ -1,0 +1,104 @@
+# Reference this view as staging__stg_salesforce__task
+schema: STAGING
+table_name: STG_SALESFORCE__TASK
+
+dimensions:
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  task_id:
+    sql: '"TASK_ID"'
+    format: ID
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  activity_date:
+    sql: '"ACTIVITY_DATE"'
+
+  call_disposition:
+    sql: '"CALL_DISPOSITION"'
+
+  call_duration_in_seconds:
+    sql: '"CALL_DURATION_IN_SECONDS"'
+
+  call_object:
+    sql: '"CALL_OBJECT"'
+
+  call_type:
+    sql: '"CALL_TYPE"'
+
+  completed_date_time:
+    sql: '"COMPLETED_DATE_TIME"'
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  task_description:
+    sql: '"TASK_DESCRIPTION"'
+
+  is_archived:
+    sql: '"IS_ARCHIVED"'
+
+  is_closed:
+    sql: '"IS_CLOSED"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  is_high_priority:
+    sql: '"IS_HIGH_PRIORITY"'
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  priority:
+    sql: '"PRIORITY"'
+
+  record_type_id:
+    sql: '"RECORD_TYPE_ID"'
+    format: ID
+
+  status:
+    sql: '"STATUS"'
+
+  subject:
+    sql: '"SUBJECT"'
+
+  task_subtype:
+    sql: '"TASK_SUBTYPE"'
+
+  type:
+    sql: '"TYPE"'
+
+  what_count:
+    sql: '"WHAT_COUNT"'
+
+  what_id:
+    sql: '"WHAT_ID"'
+    format: ID
+
+  who_count:
+    sql: '"WHO_COUNT"'
+
+  who_id:
+    sql: '"WHO_ID"'
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

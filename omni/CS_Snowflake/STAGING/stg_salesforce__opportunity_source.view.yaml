@@ -1,0 +1,47 @@
+# Reference this view as staging__stg_salesforce__opportunity_source
+schema: STAGING
+table_name: STG_SALESFORCE__OPPORTUNITY_SOURCE
+
+dimensions:
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  opportunity_name:
+    sql: '"OPPORTUNITY_NAME"'
+
+  stage_name:
+    sql: '"STAGE_NAME"'
+
+  opportunity_type:
+    sql: '"OPPORTUNITY_TYPE"'
+
+  amount:
+    sql: '"AMOUNT"'
+
+  probability:
+    sql: '"PROBABILITY"'
+
+  is_closed:
+    sql: '"IS_CLOSED"'
+
+  is_won:
+    sql: '"IS_WON"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  close_date:
+    sql: '"CLOSE_DATE"'
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

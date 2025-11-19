@@ -1,0 +1,54 @@
+# Reference this view as staging__stg_salesforce__survey_response
+schema: STAGING
+table_name: STG_SALESFORCE__SURVEY_RESPONSE
+
+dimensions:
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  survey_date:
+    sql: '"SURVEY_DATE"'
+
+  rating_c:
+    sql: '"RATING_C"'
+
+  survey_type_c:
+    sql: '"SURVEY_TYPE_C"'
+
+  rating:
+    sql: '"RATING"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__survey_response
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with surveys as (
+        select
+            account_c as account_id,
+            to_date(created_date) as survey_date,
+            rating_c,
+            survey_type_c,
+            case
+                when rating_c is not null then rating_c
+                when csat_for_support_experience_c = 'Very Satisfied' then 4
+                when csat_for_support_experience_c = 'Satisfied' then 3
+                when csat_for_support_experience_c = 'Dissatisfied' then 2
+                when csat_for_support_experience_c = 'Very Dissatisfied' then 1
+                when rate_current_satisfaction_contentstack_c = 'Very Satisfied' then 4
+                when rate_current_satisfaction_contentstack_c = 'Satisfied' then 3
+                when rate_current_satisfaction_contentstack_c = 'Dissatisfied' then 2
+                when rate_current_satisfaction_contentstack_c = 'Very Dissatisfied' then 1
+            end as rating
+        from {{ source('salesforce_customer', 'contentstack_survey_response_c') }}
+        where is_deleted = false
+    )
+    select * from surveys

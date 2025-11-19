@@ -1,0 +1,75 @@
+# Reference this view as omni_dbt_staging__stg_salesforce__entitlements__orgs
+schema_label: ""
+
+schema: omni_dbt_staging
+table_name: STG_SALESFORCE__ENTITLEMENTS__ORGS
+
+dimensions:
+  entitlement_id:
+    sql: '"ENTITLEMENT_ID"'
+    format: ID
+
+  entitlement_name:
+    sql: '"ENTITLEMENT_NAME"'
+
+  entitlement_start_date:
+    sql: '"ENTITLEMENT_START_DATE"'
+
+  entitlement_end_date:
+    sql: '"ENTITLEMENT_END_DATE"'
+
+  current_amount_allowed:
+    sql: '"CURRENT_AMOUNT_ALLOWED"'
+
+  date:
+    sql: '"DATE"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  amount_used:
+    sql: '"AMOUNT_USED"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__entitlements__orgs
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    {{ config(
+        materialized = "view"
+    ) }}
+
+    with source as (
+
+        select * 
+        from {{ source('salesforce_entitlements', 'tenant_usage_entitlement') }}
+
+    ),
+
+    renamed as (
+
+        select
+            id                                as entitlement_id,
+            master_label                      as entitlement_name,
+            start_date                        as entitlement_start_date,
+            end_date                          as entitlement_end_date,
+    -- e.g. Warranty, Support, SLA
+            current_amount_allowed,   -- e.g. Active, Inactive
+            usage_date as date,
+            created_date                      as created_date,
+            last_modified_date                as last_modified_date,
+            amount_used                          -- joins to Salesforce Organization
+        from source
+    )
+
+    select * from renamed

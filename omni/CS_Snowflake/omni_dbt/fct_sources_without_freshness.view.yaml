@@ -1,0 +1,47 @@
+# Reference this view as omni_dbt__fct_sources_without_freshness
+schema_label: ""
+#This description was pulled from dbt.
+description: This table shows each source that does not have a source freshness
+  defined, either as a warn or an error
+
+schema: omni_dbt
+table_name: FCT_SOURCES_WITHOUT_FRESHNESS
+
+dimensions:
+  resource_name:
+    sql: '"RESOURCE_NAME"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_sources_without_freshness
+  target_schema: STAGING
+  description: This table shows each source that does not have a source freshness
+    defined, either as a warn or an error
+  config:
+    materialized: view
+  code: |-
+    with
+
+    all_resources as (
+        select * from {{ ref('int_all_graph_resources') }}
+        where not is_excluded
+
+    ),
+
+    final as (
+
+        select distinct
+            resource_name
+
+        from all_resources
+        where not is_freshness_enabled and resource_type = 'source'
+
+    )
+
+    select * from final
+
+    {{ filter_exceptions() }}

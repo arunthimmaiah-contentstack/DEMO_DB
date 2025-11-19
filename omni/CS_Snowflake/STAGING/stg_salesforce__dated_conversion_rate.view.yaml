@@ -1,0 +1,43 @@
+# Reference this view as staging__stg_salesforce__dated_conversion_rate
+schema: STAGING
+table_name: STG_SALESFORCE__DATED_CONVERSION_RATE
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  iso_code:
+    sql: '"ISO_CODE"'
+
+  start_date:
+    sql: '"START_DATE"'
+
+  next_start_date:
+    sql: '"NEXT_START_DATE"'
+
+  conversion_rate:
+    sql: '"CONVERSION_RATE"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__dated_conversion_rate
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    -- this table is used for converting currency amounts
+    -- there is no is_deleted column in this table
+    select
+        id,
+        iso_code,
+        start_date,
+        next_start_date,
+        conversion_rate
+    from fivetran_database.salesforce.dated_conversion_rate

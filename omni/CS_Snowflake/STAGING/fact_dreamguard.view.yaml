@@ -1,0 +1,159 @@
+# Reference this view as staging__fact_dreamguard
+schema: STAGING
+table_name: FACT_DREAMGUARD
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  opp_acc_id:
+    sql: '"OPP_ACC_ID"'
+    format: ID
+
+  opportunity_record_type:
+    sql: '"OPPORTUNITY_RECORD_TYPE"'
+
+  stage_name:
+    sql: '"STAGE_NAME"'
+
+  close_date:
+    sql: '"CLOSE_DATE"'
+
+  pipeline_date_c:
+    sql: '"PIPELINE_DATE_C"'
+
+  total_original_piped_amount_c:
+    sql: '"TOTAL_ORIGINAL_PIPED_AMOUNT_C"'
+
+  opp_total_bookings_c:
+    sql: '"OPP_TOTAL_BOOKINGS_C"'
+
+  opp_expansion_bookings_c:
+    sql: '"OPP_EXPANSION_BOOKINGS_C"'
+
+  opportunity_lost_reason:
+    sql: '"OPPORTUNITY_LOST_REASON"'
+
+  stage_enter_mqo_c:
+    sql: '"STAGE_ENTER_MQO_C"'
+
+  currency_iso_code:
+    sql: '"CURRENCY_ISO_CODE"'
+
+  owner_region:
+    sql: '"OWNER_REGION"'
+
+  owner_sub_region:
+    sql: '"OWNER_SUB_REGION"'
+
+  lead_source:
+    sql: '"LEAD_SOURCE"'
+
+  lead_source_category_c:
+    sql: '"LEAD_SOURCE_CATEGORY_C"'
+
+  type:
+    sql: '"TYPE"'
+
+  cms_sales_motion:
+    sql: '"CMS_SALES_MOTION"'
+
+  expansion_sales_motion:
+    sql: '"EXPANSION_SALES_MOTION"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  is_won:
+    sql: '"IS_WON"'
+
+  record_type_grouped:
+    sql: '"RECORD_TYPE_GROUPED"'
+
+  motion:
+    sql: '"MOTION"'
+
+  sync_date:
+    sql: '"SYNC_DATE"'
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  company_size:
+    sql: '"COMPANY_SIZE"'
+
+  account_tier:
+    sql: '"ACCOUNT_TIER"'
+
+  geo:
+    sql: '"GEO"'
+
+  account_region:
+    sql: '"ACCOUNT_REGION"'
+
+  account_sub_region:
+    sql: '"ACCOUNT_SUB_REGION"'
+
+  revenue_c:
+    sql: '"REVENUE_C"'
+
+  deployment_status_c:
+    sql: '"DEPLOYMENT_STATUS_C"'
+
+  account_type:
+    sql: '"ACCOUNT_TYPE"'
+
+  deployment_days:
+    sql: '"DEPLOYMENT_DAYS"'
+
+  onboarded_on_time:
+    sql: '"ONBOARDED_ON_TIME"'
+
+  license_start_date:
+    sql: '"LICENSE_START_DATE"'
+
+  actual_go_live_date_c:
+    sql: '"ACTUAL_GO_LIVE_DATE_C"'
+
+  predicted_go_live_date_c:
+    sql: '"PREDICTED_GO_LIVE_DATE_C"'
+
+  conversion_rate:
+    sql: '"CONVERSION_RATE"'
+
+  pipeline_amount_usd:
+    sql: '"PIPELINE_AMOUNT_USD"'
+
+  bookings_amount_usd:
+    sql: '"BOOKINGS_AMOUNT_USD"'
+
+  expansion_bookings_usd:
+    sql: '"EXPANSION_BOOKINGS_USD"'
+
+  is_closed_won:
+    sql: '"IS_CLOSED_WON"'
+
+  is_closed_lost:
+    sql: '"IS_CLOSED_LOST"'
+
+  is_opp_total_bookings_valid:
+    sql: '"IS_OPP_TOTAL_BOOKINGS_VALID"'
+
+  is_renewal_won:
+    sql: '"IS_RENEWAL_WON"'
+
+  is_mqo:
+    sql: '"IS_MQO"'
+
+  sales_cycle_days:
+    sql: '"SALES_CYCLE_DAYS"'
+
+measures:
+  count:
+    aggregate_type: count

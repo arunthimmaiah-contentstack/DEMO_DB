@@ -1,0 +1,893 @@
+# Reference this view as omni_dbt_staging__fct_partner360_summary
+label: Partner360 Semantic Model
+schema_label: ""
+#This description was pulled from dbt.
+description: |
+  The unified Partner360 fact model containing all partner-related performance metrics. It includes Co-Sell, Sourced, Influenced, and Attach Rate KPIs derived from unified Salesforce data.
+
+schema: omni_dbt_staging
+table_name: FCT_PARTNER360_SUMMARY
+
+dimensions:
+  metric_name:
+    sql: '"METRIC_NAME"'
+    #This description was pulled from dbt.
+    description: Metric name/category (e.g., FACT_PARTNER_COSELL_WINS).
+
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Linked Opportunity ID (nullable for non-opportunity metrics).
+    primary_key: true
+
+  opportunity_name:
+    sql: '"OPPORTUNITY_NAME"'
+    #This description was pulled from dbt.
+    description: Name of the Opportunity.
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Linked Salesforce Account ID.
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+    #This description was pulled from dbt.
+    description: Name of the Account.
+
+  record_type_value:
+    sql: '"RECORD_TYPE_VALUE"'
+    #This description was pulled from dbt.
+    description: Record type value (e.g., Sales, Renewal, Cross-Sell).
+
+  opportunity_stage_name:
+    sql: '"OPPORTUNITY_STAGE_NAME"'
+    #This description was pulled from dbt.
+    description: Stage name for the Opportunity.
+
+  opportunity_created_date:
+    sql: '"OPPORTUNITY_CREATED_DATE"'
+    #This description was pulled from dbt.
+    description: Creation date of the Opportunity.
+
+  opportunity_close_date:
+    sql: '"OPPORTUNITY_CLOSE_DATE"'
+    #This description was pulled from dbt.
+    description: Close date of the Opportunity.
+
+  pipeline_value_usd:
+    sql: '"PIPELINE_VALUE_USD"'
+    #This description was pulled from dbt.
+    description: Total pipeline value in USD.
+
+  bookings_value_usd:
+    sql: '"BOOKINGS_VALUE_USD"'
+    #This description was pulled from dbt.
+    description: Total bookings in USD.
+
+  partner_relationship_manager_id:
+    sql: '"PARTNER_RELATIONSHIP_MANAGER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Partner Relationship Manager ID.
+
+  partner_relationship_manager_name:
+    sql: '"PARTNER_RELATIONSHIP_MANAGER_NAME"'
+    #This description was pulled from dbt.
+    description: Name of the Partner Relationship Manager.
+
+  catalyst_role:
+    sql: '"CATALYST_ROLE"'
+    #This description was pulled from dbt.
+    description: Role type (Co-Sell, Referral, etc.).
+
+  catalyst_relationship_status:
+    sql: '"CATALYST_RELATIONSHIP_STATUS"'
+    #This description was pulled from dbt.
+    description: Relationship status.
+
+  region:
+    sql: '"REGION"'
+    #This description was pulled from dbt.
+    description: Account region.
+
+  sub_region:
+    sql: '"SUB_REGION"'
+    #This description was pulled from dbt.
+    description: Account sub-region.
+
+  account_tier:
+    sql: '"ACCOUNT_TIER"'
+    #This description was pulled from dbt.
+    description: Account segmentation tier.
+
+  account_current_arr:
+    sql: '"ACCOUNT_CURRENT_ARR"'
+    #This description was pulled from dbt.
+    description: Current ARR value for the account.
+
+  record_built_ts:
+    sql: '"RECORD_BUILT_TS"'
+    #This description was pulled from dbt.
+    description: Timestamp when the record was generated.
+
+  partner_metric_name:
+    # Dimension is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.metric_name}
+    description: Metric category label.
+
+  partner_record_type_value:
+    # Dimension is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.record_type_value}
+    description: Record type of the opportunity.
+
+  partner_opportunity_stage_name:
+    # Dimension is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.opportunity_stage_name}
+    description: Salesforce stage name.
+
+  partner_catalyst_role:
+    # Dimension is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.catalyst_role}
+    description: Partner catalyst role (Co-Sell, Referral, etc.).
+
+  partner_catalyst_relationship_status:
+    # Dimension is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.catalyst_relationship_status}
+    description: Catalyst relationship status.
+
+  partner_region:
+    # Dimension is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.region}
+    description: Region for Partner360 metrics.
+
+  partner_sub_region:
+    # Dimension is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.sub_region}
+    description: Sub-region for Partner360 metrics.
+
+  partner_account_tier:
+    # Dimension is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.account_tier}
+    description: Account tier classification for Partner360 context.
+
+  partner_opportunity_created_date:
+    # Dimension is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.opportunity_created_date}
+    description: Creation date of the opportunity.
+
+  partner_opportunity_close_date:
+    # Dimension is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.opportunity_close_date}
+    description: Close date for the opportunity record.
+
+  partner_record_built_ts:
+    # Dimension is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.record_built_ts}
+    description: Timestamp when record was built in dbt.
+
+  _entity_opportunity:
+    # Entity is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.opportunity_id}
+    hidden: true
+
+  _entity_account:
+    # Entity is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.account_id}
+    hidden: true
+
+  _entity_partner_relationship_manager:
+    # Entity is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.partner_relationship_manager_id}
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+  partner_total_pipeline_usd:
+    # Measure is defined by the 'partner_total_pipeline_usd' dbt metric (models/staging/Partner360/partner360_base_metrics.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.pipeline_value_usd}
+    label: Total Pipeline (USD)
+    aggregate_type: sum
+
+  partner_total_bookings_usd:
+    # Measure is defined by the 'partner_total_bookings_usd' dbt metric (models/staging/Partner360/partner360_base_metrics.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.bookings_value_usd}
+    label: Total Bookings (USD)
+    aggregate_type: sum
+
+  partner_opportunity_count:
+    # Measure is defined by the 'partner_opportunity_count' dbt metric (models/staging/Partner360/partner360_base_metrics.yml)
+    sql: ${omni_dbt_staging__fct_partner360_summary.opportunity_id}
+    label: Opportunity Count
+    aggregate_type: count_distinct
+
+  partner_sourced_pipeline_usd:
+    # Measure is defined by the 'partner_sourced_pipeline_usd' dbt metric (models/staging/Partner360/partner360_base_metrics.yml)
+    sql: CASE WHEN LOWER(${omni_dbt_staging__fct_partner360_summary.catalyst_role})
+      LIKE '%referral from partner%' THEN
+      ${omni_dbt_staging__fct_partner360_summary.pipeline_value_usd} ELSE NULL
+      END
+    label: Partner Sourced Pipeline (USD)
+    aggregate_type: sum
+
+  partner_cosell_pipeline_usd:
+    # Measure is defined by the 'partner_cosell_pipeline_usd' dbt metric (models/staging/Partner360/partner360_base_metrics.yml)
+    sql: CASE WHEN LOWER(${omni_dbt_staging__fct_partner360_summary.catalyst_role})
+      = 'co-sell' THEN
+      ${omni_dbt_staging__fct_partner360_summary.pipeline_value_usd} ELSE NULL
+      END
+    label: Partner Co-Sell Pipeline (USD)
+    aggregate_type: sum
+
+  partner_active_pipeline_count:
+    # Measure is defined by the 'partner_active_pipeline_count' dbt metric (models/staging/Partner360/partner360_base_metrics.yml)
+    sql: CASE WHEN
+      LOWER(${omni_dbt_staging__fct_partner360_summary.opportunity_stage_name})
+      NOT IN ('closed won', 'closed lost') THEN
+      ${omni_dbt_staging__fct_partner360_summary.opportunity_id} ELSE NULL END
+    label: Active Pipeline Count
+    aggregate_type: count_distinct
+
+  partner_sourced_closed_won_count:
+    # Measure is defined by the 'partner_sourced_closed_won_count' dbt metric (models/staging/Partner360/partner360_base_metrics.yml)
+    sql: CASE WHEN LOWER(${omni_dbt_staging__fct_partner360_summary.catalyst_role})
+      LIKE '%referral%' AND
+      LOWER(${omni_dbt_staging__fct_partner360_summary.opportunity_stage_name})
+      = 'closed won' THEN
+      ${omni_dbt_staging__fct_partner360_summary.opportunity_id} ELSE NULL END
+    label: Partner Sourced Closed Won Count
+    aggregate_type: count_distinct
+
+  partner_sourced_total_count:
+    # Measure is defined by the 'partner_sourced_total_count' dbt metric (models/staging/Partner360/partner360_base_metrics.yml)
+    sql: CASE WHEN LOWER(${omni_dbt_staging__fct_partner360_summary.catalyst_role})
+      LIKE '%referral%' THEN
+      ${omni_dbt_staging__fct_partner360_summary.opportunity_id} ELSE NULL END
+    label: Partner Sourced Total Count
+    aggregate_type: count_distinct
+
+  partner_cosell_closed_won_count:
+    # Measure is defined by the 'partner_cosell_closed_won_count' dbt metric (models/staging/Partner360/partner360_base_metrics.yml)
+    sql: CASE WHEN LOWER(${omni_dbt_staging__fct_partner360_summary.catalyst_role})
+      = 'co-sell' AND
+      LOWER(${omni_dbt_staging__fct_partner360_summary.opportunity_stage_name})
+      = 'closed won' THEN
+      ${omni_dbt_staging__fct_partner360_summary.opportunity_id} ELSE NULL END
+    label: Partner Co-Sell Closed Won Count
+    aggregate_type: count_distinct
+
+  partner_cosell_total_count:
+    # Measure is defined by the 'partner_cosell_total_count' dbt metric (models/staging/Partner360/partner360_base_metrics.yml)
+    sql: CASE WHEN LOWER(${omni_dbt_staging__fct_partner360_summary.catalyst_role})
+      = 'co-sell' THEN
+      ${omni_dbt_staging__fct_partner360_summary.opportunity_id} ELSE NULL END
+    label: Partner Co-Sell Total Count
+    aggregate_type: count_distinct
+
+  partner_closed_won_count:
+    # Measure is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
+    sql: CASE WHEN
+      LOWER(${omni_dbt_staging__fct_partner360_summary.opportunity_stage_name})
+      = 'closed won' THEN
+      ${omni_dbt_staging__fct_partner360_summary.opportunity_id} ELSE NULL END
+    label: Total Closed Won Opportunities
+    description: Count of Closed Won opportunities.
+    aggregate_type: count_distinct
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_partner360_summary
+  target_schema: STAGING
+  description: |
+    The unified Partner360 fact model containing all partner-related performance metrics. It includes Co-Sell, Sourced, Influenced, and Attach Rate KPIs derived from unified Salesforce data.
+  config:
+    schema: staging
+    materialized: table
+  code: |-
+    {{ config(materialized='table') }}
+
+    with
+    -- Unified sources
+    opp as (select * from {{ ref('int_salesforce__opportunity_unified') }}),
+    acct as (select * from {{ ref('int_salesforce__account_unified') }}),
+    cat  as (select * from {{ ref('int_salesforce__catalyst_relationship_unified') }}),
+    rt   as (select * from {{ ref('int_salesforce__record_type_unified') }}),
+    usr  as (select * from {{ ref('int_salesforce__user_unified') }}),
+    cx   as (select * from {{ ref('int_salesforce__xbeam_overlap_unified') }})
+
+    --------------------------------------------------------------------------------
+    -- Core output columns (consistent across all metric rows)
+    -- metric_name,
+    -- opportunity_id, opportunity_name,
+    -- account_id, account_name,
+    -- record_type_value, opportunity_stage_name, opportunity_created_date, opportunity_close_date,
+    -- pipeline_value_usd, bookings_value_usd,
+    -- partner_relationship_manager_id, partner_relationship_manager_name,
+    -- catalyst_role, catalyst_relationship_status,
+    -- region, sub_region, account_tier, account_current_arr,
+    -- record_built_ts
+    --------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------
+    -- 1) FACT_PARTNER_COSELL_ACTIVE_PIPELINE
+    --------------------------------------------------------------------------------
+    select
+      'FACT_PARTNER_COSELL_ACTIVE_PIPELINE' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type as record_type_value,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+
+      -- pipeline/bookings from unified finance fields
+      o.finance_converted_total_original_piped_amount    as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings             as bookings_value_usd,
+
+      -- partner manager id + name via join to usr
+      coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id) as partner_relationship_manager_id,
+      u.user_name                                        as partner_relationship_manager_name,
+
+      cat.catalyst_role                                  as catalyst_role,
+      cat.catalyst_relationship_status                   as catalyst_relationship_status,
+
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+
+      current_timestamp()                                as record_built_ts
+
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    left join usr  u on u.user_id = coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id)
+    where upper(coalesce(o.opportunity_record_type,'')) in ('CPQ SALES','SALES','CROSS-SELL','CPQ AMENDMENT','CPQ RENEWAL')
+      and lower(coalesce(o.opportunity_stage_name,'')) not in ('closed won','closed lost')
+      and lower(coalesce(cat.catalyst_role,'')) = 'co-sell'
+      and lower(coalesce(cat.catalyst_influencer_approval_status,'')) = 'approved'
+      and coalesce(cat.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    --------------------------------------------------------------------------------
+    -- 2) FACT_PARTNER_COSELL_WINS
+    --------------------------------------------------------------------------------
+    select
+      'FACT_PARTNER_COSELL_WINS' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type as record_type_value,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+
+      o.finance_converted_total_original_piped_amount    as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings             as bookings_value_usd,
+
+      coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id) as partner_relationship_manager_id,
+      u.user_name                                        as partner_relationship_manager_name,
+
+      cat.catalyst_role,
+      cat.catalyst_relationship_status,
+
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+
+      current_timestamp()                                as record_built_ts
+
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    left join usr  u on u.user_id = coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id)
+    where upper(coalesce(o.opportunity_record_type,'')) in ('CPQ SALES','SALES','CROSS-SELL','CPQ AMENDMENT','CPQ RENEWAL')
+      and lower(coalesce(o.opportunity_stage_name,'')) = 'closed won'
+      and lower(coalesce(cat.catalyst_role,'')) = 'co-sell'
+      and lower(coalesce(cat.catalyst_influencer_approval_status,'')) = 'approved'
+      and coalesce(cat.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    --------------------------------------------------------------------------------
+    -- 3) FACT_PARTNER_COSELL_LOSSES
+    --------------------------------------------------------------------------------
+    select
+      'FACT_PARTNER_COSELL_LOSSES' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type as record_type_value,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+
+      o.finance_converted_total_original_piped_amount    as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings             as bookings_value_usd,
+
+      coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id) as partner_relationship_manager_id,
+      u.user_name                                        as partner_relationship_manager_name,
+
+      cat.catalyst_role,
+      cat.catalyst_relationship_status,
+
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+
+      current_timestamp()                                as record_built_ts
+
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    left join usr  u on u.user_id = coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id)
+    where upper(coalesce(o.opportunity_record_type,'')) in ('CPQ SALES','SALES','CROSS-SELL','CPQ AMENDMENT','CPQ RENEWAL')
+      and lower(coalesce(o.opportunity_stage_name,'')) = 'closed lost'
+      and lower(coalesce(cat.catalyst_role,'')) = 'co-sell'
+      and coalesce(cat.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    --------------------------------------------------------------------------------
+    -- 4) FACT_PARTNER_SOURCED_WINS
+    --------------------------------------------------------------------------------
+    select
+      'FACT_PARTNER_SOURCED_WINS' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type as record_type_value,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+
+      o.finance_converted_total_original_piped_amount    as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings             as bookings_value_usd,
+
+      coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id) as partner_relationship_manager_id,
+      u.user_name                                        as partner_relationship_manager_name,
+
+      cat.catalyst_role,
+      cat.catalyst_relationship_status,
+
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+
+      current_timestamp()                                as record_built_ts
+
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    left join usr  u on u.user_id = coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id)
+    where upper(coalesce(o.opportunity_record_type,'')) in ('CPQ SALES','SALES','CROSS-SELL','CPQ AMENDMENT','CPQ RENEWAL')
+      and lower(coalesce(o.opportunity_stage_name,'')) = 'closed won'
+      and lower(coalesce(cat.catalyst_role,'')) like '%referral from partner%'
+      and coalesce(cat.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    --------------------------------------------------------------------------------
+    -- 5) FACT_PARTNER_SOURCED_LOSSES
+    --------------------------------------------------------------------------------
+    select
+      'FACT_PARTNER_SOURCED_LOSSES' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type as record_type_value,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+
+      o.finance_converted_total_original_piped_amount    as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings             as bookings_value_usd,
+
+      coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id) as partner_relationship_manager_id,
+      u.user_name                                        as partner_relationship_manager_name,
+
+      cat.catalyst_role,
+      cat.catalyst_relationship_status,
+
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+
+      current_timestamp()                                as record_built_ts
+
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    left join usr  u on u.user_id = coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id)
+    where upper(coalesce(o.opportunity_record_type,'')) in ('CPQ SALES','SALES','CROSS-SELL','CPQ AMENDMENT','CPQ RENEWAL')
+      and lower(coalesce(o.opportunity_stage_name,'')) = 'closed lost'
+      and lower(coalesce(cat.catalyst_role,'')) like '%referral from partner%'
+      and coalesce(cat.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    --------------------------------------------------------------------------------
+    -- 6) FACT_PARTNER_SOURCED_ACTIVE_PIPELINE
+    --------------------------------------------------------------------------------
+    select
+      'FACT_PARTNER_SOURCED_ACTIVE_PIPELINE' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type as record_type_value,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+
+      o.finance_converted_total_original_piped_amount    as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings             as bookings_value_usd,
+
+      coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id) as partner_relationship_manager_id,
+      u.user_name                                        as partner_relationship_manager_name,
+
+      cat.catalyst_role,
+      cat.catalyst_relationship_status,
+
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+
+      current_timestamp()                                as record_built_ts
+
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    left join usr  u on u.user_id = coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id)
+    where upper(coalesce(o.opportunity_record_type,'')) in ('CPQ SALES','SALES','CROSS-SELL','CPQ AMENDMENT','CPQ RENEWAL')
+      and lower(coalesce(o.opportunity_stage_name,'')) not in ('closed won','closed lost')
+      and lower(coalesce(cat.catalyst_role,'')) like '%referral from partner%'
+      and coalesce(cat.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    --------------------------------------------------------------------------------
+    -- 7) FACT_PARTNER_COSELL_BOOKINGS
+    --------------------------------------------------------------------------------
+    select
+      'FACT_PARTNER_COSELL_BOOKINGS' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type as record_type_value,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+
+      o.finance_converted_total_original_piped_amount    as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings             as bookings_value_usd,
+
+      coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id) as partner_relationship_manager_id,
+      u.user_name                                        as partner_relationship_manager_name,
+
+      cat.catalyst_role,
+      cat.catalyst_relationship_status,
+
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+
+      current_timestamp()                                as record_built_ts
+
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    left join usr  u on u.user_id = coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id)
+    where upper(coalesce(o.opportunity_record_type,'')) in ('CPQ SALES','SALES','CROSS-SELL','CPQ AMENDMENT','CPQ RENEWAL')
+      and lower(coalesce(o.opportunity_stage_name,'')) = 'closed won'
+      and lower(coalesce(cat.catalyst_role,'')) = 'co-sell'
+      and coalesce(o.finance_converted_opp_total_bookings,0) > 0
+      and coalesce(cat.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    --------------------------------------------------------------------------------
+    -- 8) FACT_PARTNER_SOURCED_BOOKINGS
+    --------------------------------------------------------------------------------
+    select
+      'FACT_PARTNER_SOURCED_BOOKINGS' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type as record_type_value,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+
+      o.finance_converted_total_original_piped_amount    as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings             as bookings_value_usd,
+
+      coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id) as partner_relationship_manager_id,
+      u.user_name                                        as partner_relationship_manager_name,
+
+      cat.catalyst_role,
+      cat.catalyst_relationship_status,
+
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+
+      current_timestamp()                                as record_built_ts
+
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    left join usr  u on u.user_id = coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id)
+    where upper(coalesce(o.opportunity_record_type,'')) in ('CPQ SALES','SALES','CROSS-SELL','CPQ AMENDMENT','CPQ RENEWAL')
+      and lower(coalesce(o.opportunity_stage_name,'')) = 'closed won'
+      and lower(coalesce(cat.catalyst_role,'')) like '%referral from partner%'
+      and coalesce(o.finance_converted_opp_total_bookings,0) > 0
+      and coalesce(cat.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    --------------------------------------------------------------------------------
+    -- 9) FACT_CROSSBEAM_JOINT_CUSTOMERS
+    -- (uses xbeam filters and joins to accounts per your original SQL)
+    --------------------------------------------------------------------------------
+    select
+      'FACT_CROSSBEAM_JOINT_CUSTOMERS' as metric_name,
+      null as opportunity_id,
+      null as opportunity_name,
+      cx.xbeamprod_account_c as account_id,
+      ac.account_name,
+      null as record_type_value,
+      null as opportunity_stage_name,
+      null as opportunity_created_date,
+      null as opportunity_close_date,
+      null as pipeline_value_usd,
+      null as bookings_value_usd,
+      null as partner_relationship_manager_id,
+      null as partner_relationship_manager_name,
+      null as catalyst_role,
+      null as catalyst_relationship_status,
+      ac.region,
+      ac.sub_region,
+      ac.account_tier,
+      ac.account_current_arr,
+      current_timestamp() as record_built_ts
+    from cx
+    left join acct a  on cx.partner_account_c = a.account_id
+    left join acct ac on cx.xbeamprod_account_c = ac.account_id
+    where lower(coalesce(cx.xbeamprod_standard_populations_c,'')) like '%customers%'
+      and lower(coalesce(cx.xbeamprod_partner_standard_populations_c,'')) like '%customers%'
+      and coalesce(cx.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    --------------------------------------------------------------------------------
+    -- 10) FACT_PARTNER_SOURCED_PIPELINE_CONVERSION
+    --------------------------------------------------------------------------------
+    select
+      'FACT_PARTNER_SOURCED_PIPELINE_CONVERSION' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type as record_type_value,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+
+      o.finance_converted_total_original_piped_amount    as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings             as bookings_value_usd,
+
+      coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id) as partner_relationship_manager_id,
+      u.user_name                                        as partner_relationship_manager_name,
+
+      cat.catalyst_role,
+      cat.catalyst_relationship_status,
+
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+
+      current_timestamp()                                as record_built_ts
+
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    left join usr  u on u.user_id = coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id)
+    where upper(coalesce(o.opportunity_record_type,'')) in ('CPQ SALES','SALES','CROSS-SELL','CPQ AMENDMENT','CPQ RENEWAL')
+      and lower(coalesce(o.opportunity_stage_name,'')) = 'closed won'
+      and lower(coalesce(cat.catalyst_role,'')) like '%referral from partner%'
+      and coalesce(o.total_original_piped_amount_c,0) > 0
+      and coalesce(cat.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    --------------------------------------------------------------------------------
+    -- 11) Partner Attach Rate & Influence related metrics (per-opportunity detail rows)
+    -- These replicate the many Partner Attach / Influenced / Uninfluenced variants
+    --------------------------------------------------------------------------------
+
+    union all
+
+    -- 11.a PARTNER_ATTACH_RATE_ALL (per-opportunity)
+    select
+      'PARTNER_ATTACH_RATE_ALL' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+      o.finance_converted_total_original_piped_amount as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings as bookings_value_usd,
+      coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id) as partner_relationship_manager_id,
+      u.user_name                                        as partner_relationship_manager_name,
+      -- indicator field: 'PartnerAttached' or 'NotPartnerAttached'
+      case
+        when lower(coalesce(cat.catalyst_role,'')) like '%referral%' or lower(coalesce(cat.catalyst_role,'')) = 'co-sell'
+          then 'PartnerAttached'
+        else 'NotPartnerAttached'
+      end                                                as catalyst_role,
+      cat.catalyst_relationship_status,
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+      current_timestamp()                                as record_built_ts
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    left join usr  u on u.user_id = coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id)
+    where upper(coalesce(o.opportunity_record_type,'')) in ('CPQ SALES','SALES','CROSS-SELL','CPQ AMENDMENT','CPQ RENEWAL')
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    -- 11.b PARTNER_ATTACH_INFLUENCED_BOOKINGS
+    select
+      'PARTNER_ATTACH_INFLUENCED_BOOKINGS' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+      o.finance_converted_total_original_piped_amount as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings as bookings_value_usd,
+      coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id) as partner_relationship_manager_id,
+      u.user_name                                        as partner_relationship_manager_name,
+      'PartnerInfluenced'                                as catalyst_role,
+      cat.catalyst_relationship_status,
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+      current_timestamp()                                as record_built_ts
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    left join usr  u on u.user_id = coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id)
+    where lower(coalesce(o.opportunity_stage_name,'')) = 'closed won'
+      and ( lower(coalesce(cat.catalyst_role,'')) like '%referral%' or lower(coalesce(cat.catalyst_role,'')) = 'co-sell' )
+      and coalesce(o.finance_converted_opp_total_bookings,0) > 0
+      and coalesce(cat.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    -- 11.c CLOSED_WON_UNINFLUENCED
+    select
+      'CLOSED_WON_UNINFLUENCED' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+      o.finance_converted_total_original_piped_amount as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings as bookings_value_usd,
+      null as partner_relationship_manager_id,
+      null as partner_relationship_manager_name,
+      'NotPartnerInfluenced'                            as catalyst_role,
+      null as catalyst_relationship_status,
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+      current_timestamp()                                as record_built_ts
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    where lower(coalesce(o.opportunity_stage_name,'')) = 'closed won'
+      and not ( lower(coalesce(cat.catalyst_role,'')) like '%referral%' or lower(coalesce(cat.catalyst_role,'')) = 'co-sell' )
+      and coalesce(o.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    -- 11.d CLOSED_WON_AND_CLOSED_LOST_UNINFLUENCED
+    select
+      'CLOSED_WON_LOST_UNINFLUENCED' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+      o.finance_converted_total_original_piped_amount as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings as bookings_value_usd,
+      null as partner_relationship_manager_id,
+      null as partner_relationship_manager_name,
+      'NotPartnerInfluenced'                            as catalyst_role,
+      null as catalyst_relationship_status,
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+      current_timestamp()                                as record_built_ts
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    where lower(coalesce(o.opportunity_stage_name,'')) in ('closed won','closed lost')
+      and not ( lower(coalesce(cat.catalyst_role,'')) like '%referral%' or lower(coalesce(cat.catalyst_role,'')) = 'co-sell' )
+      and coalesce(o.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    -- 11.e CLOSED_WON_AND_CLOSED_LOST_PARTNER_INFLUENCED
+    select
+      'CLOSED_WON_LOST_PARTNER_INFLUENCED' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+      o.finance_converted_total_original_piped_amount as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings as bookings_value_usd,
+      coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id) as partner_relationship_manager_id,
+      u.user_name                                        as partner_relationship_manager_name,
+      'PartnerInfluenced'                                as catalyst_role,
+      cat.catalyst_relationship_status,
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+      current_timestamp()                                as record_built_ts
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    left join usr  u on u.user_id = coalesce(cat.partner_relationship_manager_id, a.partner_relationship_manager_id)
+    where lower(coalesce(o.opportunity_stage_name,'')) in ('closed won','closed lost')
+      and ( lower(coalesce(cat.catalyst_role,'')) like '%referral%' or lower(coalesce(cat.catalyst_role,'')) = 'co-sell' )
+      and coalesce(o.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    union all
+
+    -- 11.f BOOKINGS_NON_PARTNER
+    select
+      'BOOKINGS_NON_PARTNER' as metric_name,
+      o.opportunity_id,
+      o.opportunity_name,
+      o.account_id,
+      a.account_name,
+      o.opportunity_record_type,
+      o.opportunity_stage_name,
+      o.opportunity_created_date,
+      o.opportunity_close_date,
+      o.finance_converted_total_original_piped_amount as pipeline_value_usd,
+      o.finance_converted_opp_total_bookings as bookings_value_usd,
+      null as partner_relationship_manager_id,
+      null as partner_relationship_manager_name,
+      'NotPartnerInfluenced'                            as catalyst_role,
+      null as catalyst_relationship_status,
+      a.region, a.sub_region, a.account_tier, a.account_current_arr,
+      current_timestamp()                                as record_built_ts
+    from opp o
+    left join acct a on o.account_id = a.account_id
+    left join cat  on o.opportunity_id = cat.opportunity_id
+    where lower(coalesce(o.opportunity_stage_name,'')) = 'closed won'
+      and not ( lower(coalesce(cat.catalyst_role,'')) like '%referral%' or lower(coalesce(cat.catalyst_role,'')) = 'co-sell' )
+      and coalesce(o.finance_converted_opp_total_bookings,0) > 0
+      and coalesce(o.is_deleted,false) = false
+      and coalesce(a.is_deleted,false) = false
+
+    -- End of UNION ALL blocks

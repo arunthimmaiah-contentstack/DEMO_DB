@@ -1,0 +1,29 @@
+# Reference this view as staging__fct_churn_rate
+schema: STAGING
+table_name: FCT_CHURN_RATE
+
+dimensions:
+  period_month:
+    sql: '"PERIOD_MONTH"'
+
+  active_accounts:
+    sql: '"ACTIVE_ACCOUNTS"'
+
+  active_arr:
+    sql: '"ACTIVE_ARR"'
+
+  churned_accounts:
+    sql: '"CHURNED_ACCOUNTS"'
+
+  churned_arr:
+    sql: '"CHURNED_ARR"'
+
+  total_accounts:
+    sql: '"TOTAL_ACCOUNTS"'
+
+  churn_rate_pct:
+    sql: '"CHURN_RATE_PCT"'
+
+measures:
+  count:
+    aggregate_type: count

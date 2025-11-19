@@ -1,0 +1,212 @@
+# Reference this view as omni_dbt_marts__fct_sales_activities
+label: Activity
+schema_label: ""
+
+schema: omni_dbt_marts
+table_name: FCT_SALES_ACTIVITIES
+
+dimensions:
+  activity_key:
+    sql: '"ACTIVITY_KEY"'
+
+  activity_id:
+    sql: '"ACTIVITY_ID"'
+    format: ID
+    primary_key: true
+
+  contact_id:
+    sql: '"CONTACT_ID"'
+    format: ID
+
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  subject:
+    sql: '"SUBJECT"'
+
+  activity_date:
+    sql: '"ACTIVITY_DATE"'
+    # This description pulled from the 'activity' dbt semantic model (models/semantic_models/sem_sales_activity.yml)
+    description: Date of the activity.
+
+  activity_type:
+    sql: '"ACTIVITY_TYPE"'
+    # This description pulled from the 'activity' dbt semantic model (models/semantic_models/sem_sales_activity.yml)
+    description: Type of sales activity.
+
+  status:
+    sql: '"STATUS"'
+
+  priority:
+    sql: '"PRIORITY"'
+
+  description:
+    sql: '"DESCRIPTION"'
+
+  is_closed:
+    sql: '"IS_CLOSED"'
+
+  activity_week:
+    sql: '"ACTIVITY_WEEK"'
+
+  activity_month:
+    sql: '"ACTIVITY_MONTH"'
+
+  activity_quarter:
+    sql: '"ACTIVITY_QUARTER"'
+
+  activity_year:
+    sql: '"ACTIVITY_YEAR"'
+
+  activity_count:
+    sql: '"ACTIVITY_COUNT"'
+
+  completed_activity_count:
+    sql: '"COMPLETED_ACTIVITY_COUNT"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  dbt_updated_at:
+    sql: '"DBT_UPDATED_AT"'
+
+  _entity_activity:
+    # Entity is defined in the 'activity' dbt semantic model (models/semantic_models/sem_sales_activity.yml)
+    sql: ${omni_dbt_marts__fct_sales_activities.activity_id}
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+  total_activities:
+    # Measure is defined in the 'activity' dbt semantic model (models/semantic_models/sem_sales_activity.yml)
+    sql: ${omni_dbt_marts__fct_sales_activities.activity_id}
+    description: Total count of logged activities.
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_sales_activities
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    -- models/marts/sales/fct_sales_activities.sql
+    {{ config(
+        materialized='table'
+    ) }}
+
+    WITH salesforce_activities AS (
+        SELECT 
+            id AS activity_id,
+            who_id AS contact_id,
+            what_id AS opportunity_id,
+            owner_id,
+            subject,
+            activity_date,
+            type AS activity_type,
+            status,
+            priority,
+            description,
+            is_closed,
+            created_date,
+            last_modified_date
+        FROM {{ source('sfdc_task', 'task') }}
+        WHERE activity_date IS NOT NULL
+        
+        UNION ALL
+        
+        SELECT 
+            id AS activity_id,
+            who_id AS contact_id,
+            what_id AS opportunity_id,
+            owner_id,
+            subject,
+            activity_date,
+            type AS activity_type,
+            'Completed' AS status,
+            'Normal' AS priority,
+            description,
+            TRUE AS is_closed,
+            created_date,
+            last_modified_date
+        FROM {{ source('events', 'event') }}
+        WHERE activity_date IS NOT NULL
+    ),
+
+    activity_categorization AS (
+        SELECT 
+            activity_id,
+            contact_id,
+            opportunity_id,
+            owner_id,
+            subject,
+            activity_date,
+            -- Standardize activity types
+            CASE 
+                WHEN activity_type ILIKE '%email%' OR subject ILIKE '%email%' THEN 'Email'
+                WHEN activity_type ILIKE '%call%' OR subject ILIKE '%call%' THEN 'Call'
+                WHEN activity_type ILIKE '%meeting%' OR subject ILIKE '%meeting%' THEN 'Meeting'
+                WHEN activity_type ILIKE '%demo%' OR subject ILIKE '%demo%' THEN 'Demo'
+                WHEN activity_type ILIKE '%proposal%' OR subject ILIKE '%proposal%' THEN 'Proposal'
+                WHEN activity_type ILIKE '%follow%up%' OR subject ILIKE '%follow%up%' THEN 'Follow-up'
+                ELSE 'Other'
+            END AS activity_type,
+            status,
+            priority,
+            description,
+            is_closed,
+            created_date,
+            last_modified_date
+        FROM salesforce_activities
+    ),
+
+    enriched_activities AS (
+        SELECT 
+            -- Primary Key
+            {{ dbt_utils.generate_surrogate_key(['activity_id', 'owner_id', 'activity_date']) }} AS activity_key,
+            
+            -- Foreign Keys
+            activity_id,
+            contact_id,
+            opportunity_id,
+            owner_id,
+                    -- Activity Details
+            subject,
+            activity_date,
+            activity_type,
+            status,
+            priority,
+            description,
+            is_closed,
+            
+            -- Time Dimensions
+            DATE_TRUNC('week', activity_date)   AS activity_week,
+            DATE_TRUNC('month', activity_date)  AS activity_month,
+            DATE_TRUNC('quarter', activity_date) AS activity_quarter,
+            DATE_TRUNC('year', activity_date)   AS activity_year,
+            
+            -- Activity Metrics
+            1 AS activity_count,
+            CASE WHEN is_closed THEN 1 ELSE 0 END AS completed_activity_count,
+            
+            -- Metadata
+            created_date,
+            last_modified_date,
+            CURRENT_TIMESTAMP AS dbt_updated_at       
+        FROM activity_categorization
+    )
+
+    SELECT * 
+    FROM enriched_activities
+  referenced_by: [ fct_quota_attainment ]

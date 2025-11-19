@@ -1,0 +1,92 @@
+# Reference this view as omni_dbt_staging__int_salesforce__record_type_unified
+schema_label: ""
+#This description was pulled from dbt.
+description: |
+  Lookup model for Salesforce record types with both developer and display names for consistent joins across models.
+
+schema: omni_dbt_staging
+table_name: INT_SALESFORCE__RECORD_TYPE_UNIFIED
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Unique identifier for record type.
+    primary_key: true
+
+  name:
+    sql: '"NAME"'
+    #This description was pulled from dbt.
+    description: Display name of the record type.
+
+  developer_name:
+    sql: '"DEVELOPER_NAME"'
+    #This description was pulled from dbt.
+    description: Internal developer name for the record type.
+
+  namespace_prefix:
+    sql: '"NAMESPACE_PREFIX"'
+
+  description:
+    sql: '"DESCRIPTION"'
+
+  business_process_id:
+    sql: '"BUSINESS_PROCESS_ID"'
+    format: ID
+
+  sobject_type:
+    sql: '"SOBJECT_TYPE"'
+
+  is_active:
+    sql: '"IS_ACTIVE"'
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  system_modstamp:
+    sql: '"SYSTEM_MODSTAMP"'
+
+  _fivetran_deleted:
+    sql: '"_FIVETRAN_DELETED"'
+    hidden: true
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: int_salesforce__record_type_unified
+  target_schema: STAGING
+  description: |
+    Lookup model for Salesforce record types with both developer and display names for consistent joins across models.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    {{ config(materialized='view') }}
+
+    with record_type as (
+        select * from {{ ref('stg_salesforce__record_type') }}
+    )
+
+    select
+        *
+    from record_type
+  referenced_by: [ fct_partner360_summary ]

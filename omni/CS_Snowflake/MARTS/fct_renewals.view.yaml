@@ -1,0 +1,168 @@
+# Reference this view as marts__fct_renewals
+label: Renewals
+
+schema: MARTS
+table_name: FCT_RENEWALS
+
+dimensions:
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+    primary_key: true
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  fiscal_quarter:
+    sql: '"FISCAL_QUARTER"'
+
+  fiscal_year:
+    sql: '"FISCAL_YEAR"'
+
+  is_won:
+    sql: '"IS_WON"'
+
+  opportunity_type:
+    sql: '"OPPORTUNITY_TYPE"'
+
+  arr_to_renew:
+    sql: '"ARR_TO_RENEW"'
+
+  churn_and_contraction_arr:
+    sql: '"CHURN_AND_CONTRACTION_ARR"'
+
+  contraction_arr:
+    sql: '"CONTRACTION_ARR"'
+
+  churn_arr:
+    sql: '"CHURN_ARR"'
+
+  expansion_arr:
+    sql: '"EXPANSION_ARR"'
+
+  fy_starting_bob_quarter:
+    sql: '"FY_STARTING_BOB_QUARTER"'
+
+  _entity_opportunity:
+    # Entity is defined in the 'renewals' dbt semantic model (models/semantic_models/sem_renewals.yml)
+    sql: ${opportunity_id}
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+  won_renewals:
+    # Measure is defined by the 'won_renewals' dbt metric (models/metrics/met_cus_success.yml)
+    sql: CASE WHEN ${is_won} = TRUE AND ${opportunity_type} = 'Renewal' THEN
+      ${opportunity_id} ELSE NULL END
+    label: Won Renewal Opportunities
+    description: Count of won renewal opportunities.
+    aggregate_type: count
+
+  renewal_arr_to_renew:
+    # Measure is defined by the 'renewal_arr_to_renew' dbt metric (models/metrics/met_cus_success.yml)
+    sql: ${arr_to_renew}
+    label: ARR to Renew
+    description: ARR eligible for renewal in the quarter.
+    aggregate_type: sum
+
+  churn_and_contraction:
+    # Measure is defined by the 'churn_and_contraction' dbt metric (models/metrics/met_cus_success.yml)
+    sql: ${churn_and_contraction_arr}
+    label: Churn and Contraction
+    description: ARR lost due to churn and contraction.
+    aggregate_type: sum
+
+  expansion:
+    # Measure is defined by the 'expansion' dbt metric (models/metrics/met_cus_success.yml)
+    sql: ${expansion_arr}
+    label: Expansion
+    description: ARR gained through expansion.
+    aggregate_type: sum
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_renewals
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+    tags: [ renewals, finance, arr ]
+  code: |-
+    {{ config(
+        materialized = 'table',
+        tags = ['renewals', 'finance', 'arr']
+    ) }}
+
+    with base as (
+        select
+            opp.opportunity_id,
+            opp.account_id,
+            opp.opportunity_name,
+            opp.opportunity_stage_name,
+            opp.opportunity_type,
+            opp.is_won,
+            opp.opportunity_close_date,
+            opp.fiscal_quarter,
+            opp.fiscal_year,
+            opp.LICENSE_START_C,
+            opp.LICENSE_END_C,
+
+            -- Financials
+            opp.RENEWAL_OPP_PRIOR_CONTRACT_END_ARR_C,        -- already NUMBER
+            opp.RENEWAL_OPP_PRIOR_CONTRACT_ARR_CUMULATIVE_C, -- already NUMBER
+            opp.expansion_sales_motion,                      -- possibly STRING
+            opp.CONTRACTION_AMOUNT_C,                        -- already NUMBER
+            opp.CHURN_AMOUNT_C,                              -- already NUMBER
+            opp.RENEWAL_OPT_OUT_DATE_C,
+
+            -- Account context
+            acct.customer_segment,
+            acct.region
+
+        from {{ ref('stg_salesforce__opportunity') }} opp
+        left join {{ ref('stg_salesforce__accounts') }} acct
+            on opp.account_id = acct.account_id
+    ),
+
+    metrics_prep as (
+        select
+            opportunity_id,
+            account_id,
+            fiscal_quarter,
+            fiscal_year,
+            is_won,
+            opportunity_type,
+
+            -- Already numeric columns: just COALESCE
+            coalesce(RENEWAL_OPP_PRIOR_CONTRACT_ARR_CUMULATIVE_C, 0) as arr_to_renew,
+            coalesce(RENEWAL_OPP_PRIOR_CONTRACT_END_ARR_C, 0)
+            + coalesce(RENEWAL_OPP_PRIOR_CONTRACT_ARR_CUMULATIVE_C, 0) as churn_and_contraction_arr,
+            coalesce(CONTRACTION_AMOUNT_C, 0) as contraction_arr,
+            coalesce(CHURN_AMOUNT_C, 0) as churn_arr,
+
+            -- Possibly string column: TRY_TO_NUMBER
+            coalesce(TRY_TO_NUMBER(expansion_sales_motion), 0) as expansion_arr,
+
+            -- Renewal BoB
+            coalesce(RENEWAL_OPP_PRIOR_CONTRACT_ARR_CUMULATIVE_C, 0) as fy_starting_bob_quarter
+
+        from base
+    )
+
+    select
+        opportunity_id,
+        account_id,
+        fiscal_quarter,
+        fiscal_year,
+        is_won,
+        opportunity_type,
+        arr_to_renew,
+        churn_and_contraction_arr,
+        contraction_arr,
+        churn_arr,
+        expansion_arr,
+        fy_starting_bob_quarter
+    from metrics_prep

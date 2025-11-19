@@ -1,0 +1,187 @@
+# Reference this view as omni_dbt_marts__new_pipeline
+label: New Pipeline
+schema_label: ""
+
+schema: omni_dbt_marts
+table_name: NEW_PIPELINE
+
+dimensions:
+  metric_name:
+    sql: '"METRIC_NAME"'
+
+  object:
+    sql: '"OBJECT"'
+
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  product:
+    sql: '"PRODUCT"'
+
+  customer_designation:
+    sql: '"CUSTOMER_DESIGNATION"'
+
+  product_deal_percentage:
+    sql: '"PRODUCT_DEAL_PERCENTAGE"'
+
+  metric_date_1:
+    sql: '"METRIC_DATE_1"'
+
+  metric_date_2:
+    sql: '"METRIC_DATE_2"'
+
+  metric_measure_1:
+    sql: '"METRIC_MEASURE_1"'
+
+  metric_measure_2:
+    sql: '"METRIC_MEASURE_2"'
+
+  metric_measure_3:
+    sql: '"METRIC_MEASURE_3"'
+
+  geo_c:
+    sql: '"GEO_C"'
+
+  region:
+    sql: '"REGION"'
+
+  sub_region:
+    sql: '"SUB_REGION"'
+
+  revenue:
+    sql: '"REVENUE"'
+
+  company_size:
+    sql: '"COMPANY_SIZE"'
+
+  record_type:
+    sql: '"RECORD_TYPE"'
+
+  leadsource:
+    sql: '"LEADSOURCE"'
+
+  motion:
+    sql: '"MOTION"'
+
+  sub_motion:
+    sql: '"SUB_MOTION"'
+
+  opp_type:
+    sql: '"OPP_TYPE"'
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  matched_account_tier_ld:
+    sql: '"MATCHED_ACCOUNT_TIER_LD"'
+
+  account_tier:
+    sql: '"ACCOUNT_TIER"'
+
+  deployment_status_c:
+    sql: '"DEPLOYMENT_STATUS_C"'
+
+  type:
+    sql: '"TYPE"'
+
+  sync_date:
+    sql: '"SYNC_DATE"'
+
+  sales_motion:
+    sql: '"SALES_MOTION"'
+
+  expansion_sales_motion:
+    sql: '"EXPANSION_SALES_MOTION"'
+
+  demand_bucket:
+    sql: '"DEMAND_BUCKET"'
+
+  pipeline_date:
+    # Dimension is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
+    sql: ${omni_dbt_marts__new_pipeline.metric_date_1}
+
+  lead_source:
+    # Dimension is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
+    sql: ${omni_dbt_marts__new_pipeline.leadsource}
+
+  _entity_opportunity_id:
+    # Entity is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
+    sql: ${omni_dbt_marts__new_pipeline.id}
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+  opportunity_id_count:
+    # Measure is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
+    sql: "1"
+    aggregate_type: count
+
+  total_piped_amount:
+    # Measure is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
+    sql: ${omni_dbt_marts__new_pipeline.metric_measure_2}
+    aggregate_type: sum
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: new_pipeline
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    SELECT
+        'New Pipeline ($)' AS METRIC_NAME,
+        'OPPORTUNITY' AS OBJECT,
+        o.opportunity_id AS ID,
+        oc.Product as product,
+        oc.customer_designation as customer_designation,
+        oc.product_deal_percentage as product_deal_percentage,
+        opportunity_pipeline_date AS METRIC_DATE_1,
+        NULL AS METRIC_DATE_2,
+        NULL AS metric_measure_1,
+        converted_total_original_piped_amount AS metric_measure_2,
+        total_original_piped_amount AS metric_measure_3,
+        NULL AS GEO_C,
+        opportunity_owner_region AS REGION,
+        opportunity_owner_sub_region AS SUB_REGION,
+        NULL AS REVENUE,
+        CASE
+            WHEN A.customer_segment = 'Enterprise Customer' THEN 'Revenue > $1B'
+            WHEN A.customer_segment = 'MM Customer' THEN 'Revenue < $1B'
+            ELSE A.customer_segment
+        END COMPANY_SIZE,
+        CASE 
+            WHEN O.opportunity_record_type IN ('CPQ Sales', 'Sales', 'Cross-Sell') THEN 'Cross-Sell'
+            WHEN O.opportunity_record_type IN ('Upsell', 'CPQ Amendment', 'CPQ Renewal') THEN 'Upsell'
+            ELSE opportunity_record_type
+        END RECORD_TYPE,
+        o.LEAD_SOURCE AS LeadSource,
+        CASE 
+          WHEN O.opportunity_lead_source_category IN ('Sales', 'Marketing') THEN 'GTM'
+          WHEN O.opportunity_lead_source_category IN ('Partner') THEN 'Partner'
+          WHEN O.opportunity_lead_source_category IN ('Customer') THEN 'Expansion'
+          ELSE NULL
+        END AS MOTION,
+        O.opportunity_lead_source_category AS SUB_MOTION,
+        O.opportunity_type AS OPP_TYPE,
+        A.account_name AS ACCOUNT_NAME,
+        NULL AS Matched_Account_Tier_LD,
+        A.account_tier AS Account_Tier,
+        NULL AS DEPLOYMENT_STATUS_C,
+        NULL AS TYPE
+        ,CONVERT_TIMEZONE('UTC', 'America/Los_Angeles', O._FIVETRAN_SYNCED::timestamp_ntz) AS SYNC_DATE,
+        O.cms_sales_motion AS SALES_MOTION, --THIS IS A NEW FIELD ADDED IN ASC (OBI-1404 & 1405)
+        O.expansion_sales_motion AS EXPANSION_SALES_MOTION, --THIS IS A NEW FIELD ADDED IN ASC (OBI-1404 & 1405)
+        NULL AS DEMAND_BUCKET
+    FROM _omni_ref_sub_ O
+    LEFT JOIN
+        _omni_ref_sub_ A ON O.ACCOUNT_ID = A.account_id
+    LEFT JOIN
+        {{ref('stg_salesforce__opportunity_finance')}} OC on O.opportunity_id = OC.opportunity_id
+        
+    where 1=1
+        AND O.opportunity_record_type IN ('CPQ Sales', 'Sales', 'Cross-Sell','CPQ Amendment', 'CPQ Renewal', 'Upsell' )

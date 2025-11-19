@@ -1,0 +1,218 @@
+# Reference this view as omni_dbt_marts__fct_quota_attainment
+label: Quota Performance
+schema_label: ""
+
+schema: omni_dbt_marts
+table_name: FCT_QUOTA_ATTAINMENT
+
+dimensions:
+  quota_attainment_key:
+    sql: '"QUOTA_ATTAINMENT_KEY"'
+    primary_key: true
+
+  user_id:
+    sql: '"USER_ID"'
+    format: ID
+
+  quota_period:
+    sql: '"QUOTA_PERIOD"'
+
+  manager_id:
+    sql: '"MANAGER_ID"'
+    format: ID
+
+  assigned_quota:
+    sql: '"ASSIGNED_QUOTA"'
+
+  role_name:
+    sql: '"ROLE_NAME"'
+
+  team_name:
+    sql: '"TEAM_NAME"'
+
+  territory_name:
+    sql: '"TERRITORY_NAME"'
+
+  achieved_bookings:
+    sql: '"ACHIEVED_BOOKINGS"'
+
+  closed_won_opportunities:
+    sql: '"CLOSED_WON_OPPORTUNITIES"'
+
+  quota_attainment_percentage:
+    sql: '"QUOTA_ATTAINMENT_PERCENTAGE"'
+
+  total_activities:
+    sql: '"TOTAL_ACTIVITIES"'
+
+  email_activities:
+    sql: '"EMAIL_ACTIVITIES"'
+
+  call_activities:
+    sql: '"CALL_ACTIVITIES"'
+
+  demo_activities:
+    sql: '"DEMO_ACTIVITIES"'
+
+  total_pipeline_value:
+    sql: '"TOTAL_PIPELINE_VALUE"'
+
+  total_opportunities:
+    sql: '"TOTAL_OPPORTUNITIES"'
+
+  avg_sales_cycle:
+    sql: '"AVG_SALES_CYCLE"'
+
+  pipeline_coverage_ratio:
+    sql: '"PIPELINE_COVERAGE_RATIO"'
+
+  sales_productivity_arr:
+    sql: '"SALES_PRODUCTIVITY_ARR"'
+
+  created_at:
+    sql: '"CREATED_AT"'
+
+  updated_at:
+    sql: '"UPDATED_AT"'
+
+  _entity_quota_record:
+    # Entity is defined in the 'quota_performance' dbt semantic model (models/semantic_models/sem_quota_performance.yml)
+    sql: ${omni_dbt_marts__fct_quota_attainment.quota_attainment_key}
+    hidden: true
+
+  _entity_user:
+    # Entity is defined in the 'quota_performance' dbt semantic model (models/semantic_models/sem_quota_performance.yml)
+    sql: ${omni_dbt_marts__fct_quota_attainment.user_id}
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+  achieved_bookings:
+    # Measure is defined in the 'quota_performance' dbt semantic model (models/semantic_models/sem_quota_performance.yml)
+    sql: ${omni_dbt_marts__fct_quota_attainment.achieved_bookings}
+    description: Actual bookings achieved
+    aggregate_type: sum
+
+  pipeline_coverage_ratio:
+    # Measure is defined in the 'quota_performance' dbt semantic model (models/semantic_models/sem_quota_performance.yml)
+    sql: ${omni_dbt_marts__fct_quota_attainment.pipeline_coverage_ratio}
+    description: Pipeline coverage ratio
+    aggregate_type: average
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_quota_attainment
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    WITH quota_base AS (
+        SELECT
+            user_id,
+            quota_period,
+            assigned_quota,
+            role_name,
+            team_name,
+            territory_name,
+            manager_id
+        FROM {{ ref('dim_quota_assignments') }}
+    ),
+
+    achieved_bookings AS (
+        -- This CTE calculates the actual sales achieved by each user per quarter.
+        SELECT
+            owner_id AS user_id,
+            DATE_TRUNC('quarter', close_date) AS quota_period,
+            SUM(opp_total_bookings) AS achieved_bookings,
+            COUNT(opportunity_id) AS closed_won_opportunities
+        FROM {{ ref('fct_opportunities') }} -- NOTE: Update to your opportunities model
+        WHERE is_won = TRUE
+        GROUP BY 1, 2
+    ),
+
+    sales_activities AS (
+        -- This CTE summarizes sales activities for each user per quarter.
+        SELECT
+            owner_id AS user_id,
+            DATE_TRUNC('quarter', activity_date) AS quota_period,
+            COUNT(activity_id) AS total_activities,
+            COUNT_IF(activity_type = 'Email') AS email_activities,
+            COUNT_IF(activity_type = 'Call') AS call_activities,
+            COUNT_IF(activity_type = 'Demo') AS demo_activities
+        FROM {{ ref('fct_sales_activities') }} -- NOTE: Update to your activities model
+        GROUP BY 1, 2
+    ),
+
+    pipeline_metrics AS (
+        -- This CTE calculates pipeline value and sales cycle for each user per quarter.
+        SELECT
+            owner_id AS user_id,
+            DATE_TRUNC('quarter', created_date) AS quota_period,
+            SUM(CASE WHEN NOT is_closed THEN opp_total_bookings ELSE 0 END) AS total_pipeline_value,
+            COUNT(opportunity_id) AS total_opportunities,
+            AVG(days_in_pipeline) AS avg_sales_cycle
+        FROM {{ ref('fct_opportunities') }} -- NOTE: Update to your opportunities model
+        GROUP BY 1, 2
+    )
+
+    SELECT
+        -- Primary Key
+        {{ dbt_utils.generate_surrogate_key(['q.user_id', 'q.quota_period']) }} AS quota_attainment_key,
+
+        -- Foreign Keys
+        q.user_id,
+        q.quota_period,
+        q.manager_id,
+
+        -- Quota Information
+        q.assigned_quota,
+        q.role_name,
+        q.team_name,
+        q.territory_name,
+
+        -- Achievement Metrics
+        COALESCE(ab.achieved_bookings, 0) AS achieved_bookings,
+        COALESCE(ab.closed_won_opportunities, 0) AS closed_won_opportunities,
+
+        -- Quota Attainment Calculation
+        CASE
+            WHEN q.assigned_quota > 0
+            THEN (COALESCE(ab.achieved_bookings, 0) / q.assigned_quota)
+            ELSE 0
+        END AS quota_attainment_percentage,
+
+        -- Activity Metrics
+        COALESCE(sa.total_activities, 0) AS total_activities,
+        COALESCE(sa.email_activities, 0) AS email_activities,
+        COALESCE(sa.call_activities, 0) AS call_activities,
+        COALESCE(sa.demo_activities, 0) AS demo_activities,
+
+        -- Pipeline Metrics
+        COALESCE(pm.total_pipeline_value, 0) AS total_pipeline_value,
+        COALESCE(pm.total_opportunities, 0) AS total_opportunities,
+        COALESCE(pm.avg_sales_cycle, 0) AS avg_sales_cycle,
+
+        -- Pipeline Coverage Ratio
+        CASE
+            WHEN q.assigned_quota > 0
+            THEN COALESCE(pm.total_pipeline_value, 0) / q.assigned_quota
+            ELSE 0
+        END AS pipeline_coverage_ratio,
+
+        -- Sales Productivity per Rep
+        COALESCE(ab.achieved_bookings, 0) AS sales_productivity_arr,
+
+        -- Metadata
+        CURRENT_TIMESTAMP AS created_at,
+        CURRENT_TIMESTAMP AS updated_at
+
+    FROM quota_base AS q
+    LEFT JOIN achieved_bookings AS ab
+        ON q.user_id = ab.user_id AND q.quota_period = ab.quota_period
+    LEFT JOIN sales_activities AS sa
+        ON q.user_id = sa.user_id AND q.quota_period = sa.quota_period
+    LEFT JOIN pipeline_metrics AS pm
+        ON q.user_id = pm.user_id AND q.quota_period = pm.quota_period

@@ -1,0 +1,271 @@
+# Reference this view as omni_dbt_marts__dim_date
+schema_label: ""
+#This description was pulled from dbt.
+description: Date dimension with calendar and fiscal periods
+
+schema: omni_dbt_marts
+table_name: DIM_DATE
+
+dimensions:
+  date_id:
+    sql: '"DATE_ID"'
+    format: ID
+
+  year:
+    sql: '"YEAR"'
+
+  quarter:
+    sql: '"QUARTER"'
+
+  month:
+    sql: '"MONTH"'
+
+  week:
+    sql: '"WEEK"'
+
+  day_of_month:
+    sql: '"DAY_OF_MONTH"'
+
+  day_of_week:
+    sql: '"DAY_OF_WEEK"'
+
+  year_label:
+    sql: '"YEAR_LABEL"'
+
+  quarter_label:
+    sql: '"QUARTER_LABEL"'
+
+  month_label:
+    sql: '"MONTH_LABEL"'
+
+  date_label:
+    sql: '"DATE_LABEL"'
+
+  quarter_start_date:
+    sql: '"QUARTER_START_DATE"'
+
+  month_start_date:
+    sql: '"MONTH_START_DATE"'
+
+  week_start_date:
+    sql: '"WEEK_START_DATE"'
+
+  cal_year:
+    sql: '"CAL_YEAR"'
+
+  cal_month:
+    sql: '"CAL_MONTH"'
+
+  fiscal_month_in_year:
+    sql: '"FISCAL_MONTH_IN_YEAR"'
+    #This description was pulled from dbt.
+    description: Month number within the fiscal year (1..12) based on
+      fiscal_year_start_month
+
+  fiscal_quarter:
+    sql: '"FISCAL_QUARTER"'
+    #This description was pulled from dbt.
+    description: Fiscal quarter number (1..4) relative to fiscal year
+
+  fiscal_year:
+    sql: '"FISCAL_YEAR"'
+    #This description was pulled from dbt.
+    description: "Fiscal year numeric value (depends on label_kind: end or start)"
+
+  fiscal_year_label:
+    sql: '"FISCAL_YEAR_LABEL"'
+    #This description was pulled from dbt.
+    description: Fiscal year label (e.g., FY2025). Controlled by fiscal_year_label_kind var
+
+  fiscal_quarter_label:
+    sql: '"FISCAL_QUARTER_LABEL"'
+    #This description was pulled from dbt.
+    description: Fiscal quarter label (e.g., FY2025-Q1)
+
+  fiscal_year_start_calendar_year:
+    sql: '"FISCAL_YEAR_START_CALENDAR_YEAR"'
+
+  fiscal_year_start_date:
+    sql: '"FISCAL_YEAR_START_DATE"'
+    #This description was pulled from dbt.
+    description: Calendar date when the fiscal year begins
+
+  fiscal_year_end_date:
+    sql: '"FISCAL_YEAR_END_DATE"'
+    #This description was pulled from dbt.
+    description: Calendar date when the fiscal year ends
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: dim_date
+  target_schema: STAGING
+  description: Date dimension with calendar and fiscal periods
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    {{ config(materialized='table') }}
+
+    {# ------------- Configurable fiscal vars ------------- #}
+    {% set fiscal_start_month = var('fiscal_year_start_month', 4) %}
+    {% set fiscal_label_kind = var('fiscal_year_label_kind', 'end') | lower %}  {# 'end' or 'start' #}
+
+    with date_spine as (
+
+        {{ dbt_utils.date_spine(
+            datepart="day",
+            start_date="cast('2020-01-01' as date)",
+            end_date="cast(current_date as date)"
+        ) }}
+
+    )
+
+    select
+        date_day as date_id,
+
+        -- Basic calendar components
+        extract(year from date_day)          as year,
+        extract(quarter from date_day)       as quarter,
+        extract(month from date_day)         as month,
+        extract(week from date_day)          as week,
+        extract(day from date_day)           as day_of_month,
+        extract(dow from date_day)           as day_of_week,
+
+        -- Calendar labels and period starts
+        to_char(date_day, 'YYYY')            as year_label,
+        to_char(date_day, 'YYYY-"Q"Q')       as quarter_label,
+        to_char(date_day, 'YYYY-MM')         as month_label,
+        to_char(date_day, 'YYYY-MM-DD')      as date_label,
+        date_trunc('quarter', date_day)      as quarter_start_date,
+        date_trunc('month', date_day)        as month_start_date,
+        date_trunc('week', date_day)         as week_start_date,
+
+        -- =========================
+        -- FISCAL / FINANCIAL PERIODS
+        -- =========================
+
+        -- simple numeric helpers
+        extract(year from date_day)                                  as cal_year,
+        extract(month from date_day)                                 as cal_month,
+
+        -- shifted month relative to fiscal year start (1..12)
+        -- mod(...) used to rotate months so fiscal year starts at 1
+        (mod(extract(month from date_day) - {{ fiscal_start_month }} + 12, 12) + 1)
+                                                                     as fiscal_month_in_year,
+
+        -- fiscal quarter derived from shifted month
+        case
+          when (mod(extract(month from date_day) - {{ fiscal_start_month }} + 12, 12) + 1) between 1 and 3 then 1
+          when (mod(extract(month from date_day) - {{ fiscal_start_month }} + 12, 12) + 1) between 4 and 6 then 2
+          when (mod(extract(month from date_day) - {{ fiscal_start_month }} + 12, 12) + 1) between 7 and 9 then 3
+          else 4
+        end                                                            as fiscal_quarter,
+
+        -- fiscal year numeric value (label depends on fiscal_label_kind)
+        -- If label_kind = 'end' -> FY = calendar_year + (month >= start ? 1 : 0)
+        -- If label_kind = 'start' -> FY = calendar_year - (month < start ? 1 : 0)
+        case
+          when '{{ fiscal_label_kind }}' = 'end' then
+            case
+              when extract(month from date_day) >= {{ fiscal_start_month }} then extract(year from date_day) + 1
+              else extract(year from date_day)
+            end
+          else  -- label_kind = 'start'
+            case
+              when extract(month from date_day) >= {{ fiscal_start_month }} then extract(year from date_day)
+              else extract(year from date_day) - 1
+            end
+        end                                                               as fiscal_year,
+
+        -- Fiscal labels (e.g., FY2025, FY2025-Q1)
+        concat('FY', cast(
+          case
+            when '{{ fiscal_label_kind }}' = 'end' then
+              case
+                when extract(month from date_day) >= {{ fiscal_start_month }} then extract(year from date_day) + 1
+                else extract(year from date_day)
+              end
+            else
+              case
+                when extract(month from date_day) >= {{ fiscal_start_month }} then extract(year from date_day)
+                else extract(year from date_day) - 1
+              end
+          end
+        as integer))                                                       as fiscal_year_label,
+
+        concat(
+          'FY',
+          cast(
+            case
+              when '{{ fiscal_label_kind }}' = 'end' then
+                case
+                  when extract(month from date_day) >= {{ fiscal_start_month }} then extract(year from date_day) + 1
+                  else extract(year from date_day)
+                end
+              else
+                case
+                  when extract(month from date_day) >= {{ fiscal_start_month }} then extract(year from date_day)
+                  else extract(year from date_day) - 1
+                end
+            end
+          as integer),
+          '-Q',
+          cast(
+            case
+              when (mod(extract(month from date_day) - {{ fiscal_start_month }} + 12, 12) + 1) between 1 and 3 then 1
+              when (mod(extract(month from date_day) - {{ fiscal_start_month }} + 12, 12) + 1) between 4 and 6 then 2
+              when (mod(extract(month from date_day) - {{ fiscal_start_month }} + 12, 12) + 1) between 7 and 9 then 3
+              else 4
+            end
+          as integer)
+        )                                                                   as fiscal_quarter_label,
+
+        -- Fiscal year start & end dates (calendar dates)
+        -- Compute fiscal_year_start_year (the calendar year where the fiscal year begins)
+        (case
+          when extract(month from date_day) >= {{ fiscal_start_month }} then extract(year from date_day)
+          else extract(year from date_day) - 1
+        end)                                                                as fiscal_year_start_calendar_year,
+
+        -- Build fiscal year start date: YYYY-<start_month>-01
+        to_date(
+          concat(
+            cast(
+              case
+                when extract(month from date_day) >= {{ fiscal_start_month }} then extract(year from date_day)
+                else extract(year from date_day) - 1
+              end
+            as varchar),
+            '-',
+            lpad(cast({{ fiscal_start_month }} as varchar), 2, '0'),
+            '-01'
+          )
+        )                                                                   as fiscal_year_start_date,
+
+        -- Fiscal year end date is one day before next fiscal year start
+        dateadd(
+          day,
+          -1,
+          dateadd(
+            year, 1,
+            to_date(
+              concat(
+                cast(
+                  case
+                    when extract(month from date_day) >= {{ fiscal_start_month }} then extract(year from date_day)
+                    else extract(year from date_day) - 1
+                  end
+                as varchar),
+                '-',
+                lpad(cast({{ fiscal_start_month }} as varchar), 2, '0'),
+                '-01'
+              )
+            )
+          )
+        )                                                                   as fiscal_year_end_date
+
+    from date_spine

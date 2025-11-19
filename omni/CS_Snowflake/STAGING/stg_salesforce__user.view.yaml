@@ -1,0 +1,107 @@
+# Reference this view as staging__stg_salesforce__user
+schema: STAGING
+table_name: STG_SALESFORCE__USER
+
+dimensions:
+  _fivetran_deleted:
+    sql: '"_FIVETRAN_DELETED"'
+    hidden: true
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  alias:
+    sql: '"ALIAS"'
+
+  city:
+    sql: '"CITY"'
+
+  company_name:
+    sql: '"COMPANY_NAME"'
+
+  contact_id:
+    sql: '"CONTACT_ID"'
+    format: ID
+
+  country:
+    sql: '"COUNTRY"'
+
+  country_code:
+    sql: '"COUNTRY_CODE"'
+
+  department:
+    sql: '"DEPARTMENT"'
+
+  email:
+    sql: '"EMAIL"'
+
+  first_name:
+    sql: '"FIRST_NAME"'
+
+  user_id:
+    sql: '"USER_ID"'
+    format: ID
+
+  individual_id:
+    sql: '"INDIVIDUAL_ID"'
+    format: ID
+
+  is_active:
+    sql: '"IS_ACTIVE"'
+
+  last_login_date:
+    sql: '"LAST_LOGIN_DATE"'
+
+  last_name:
+    sql: '"LAST_NAME"'
+
+  last_referenced_date:
+    sql: '"LAST_REFERENCED_DATE"'
+
+  last_viewed_date:
+    sql: '"LAST_VIEWED_DATE"'
+
+  manager_id:
+    sql: '"MANAGER_ID"'
+    format: ID
+
+  user_name:
+    sql: '"USER_NAME"'
+
+  postal_code:
+    sql: '"POSTAL_CODE"'
+
+  profile_id:
+    sql: '"PROFILE_ID"'
+    format: ID
+
+  state:
+    sql: '"STATE"'
+
+  state_code:
+    sql: '"STATE_CODE"'
+
+  street:
+    sql: '"STREET"'
+
+  title:
+    sql: '"TITLE"'
+
+  user_role_id:
+    sql: '"USER_ROLE_ID"'
+    format: ID
+
+  user_type:
+    sql: '"USER_TYPE"'
+
+  username:
+    sql: '"USERNAME"'
+
+measures:
+  count:
+    aggregate_type: count

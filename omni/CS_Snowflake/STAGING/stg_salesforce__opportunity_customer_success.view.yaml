@@ -1,0 +1,89 @@
+# Reference this view as staging__stg_salesforce__opportunity_customer_success
+#This description was pulled from dbt.
+description: |
+  Staging model for Salesforce Opportunities focused on Customer Success.  This model selects and renames relevant fields from the Salesforce 'opportunity' source table,  filters out deleted records, and generates a composite primary key.  It provides key opportunity details including owner, stage, activity, and success tier.
+
+schema: STAGING
+table_name: STG_SALESFORCE__OPPORTUNITY_CUSTOMER_SUCCESS
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Composite primary key for the opportunity record, created by
+      concatenating the opportunity ID and name.
+    primary_key: true
+
+  oppotunity_id:
+    sql: '"OPPOTUNITY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Salesforce ID of the opportunity.
+
+  opportunity_owner_id:
+    sql: '"OPPORTUNITY_OWNER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Salesforce ID of the opportunity owner.
+
+  last_activity_date:
+    sql: '"LAST_ACTIVITY_DATE"'
+    #This description was pulled from dbt.
+    description: Date of the last activity on the opportunity.
+
+  opportunity_stage_name:
+    sql: '"OPPORTUNITY_STAGE_NAME"'
+    #This description was pulled from dbt.
+    description: Current stage of the opportunity.
+
+  last_stage_change_date:
+    sql: '"LAST_STAGE_CHANGE_DATE"'
+    #This description was pulled from dbt.
+    description: Date when the opportunity last changed stage.
+
+  opportunity_owner_name:
+    sql: '"OPPORTUNITY_OWNER_NAME"'
+    #This description was pulled from dbt.
+    description: Name of the opportunity owner.
+
+  days_without_activity:
+    sql: '"DAYS_WITHOUT_ACTIVITY"'
+    #This description was pulled from dbt.
+    description: Number of days since the last activity on the opportunity.
+
+  opportunity_success_tier:
+    sql: '"OPPORTUNITY_SUCCESS_TIER"'
+    #This description was pulled from dbt.
+    description: Success tier classification for the opportunity.
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__opportunity_customer_success
+  target_schema: STAGING
+  description: |
+    Staging model for Salesforce Opportunities focused on Customer Success.  This model selects and renames relevant fields from the Salesforce 'opportunity' source table,  filters out deleted records, and generates a composite primary key.  It provides key opportunity details including owner, stage, activity, and success tier.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('salesforce_opportunity', 'opportunity') }} where is_deleted = 'FALSE'
+    )
+
+    select
+        concat(id,'|',name) as id,
+        id as oppotunity_id,
+        owner_id as opportunity_owner_id,
+        last_activity_date,
+        stage_name as opportunity_stage_name,
+        last_stage_change_date,
+        opportunity_owner_name_c as opportunity_owner_name,
+        days_without_activity_c as days_without_activity,
+        opportunity_success_tier_c as opportunity_success_tier
+    from source
+  referenced_by: [ int_salesforce__opportunity_unified ]

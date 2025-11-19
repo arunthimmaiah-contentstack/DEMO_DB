@@ -1,0 +1,159 @@
+# Reference this view as omni_dbt_staging__learnupon_partner_enrollments
+schema_label: ""
+
+schema: omni_dbt_staging
+table_name: LEARNUPON_PARTNER_ENROLLMENTS
+
+dimensions:
+  source_file_name:
+    sql: '"SOURCE_FILE_NAME"'
+
+  file_row_number:
+    sql: '"FILE_ROW_NUMBER"'
+
+  batch_number:
+    sql: '"BATCH_NUMBER"'
+
+  data_sync_date:
+    sql: '"DATA_SYNC_DATE"'
+
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  course_id:
+    sql: '"COURSE_ID"'
+    format: ID
+
+  course_source_id:
+    sql: '"COURSE_SOURCE_ID"'
+    format: ID
+
+  version:
+    sql: '"VERSION"'
+
+  user_id:
+    sql: '"USER_ID"'
+    format: ID
+
+  percentage:
+    sql: '"PERCENTAGE"'
+
+  has_attempts_remaining:
+    sql: '"HAS_ATTEMPTS_REMAINING"'
+
+  date_started:
+    sql: '"DATE_STARTED"'
+
+  date_completed:
+    sql: '"DATE_COMPLETED"'
+
+  date_lastaccessed:
+    sql: '"DATE_LASTACCESSED"'
+
+  date_enrolled:
+    sql: '"DATE_ENROLLED"'
+
+  course_name:
+    sql: '"COURSE_NAME"'
+
+  first_name:
+    sql: '"FIRST_NAME"'
+
+  last_name:
+    sql: '"LAST_NAME"'
+
+  email:
+    sql: '"EMAIL"'
+
+  certificate_name:
+    sql: '"CERTIFICATE_NAME"'
+
+  percentage_complete:
+    sql: '"PERCENTAGE_COMPLETE"'
+
+  unenrolled:
+    sql: '"UNENROLLED"'
+
+  from_catalog:
+    sql: '"FROM_CATALOG"'
+
+  from_store:
+    sql: '"FROM_STORE"'
+
+  updated_at:
+    sql: '"UPDATED_AT"'
+
+  date_last_accessed:
+    sql: '"DATE_LAST_ACCESSED"'
+
+  due_date:
+    sql: '"DUE_DATE"'
+
+  cert_expires_at:
+    sql: '"CERT_EXPIRES_AT"'
+
+  course_access_expires_at:
+    sql: '"COURSE_ACCESS_EXPIRES_AT"'
+
+  status:
+    sql: '"STATUS"'
+
+  was_recertified:
+    sql: '"WAS_RECERTIFIED"'
+
+  partner_name:
+    sql: '"PARTNER_NAME"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: learnupon_partner_enrollments
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    select  
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        ID,
+        COURSE_ID,
+        COURSE_SOURCE_ID,
+        VERSION,
+        USER_ID,
+        PERCENTAGE,
+        HAS_ATTEMPTS_REMAINING,
+        DATE_STARTED,
+        DATE_COMPLETED,
+        DATE_LASTACCESSED,
+        DATE_ENROLLED,
+        COURSE_NAME,
+        FIRST_NAME,
+        LAST_NAME,
+        lp.EMAIL,
+        CERTIFICATE_NAME,
+        PERCENTAGE_COMPLETE,
+        UNENROLLED,
+        FROM_CATALOG,
+        FROM_STORE,
+        UPDATED_AT,
+        DATE_LAST_ACCESSED,
+        DUE_DATE,
+        CERT_EXPIRES_AT,
+        COURSE_ACCESS_EXPIRES_AT,
+        STATUS,
+        WAS_RECERTIFIED,
+        accounts.ultimate_parent_account_name AS PARTNER_NAME
+    from {{source('academy','learnupon_enrollments_partner')}} lp
+    left join {{ref("stg_salesforce__contacts")}} contacts
+        on contacts.email = lp.email
+    left join {{ref("stg_salesforce__accounts")}} accounts
+        on contacts.account_id = accounts.account_id
+  referenced_by: [ all_enrollments_partner ]

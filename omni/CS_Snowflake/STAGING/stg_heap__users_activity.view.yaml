@@ -1,0 +1,59 @@
+# Reference this view as staging__stg_heap__users_activity
+schema: STAGING
+table_name: STG_HEAP__USERS_ACTIVITY
+
+dimensions:
+  user_id:
+    sql: '"USER_ID"'
+    format: ID
+
+  email:
+    sql: '"EMAIL"'
+
+  date:
+    sql: '"DATE"'
+
+  organization_uid:
+    sql: '"ORGANIZATION_UID"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+  location:
+    sql: '"LOCATION"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_heap__users_activity
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    -- models/staging/heap/stg_heap__users_activity.sql
+    with source as (
+
+        select *
+        from {{ source('stg_heap__users_activity', 'summary_heap_users_activity') }}
+
+    ),
+
+    renamed as (
+
+        select
+            user_id,
+            email,
+            date,
+            organization_uid,
+            platform,
+            location
+        from source
+
+    )
+
+    select * from renamed
+  referenced_by: [ int_dau, int_mau, int_last30au ]

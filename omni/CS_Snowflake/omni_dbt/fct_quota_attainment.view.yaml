@@ -1,0 +1,78 @@
+# Reference this view as omni_dbt__fct_quota_attainment
+schema_label: ""
+
+schema: omni_dbt
+table_name: FCT_QUOTA_ATTAINMENT
+
+dimensions:
+  quota_attainment_key:
+    sql: '"QUOTA_ATTAINMENT_KEY"'
+
+  user_id:
+    sql: '"USER_ID"'
+    format: ID
+
+  quota_period:
+    sql: '"QUOTA_PERIOD"'
+
+  manager_id:
+    sql: '"MANAGER_ID"'
+    format: ID
+
+  assigned_quota:
+    sql: '"ASSIGNED_QUOTA"'
+
+  role_name:
+    sql: '"ROLE_NAME"'
+
+  team_name:
+    sql: '"TEAM_NAME"'
+
+  territory_name:
+    sql: '"TERRITORY_NAME"'
+
+  achieved_bookings:
+    sql: '"ACHIEVED_BOOKINGS"'
+
+  closed_won_opportunities:
+    sql: '"CLOSED_WON_OPPORTUNITIES"'
+
+  quota_attainment_percentage:
+    sql: '"QUOTA_ATTAINMENT_PERCENTAGE"'
+
+  total_activities:
+    sql: '"TOTAL_ACTIVITIES"'
+
+  email_activities:
+    sql: '"EMAIL_ACTIVITIES"'
+
+  call_activities:
+    sql: '"CALL_ACTIVITIES"'
+
+  demo_activities:
+    sql: '"DEMO_ACTIVITIES"'
+
+  total_pipeline_value:
+    sql: '"TOTAL_PIPELINE_VALUE"'
+
+  total_opportunities:
+    sql: '"TOTAL_OPPORTUNITIES"'
+
+  avg_sales_cycle:
+    sql: '"AVG_SALES_CYCLE"'
+
+  pipeline_coverage_ratio:
+    sql: '"PIPELINE_COVERAGE_RATIO"'
+
+  sales_productivity_arr:
+    sql: '"SALES_PRODUCTIVITY_ARR"'
+
+  created_at:
+    sql: '"CREATED_AT"'
+
+  updated_at:
+    sql: '"UPDATED_AT"'
+
+measures:
+  count:
+    aggregate_type: count

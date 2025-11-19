@@ -1,0 +1,48 @@
+# Reference this view as omni_dbt__int_account_subscription
+schema_label: ""
+
+schema: omni_dbt
+table_name: INT_ACCOUNT_SUBSCRIPTION
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  name:
+    sql: '"NAME"'
+
+  type:
+    sql: '"TYPE"'
+
+  product_type_c:
+    sql: '"PRODUCT_TYPE_C"'
+
+  region_c:
+    sql: '"REGION_C"'
+
+  current_arr_c:
+    sql: '"CURRENT_ARR_C"'
+
+  acquisition_date_c:
+    sql: '"ACQUISITION_DATE_C"'
+
+  churn_date_c:
+    sql: '"CHURN_DATE_C"'
+
+  churn_reason_c:
+    sql: '"CHURN_REASON_C"'
+
+  churn_reason_other_description_c:
+    sql: '"CHURN_REASON_OTHER_DESCRIPTION_C"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  close_date:
+    sql: '"CLOSE_DATE"'
+
+measures:
+  count:
+    aggregate_type: count

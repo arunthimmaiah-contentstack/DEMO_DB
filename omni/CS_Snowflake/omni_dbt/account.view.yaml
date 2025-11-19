@@ -1,0 +1,1006 @@
+# Reference this view as omni_dbt__account
+schema_label: ""
+
+schema: omni_dbt
+table_name: ACCOUNT
+
+dimensions:
+  bizible_2_engagement_score_c:
+    sql: '"BIZIBLE_2_ENGAGEMENT_SCORE_C"'
+
+  cms_premium_techs_c:
+    sql: '"CMS_PREMIUM_TECHS_C"'
+
+  phone:
+    sql: '"PHONE"'
+
+  ctvt_sandbox_admin_c:
+    sql: '"CTVT_SANDBOX_ADMIN_C"'
+
+  shipping_city:
+    sql: '"SHIPPING_CITY"'
+
+  account_source:
+    sql: '"ACCOUNT_SOURCE"'
+
+  billable_rate_bandwidth_c:
+    sql: '"BILLABLE_RATE_BANDWIDTH_C"'
+
+  engagio_top_urls_c:
+    sql: '"ENGAGIO_TOP_URLS_C"'
+
+  annual_revenue:
+    sql: '"ANNUAL_REVENUE"'
+
+  competitor_c:
+    sql: '"COMPETITOR_C"'
+
+  shipping_street:
+    sql: '"SHIPPING_STREET"'
+
+  fax:
+    sql: '"FAX"'
+
+  engagio_status_c:
+    sql: '"ENGAGIO_STATUS_C"'
+
+  license_start_date_c:
+    sql: '"LICENSE_START_DATE_C"'
+
+  lusha_enriched_c:
+    sql: '"LUSHA_ENRICHED_C"'
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  current_arr_c:
+    sql: '"CURRENT_ARR_C"'
+
+  shipping_country:
+    sql: '"SHIPPING_COUNTRY"'
+
+  dozisf_zoom_info_enrich_status_c:
+    sql: '"DOZISF_ZOOM_INFO_ENRICH_STATUS_C"'
+
+  zoom_info_company_name_c:
+    sql: '"ZOOM_INFO_COMPANY_NAME_C"'
+
+  zoom_info_company_state_province_c:
+    sql: '"ZOOM_INFO_COMPANY_STATE_PROVINCE_C"'
+
+  csm_pulse_code_sub_category_c:
+    sql: '"CSM_PULSE_CODE_SUB_CATEGORY_C"'
+
+  engagio_first_engagement_date_c:
+    sql: '"ENGAGIO_FIRST_ENGAGEMENT_DATE_C"'
+
+  catalyst_location_type_c:
+    sql: '"CATALYST_LOCATION_TYPE_C"'
+
+  sic:
+    sql: '"SIC"'
+
+  parent_id:
+    sql: '"PARENT_ID"'
+    format: ID
+
+  payment_payments_processor_premium_techs_c:
+    sql: '"PAYMENT_PAYMENTS_PROCESSOR_PREMIUM_TECHS_C"'
+
+  postal_email_item_accepted_last_30_d_c:
+    sql: '"POSTAL_EMAIL_ITEM_ACCEPTED_LAST_30_D_C"'
+
+  partner_industry_focus_c:
+    sql: '"PARTNER_INDUSTRY_FOCUS_C"'
+
+  postal_email_sent_last_30_d_c:
+    sql: '"POSTAL_EMAIL_SENT_LAST_30_D_C"'
+
+  legacy_account_c:
+    sql: '"LEGACY_ACCOUNT_C"'
+
+  surging_engaged_people_c:
+    sql: '"SURGING_ENGAGED_PEOPLE_C"'
+
+  billing_latitude:
+    sql: '"BILLING_LATITUDE"'
+
+  actual_go_live_date_c:
+    sql: '"ACTUAL_GO_LIVE_DATE_C"'
+
+  shipping_latitude:
+    sql: '"SHIPPING_LATITUDE"'
+
+  zoom_info_company_is_defunct_c:
+    sql: '"ZOOM_INFO_COMPANY_IS_DEFUNCT_C"'
+
+  lean_data_reporting_recent_marketing_touches_c:
+    sql: '"LEAN_DATA_REPORTING_RECENT_MARKETING_TOUCHES_C"'
+
+  bw_spending_c:
+    sql: '"BW_SPENDING_C"'
+
+  zoominfo_ultimate_parent_name_c:
+    sql: '"ZOOMINFO_ULTIMATE_PARENT_NAME_C"'
+
+  billing_contact_name_c:
+    sql: '"BILLING_CONTACT_NAME_C"'
+
+  partner_referral_rate_c:
+    sql: '"PARTNER_REFERRAL_RATE_C"'
+
+  ctvt_legal_organization_type_c:
+    sql: '"CTVT_LEGAL_ORGANIZATION_TYPE_C"'
+
+  engagio_sales_touches_7_days_c:
+    sql: '"ENGAGIO_SALES_TOUCHES_7_DAYS_C"'
+
+  billing_contact_email_c:
+    sql: '"BILLING_CONTACT_EMAIL_C"'
+
+  is_customer_portal:
+    sql: '"IS_CUSTOMER_PORTAL"'
+
+  zoominfo_ultimate_parent_company_id_c:
+    sql: '"ZOOMINFO_ULTIMATE_PARENT_COMPANY_ID_C"'
+
+  zoominfo_ultimate_parent_revenue_c:
+    sql: '"ZOOMINFO_ULTIMATE_PARENT_REVENUE_C"'
+
+  site:
+    sql: '"SITE"'
+
+  co_marketing_fulfilled_c:
+    sql: '"CO_MARKETING_FULFILLED_C"'
+
+  cms_open_source_premium_techs_c:
+    sql: '"CMS_OPEN_SOURCE_PREMIUM_TECHS_C"'
+
+  shipping_country_code:
+    sql: '"SHIPPING_COUNTRY_CODE"'
+
+  deployment_status_c:
+    sql: '"DEPLOYMENT_STATUS_C"'
+
+  widgets_translation_premium_techs_c:
+    sql: '"WIDGETS_TRANSLATION_PREMIUM_TECHS_C"'
+
+  sync_with_channeltivity_c:
+    sql: '"SYNC_WITH_CHANNELTIVITY_C"'
+
+  mkto_si_last_sales_engagement_c:
+    sql: '"MKTO_SI_LAST_SALES_ENGAGEMENT_C"'
+
+  supported_isv_solutions_c:
+    sql: '"SUPPORTED_ISV_SOLUTIONS_C"'
+
+  shipping_state:
+    sql: '"SHIPPING_STATE"'
+
+  license_end_date_c:
+    sql: '"LICENSE_END_DATE_C"'
+
+  lean_data_status_info_c:
+    sql: '"LEAN_DATA_STATUS_INFO_C"'
+
+  churn_date_c:
+    sql: '"CHURN_DATE_C"'
+
+  last_referenced_date:
+    sql: '"LAST_REFERENCED_DATE"'
+
+  bw_linkedin_c:
+    sql: '"BW_LINKEDIN_C"'
+
+  lean_data_reporting_last_marketing_touch_date_c:
+    sql: '"LEAN_DATA_REPORTING_LAST_MARKETING_TOUCH_DATE_C"'
+
+  name:
+    sql: '"NAME"'
+
+  jigsaw_company_id:
+    sql: '"JIGSAW_COMPANY_ID"'
+    format: ID
+
+  trid_trust_radius_account_id_c:
+    sql: '"TRID_TRUST_RADIUS_ACCOUNT_ID_C"'
+
+  postal_rejected_items_last_30_d_c:
+    sql: '"POSTAL_REJECTED_ITEMS_LAST_30_D_C"'
+
+  premium_techs_c:
+    sql: '"PREMIUM_TECHS_C"'
+
+  sales_engineer_c:
+    sql: '"SALES_ENGINEER_C"'
+
+  partner_tech_category_c:
+    sql: '"PARTNER_TECH_CATEGORY_C"'
+
+  surging_high_intent_engagement_mins_c:
+    sql: '"SURGING_HIGH_INTENT_ENGAGEMENT_MINS_C"'
+
+  catalyst_status_c:
+    sql: '"CATALYST_STATUS_C"'
+
+  ssl_extended_validation_premium_techs_c:
+    sql: '"SSL_EXTENDED_VALIDATION_PREMIUM_TECHS_C"'
+
+  zoom_info_company_street_c:
+    sql: '"ZOOM_INFO_COMPANY_STREET_C"'
+
+  zoominfo_ultimate_parent_employees_c:
+    sql: '"ZOOMINFO_ULTIMATE_PARENT_EMPLOYEES_C"'
+
+  churn_reason_other_description_c:
+    sql: '"CHURN_REASON_OTHER_DESCRIPTION_C"'
+
+  rating:
+    sql: '"RATING"'
+
+  cms_financial_premium_techs_c:
+    sql: '"CMS_FINANCIAL_PREMIUM_TECHS_C"'
+
+  unique_account_number_c:
+    sql: '"UNIQUE_ACCOUNT_NUMBER_C"'
+
+  partner_sandbox_c:
+    sql: '"PARTNER_SANDBOX_C"'
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+
+  postal_accepted_items_last_30_d_c:
+    sql: '"POSTAL_ACCEPTED_ITEMS_LAST_30_D_C"'
+
+  lusha_industry_c:
+    sql: '"LUSHA_INDUSTRY_C"'
+
+  postal_meetings_booked_last_30_d_c:
+    sql: '"POSTAL_MEETINGS_BOOKED_LAST_30_D_C"'
+
+  postal_qr_scanned_last_30_d_c:
+    sql: '"POSTAL_QR_SCANNED_LAST_30_D_C"'
+
+  lead_source_details_c:
+    sql: '"LEAD_SOURCE_DETAILS_C"'
+
+  cs_manager_c:
+    sql: '"CS_MANAGER_C"'
+
+  reference_program_c:
+    sql: '"REFERENCE_PROGRAM_C"'
+
+  surging_predictive_engagement_score_c:
+    sql: '"SURGING_PREDICTIVE_ENGAGEMENT_SCORE_C"'
+
+  partner_relationship_manager_c:
+    sql: '"PARTNER_RELATIONSHIP_MANAGER_C"'
+
+  bw_sitemap_c:
+    sql: '"BW_SITEMAP_C"'
+
+  photo_url:
+    sql: '"PHOTO_URL"'
+
+  data_analytics_service_focus_c:
+    sql: '"DATA_ANALYTICS_SERVICE_FOCUS_C"'
+
+  is_priority_record:
+    sql: '"IS_PRIORITY_RECORD"'
+
+  record_type_id:
+    sql: '"RECORD_TYPE_ID"'
+    format: ID
+
+  program_tier_c:
+    sql: '"PROGRAM_TIER_C"'
+
+  cms_simple_website_builder_premium_techs_c:
+    sql: '"CMS_SIMPLE_WEBSITE_BUILDER_PREMIUM_TECHS_C"'
+
+  engagio_qualification_score_c:
+    sql: '"ENGAGIO_QUALIFICATION_SCORE_C"'
+
+  contracted_partner_c:
+    sql: '"CONTRACTED_PARTNER_C"'
+
+  company_hq_country_c:
+    sql: '"COMPANY_HQ_COUNTRY_C"'
+
+  engagio_engaged_people_c:
+    sql: '"ENGAGIO_ENGAGED_PEOPLE_C"'
+
+  partner_pulse_score_c:
+    sql: '"PARTNER_PULSE_SCORE_C"'
+
+  ctvt_sys_entity_type_c:
+    sql: '"CTVT_SYS_ENTITY_TYPE_C"'
+
+  zoominfo_state_c:
+    sql: '"ZOOMINFO_STATE_C"'
+
+  territory_assignment_rule_run_status_c:
+    sql: '"TERRITORY_ASSIGNMENT_RULE_RUN_STATUS_C"'
+
+  subregion_owner_c:
+    sql: '"SUBREGION_OWNER_C"'
+
+  lean_data_reporting_customer_c:
+    sql: '"LEAN_DATA_REPORTING_CUSTOMER_C"'
+
+  widgets_wordpress_plugins_premium_techs_c:
+    sql: '"WIDGETS_WORDPRESS_PLUGINS_PREMIUM_TECHS_C"'
+
+  zi_ranking_c:
+    sql: '"ZI_RANKING_C"'
+
+  deal_owner_c:
+    sql: '"DEAL_OWNER_C"'
+
+  co_marketing_description_c:
+    sql: '"CO_MARKETING_DESCRIPTION_C"'
+
+  success_tier_c:
+    sql: '"SUCCESS_TIER_C"'
+
+  primary_ownership_c:
+    sql: '"PRIMARY_OWNERSHIP_C"'
+
+  contentstack_executive_sponsor_c:
+    sql: '"CONTENTSTACK_EXECUTIVE_SPONSOR_C"'
+
+  billing_city:
+    sql: '"BILLING_CITY"'
+
+  engagio_engagement_minutes_last_7_days_c:
+    sql: '"ENGAGIO_ENGAGEMENT_MINUTES_LAST_7_DAYS_C"'
+
+  mkto_si_last_activity_by_sales_c:
+    sql: '"MKTO_SI_LAST_ACTIVITY_BY_SALES_C"'
+
+  engagio_web_visits_last_3_months_c:
+    sql: '"ENGAGIO_WEB_VISITS_LAST_3_MONTHS_C"'
+
+  website:
+    sql: '"WEBSITE"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  engagio_engagement_minutes_last_3_months_c:
+    sql: '"ENGAGIO_ENGAGEMENT_MINUTES_LAST_3_MONTHS_C"'
+
+  bw_pagerank_c:
+    sql: '"BW_PAGERANK_C"'
+
+  postal_spend_last_30_d_c:
+    sql: '"POSTAL_SPEND_LAST_30_D_C"'
+
+  sic_desc:
+    sql: '"SIC_DESC"'
+
+  master_record_id:
+    sql: '"MASTER_RECORD_ID"'
+    format: ID
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+
+  number_of_employees:
+    sql: '"NUMBER_OF_EMPLOYEES"'
+
+  shop_enterprise_techs_c:
+    sql: '"SHOP_ENTERPRISE_TECHS_C"'
+
+  zoom_info_company_country_c:
+    sql: '"ZOOM_INFO_COMPANY_COUNTRY_C"'
+
+  lusha_revenue_c:
+    sql: '"LUSHA_REVENUE_C"'
+
+  jigsaw:
+    sql: '"JIGSAW"'
+
+  shop_open_source_premium_techs_c:
+    sql: '"SHOP_OPEN_SOURCE_PREMIUM_TECHS_C"'
+
+  dozisf_zoom_info_inbox_ai_id_c:
+    sql: '"DOZISF_ZOOM_INFO_INBOX_AI_ID_C"'
+
+  ctvt_jurisdiction_incorporation_c:
+    sql: '"CTVT_JURISDICTION_INCORPORATION_C"'
+
+  industry:
+    sql: '"INDUSTRY"'
+
+  engagio_top_web_traffic_urls_c:
+    sql: '"ENGAGIO_TOP_WEB_TRAFFIC_URLS_C"'
+
+  lean_data_ld_email_domains_c:
+    sql: '"LEAN_DATA_LD_EMAIL_DOMAINS_C"'
+
+  incumbent_cms_c:
+    sql: '"INCUMBENT_CMS_C"'
+
+  lean_data_reporting_has_opportunity_c:
+    sql: '"LEAN_DATA_REPORTING_HAS_OPPORTUNITY_C"'
+
+  shipping_geocode_accuracy:
+    sql: '"SHIPPING_GEOCODE_ACCURACY"'
+
+  revenue_c:
+    sql: '"REVENUE_C"'
+
+  postal_event_accepted_last_30_d_c:
+    sql: '"POSTAL_EVENT_ACCEPTED_LAST_30_D_C"'
+
+  data_push_to_marketo_c:
+    sql: '"DATA_PUSH_TO_MARKETO_C"'
+
+  billing_country:
+    sql: '"BILLING_COUNTRY"'
+
+  partner_type_c:
+    sql: '"PARTNER_TYPE_C"'
+
+  geo_c:
+    sql: '"GEO_C"'
+
+  territory_assignment_override_c:
+    sql: '"TERRITORY_ASSIGNMENT_OVERRIDE_C"'
+
+  engagio_mqadate_c:
+    sql: '"ENGAGIO_MQADATE_C"'
+
+  engagio_number_of_people_c:
+    sql: '"ENGAGIO_NUMBER_OF_PEOPLE_C"'
+
+  bw_salesrevenue_c:
+    sql: '"BW_SALESREVENUE_C"'
+
+  partner_sandbox_admin_c:
+    sql: '"PARTNER_SANDBOX_ADMIN_C"'
+
+  zoom_info_revenue_c:
+    sql: '"ZOOM_INFO_REVENUE_C"'
+
+  engagio_intent_minutes_last_30_days_c:
+    sql: '"ENGAGIO_INTENT_MINUTES_LAST_30_DAYS_C"'
+
+  expansion_type_c:
+    sql: '"EXPANSION_TYPE_C"'
+
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  mkto_si_sales_last_replied_c:
+    sql: '"MKTO_SI_SALES_LAST_REPLIED_C"'
+
+  partner_expertise_c:
+    sql: '"PARTNER_EXPERTISE_C"'
+
+  account_subregion_c:
+    sql: '"ACCOUNT_SUBREGION_C"'
+
+  ticker_symbol:
+    sql: '"TICKER_SYMBOL"'
+
+  shop_enterprise_premium_techs_c:
+    sql: '"SHOP_ENTERPRISE_PREMIUM_TECHS_C"'
+
+  shipping_longitude:
+    sql: '"SHIPPING_LONGITUDE"'
+
+  billing_postal_code:
+    sql: '"BILLING_POSTAL_CODE"'
+
+  catalyst_profile_c:
+    sql: '"CATALYST_PROFILE_C"'
+
+  predicted_go_live_date_c:
+    sql: '"PREDICTED_GO_LIVE_DATE_C"'
+
+  initial_arr_c:
+    sql: '"INITIAL_ARR_C"'
+
+  product_type_c:
+    sql: '"PRODUCT_TYPE_C"'
+
+  surging_first_engagement_date_c:
+    sql: '"SURGING_FIRST_ENGAGEMENT_DATE_C"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  engagio_engagement_minutes_last_30_days_c:
+    sql: '"ENGAGIO_ENGAGEMENT_MINUTES_LAST_30_DAYS_C"'
+
+  co_marketing_last_update_c:
+    sql: '"CO_MARKETING_LAST_UPDATE_C"'
+
+  zisf_zoom_id_c:
+    sql: '"ZISF_ZOOM_ID_C"'
+
+  cms_real_estate_premium_techs_c:
+    sql: '"CMS_REAL_ESTATE_PREMIUM_TECHS_C"'
+
+  cms_healthcare_premium_techs_c:
+    sql: '"CMS_HEALTHCARE_PREMIUM_TECHS_C"'
+
+  lean_data_reporting_total_leads_and_contacts_c:
+    sql: '"LEAN_DATA_REPORTING_TOTAL_LEADS_AND_CONTACTS_C"'
+
+  dozisf_zoom_info_last_updated_c:
+    sql: '"DOZISF_ZOOM_INFO_LAST_UPDATED_C"'
+
+  cms_headless_premium_techs_c:
+    sql: '"CMS_HEADLESS_PREMIUM_TECHS_C"'
+
+  surging_engagement_minutes_7_days_c:
+    sql: '"SURGING_ENGAGEMENT_MINUTES_7_DAYS_C"'
+
+  new_account_c:
+    sql: '"NEW_ACCOUNT_C"'
+
+  lean_data_search_c:
+    sql: '"LEAN_DATA_SEARCH_C"'
+
+  ctvt_sys_last_updated_c:
+    sql: '"CTVT_SYS_LAST_UPDATED_C"'
+
+  cms_non_profit_premium_techs_c:
+    sql: '"CMS_NON_PROFIT_PREMIUM_TECHS_C"'
+
+  last_viewed_date:
+    sql: '"LAST_VIEWED_DATE"'
+
+  billing_country_code:
+    sql: '"BILLING_COUNTRY_CODE"'
+
+  postal_event_sent_last_30_d_c:
+    sql: '"POSTAL_EVENT_SENT_LAST_30_D_C"'
+
+  nda_signed_c:
+    sql: '"NDA_SIGNED_C"'
+
+  csm_pulse_code_c:
+    sql: '"CSM_PULSE_CODE_C"'
+
+  company_hq_state_c:
+    sql: '"COMPANY_HQ_STATE_C"'
+
+  engagio_customer_date_c:
+    sql: '"ENGAGIO_CUSTOMER_DATE_C"'
+
+  billing_geocode_accuracy:
+    sql: '"BILLING_GEOCODE_ACCURACY"'
+
+  channeltivity_partner_status_c:
+    sql: '"CHANNELTIVITY_PARTNER_STATUS_C"'
+
+  surging_pipeline_predict_score_c:
+    sql: '"SURGING_PIPELINE_PREDICT_SCORE_C"'
+
+  bw_quantcast_c:
+    sql: '"BW_QUANTCAST_C"'
+
+  lean_data_routing_action_c:
+    sql: '"LEAN_DATA_ROUTING_ACTION_C"'
+
+  primary_outreach_owner_c:
+    sql: '"PRIMARY_OUTREACH_OWNER_C"'
+
+  billing_longitude:
+    sql: '"BILLING_LONGITUDE"'
+
+  engagio_pipeline_predict_score_c:
+    sql: '"ENGAGIO_PIPELINE_PREDICT_SCORE_C"'
+
+  cms_agency_premium_techs_c:
+    sql: '"CMS_AGENCY_PREMIUM_TECHS_C"'
+
+  engagio_sales_touches_14_days_c:
+    sql: '"ENGAGIO_SALES_TOUCHES_14_DAYS_C"'
+
+  acquisition_date_c:
+    sql: '"ACQUISITION_DATE_C"'
+
+  customer_designation_c:
+    sql: '"CUSTOMER_DESIGNATION_C"'
+
+  engagio_high_intent_keywords_c:
+    sql: '"ENGAGIO_HIGH_INTENT_KEYWORDS_C"'
+
+  mkto_si_current_sales_campaign_c:
+    sql: '"MKTO_SI_CURRENT_SALES_CAMPAIGN_C"'
+
+  csm_pulse_reason_c:
+    sql: '"CSM_PULSE_REASON_C"'
+
+  partner_presence_country_c:
+    sql: '"PARTNER_PRESENCE_COUNTRY_C"'
+
+  shipping_state_code:
+    sql: '"SHIPPING_STATE_CODE"'
+
+  account_number:
+    sql: '"ACCOUNT_NUMBER"'
+
+  zoom_info_company_city_c:
+    sql: '"ZOOM_INFO_COMPANY_CITY_C"'
+
+  zoom_info_installed_cms_c:
+    sql: '"ZOOM_INFO_INSTALLED_CMS_C"'
+
+  last_engagement_date_c:
+    sql: '"LAST_ENGAGEMENT_DATE_C"'
+
+  cms_hosted_solution_premium_techs_c:
+    sql: '"CMS_HOSTED_SOLUTION_PREMIUM_TECHS_C"'
+
+  zisf_zoom_info_industry_c:
+    sql: '"ZISF_ZOOM_INFO_INDUSTRY_C"'
+
+  engagio_high_intent_keywords_longtext_c:
+    sql: '"ENGAGIO_HIGH_INTENT_KEYWORDS_LONGTEXT_C"'
+
+  public_company_c:
+    sql: '"PUBLIC_COMPANY_C"'
+
+  bw_address_c:
+    sql: '"BW_ADDRESS_C"'
+
+  zisf_zoom_lastupdated_c:
+    sql: '"ZISF_ZOOM_LASTUPDATED_C"'
+
+  postal_email_opened_last_30_d_c:
+    sql: '"POSTAL_EMAIL_OPENED_LAST_30_D_C"'
+
+  postal_sends_last_30_d_c:
+    sql: '"POSTAL_SENDS_LAST_30_D_C"'
+
+  surging_engagement_minutes_3_mo_c:
+    sql: '"SURGING_ENGAGEMENT_MINUTES_3_MO_C"'
+
+  partner_pulse_score_last_updated_c:
+    sql: '"PARTNER_PULSE_SCORE_LAST_UPDATED_C"'
+
+  type:
+    sql: '"TYPE"'
+
+  dozisf_zoom_info_id_c:
+    sql: '"DOZISF_ZOOM_INFO_ID_C"'
+
+  account_tier_c:
+    sql: '"ACCOUNT_TIER_C"'
+
+  cms_enterprise_techs_c:
+    sql: '"CMS_ENTERPRISE_TECHS_C"'
+
+  zi_ticker_c:
+    sql: '"ZI_TICKER_C"'
+
+  primary_outreach_owner_date_c:
+    sql: '"PRIMARY_OUTREACH_OWNER_DATE_C"'
+
+  engagio_competitive_intent_keywords_c:
+    sql: '"ENGAGIO_COMPETITIVE_INTENT_KEYWORDS_C"'
+
+  ctvt_sys_url_c:
+    sql: '"CTVT_SYS_URL_C"'
+
+  ctvt_catalyst_credentials_c:
+    sql: '"CTVT_CATALYST_CREDENTIALS_C"'
+
+  opp_stage_c:
+    sql: '"OPP_STAGE_C"'
+
+  partner_active_customers_c:
+    sql: '"PARTNER_ACTIVE_CUSTOMERS_C"'
+
+  source_system_identifier:
+    sql: '"SOURCE_SYSTEM_IDENTIFIER"'
+
+  lean_data_reporting_target_account_c:
+    sql: '"LEAN_DATA_REPORTING_TARGET_ACCOUNT_C"'
+
+  shop_shopify_app_premium_techs_c:
+    sql: '"SHOP_SHOPIFY_APP_PREMIUM_TECHS_C"'
+
+  sdr_c:
+    sql: '"SDR_C"'
+
+  engagio_competitive_intent_keywords_longtext_c:
+    sql: '"ENGAGIO_COMPETITIVE_INTENT_KEYWORDS_LONGTEXT_C"'
+
+  cloud_marketplace_alignment_c:
+    sql: '"CLOUD_MARKETPLACE_ALIGNMENT_C"'
+
+  zoom_info_company_zip_postal_code_c:
+    sql: '"ZOOM_INFO_COMPANY_ZIP_POSTAL_CODE_C"'
+
+  bw_paths_c:
+    sql: '"BW_PATHS_C"'
+
+  postal_mgclink_item_accepted_last_30_d_c:
+    sql: '"POSTAL_MGCLINK_ITEM_ACCEPTED_LAST_30_D_C"'
+
+  lean_data_reporting_last_sales_touch_date_c:
+    sql: '"LEAN_DATA_REPORTING_LAST_SALES_TOUCH_DATE_C"'
+
+  zoom_info_primary_sub_industry_c:
+    sql: '"ZOOM_INFO_PRIMARY_SUB_INDUSTRY_C"'
+
+  billing_street:
+    sql: '"BILLING_STREET"'
+
+  fortune_500_europe_c:
+    sql: '"FORTUNE_500_EUROPE_C"'
+
+  csm_pulse_c:
+    sql: '"CSM_PULSE_C"'
+
+  zoom_info_primary_industry_c:
+    sql: '"ZOOM_INFO_PRIMARY_INDUSTRY_C"'
+
+  intelligence_treasury_c:
+    sql: '"INTELLIGENCE_TREASURY_C"'
+
+  partner_certified_c:
+    sql: '"PARTNER_CERTIFIED_C"'
+
+  churn_reason_c:
+    sql: '"CHURN_REASON_C"'
+
+  solution_architect_c:
+    sql: '"SOLUTION_ARCHITECT_C"'
+
+  billing_state:
+    sql: '"BILLING_STATE"'
+
+  joint_msa_executed_c:
+    sql: '"JOINT_MSA_EXECUTED_C"'
+
+  operating_hours_id:
+    sql: '"OPERATING_HOURS_ID"'
+    format: ID
+
+  company_size_c:
+    sql: '"COMPANY_SIZE_C"'
+
+  postal_swagstore_transaction_last_30_d_c:
+    sql: '"POSTAL_SWAGSTORE_TRANSACTION_LAST_30_D_C"'
+
+  lid_linked_in_company_id_c:
+    sql: '"LID_LINKED_IN_COMPANY_ID_C"'
+
+  dozisf_zoom_info_first_updated_c:
+    sql: '"DOZISF_ZOOM_INFO_FIRST_UPDATED_C"'
+
+  ownership:
+    sql: '"OWNERSHIP"'
+
+  f_1000_rank_c:
+    sql: '"F_1000_RANK_C"'
+
+  currency_iso_code:
+    sql: '"CURRENCY_ISO_CODE"'
+
+  revenue_band_override_c:
+    sql: '"REVENUE_BAND_OVERRIDE_C"'
+
+  last_activity_date:
+    sql: '"LAST_ACTIVITY_DATE"'
+
+  other_supported_cms_c:
+    sql: '"OTHER_SUPPORTED_CMS_C"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  xbeamprod_available_overlaps_c:
+    sql: '"XBEAMPROD_AVAILABLE_OVERLAPS_C"'
+
+  postal_email_land_page_view_last_30_d_c:
+    sql: '"POSTAL_EMAIL_LAND_PAGE_VIEW_LAST_30_D_C"'
+
+  msa_executed_c:
+    sql: '"MSA_EXECUTED_C"'
+
+  cms_headless_techs_c:
+    sql: '"CMS_HEADLESS_TECHS_C"'
+
+  lean_data_reporting_total_marketing_touches_c:
+    sql: '"LEAN_DATA_REPORTING_TOTAL_MARKETING_TOUCHES_C"'
+
+  system_modstamp:
+    sql: '"SYSTEM_MODSTAMP"'
+
+  lean_data_reporting_total_sales_touches_c:
+    sql: '"LEAN_DATA_REPORTING_TOTAL_SALES_TOUCHES_C"'
+
+  trid_trust_radius_account_c:
+    sql: '"TRID_TRUST_RADIUS_ACCOUNT_C"'
+
+  support_portal_status_c:
+    sql: '"SUPPORT_PORTAL_STATUS_C"'
+
+  description:
+    sql: '"DESCRIPTION"'
+
+  demandbase_last_engagement_date_c:
+    sql: '"DEMANDBASE_LAST_ENGAGEMENT_DATE_C"'
+
+  billing_state_code:
+    sql: '"BILLING_STATE_CODE"'
+
+  cms_learning_management_sy_premium_techs_c:
+    sql: '"CMS_LEARNING_MANAGEMENT_SY_PREMIUM_TECHS_C"'
+
+  cms_enterprise_premium_techs_c:
+    sql: '"CMS_ENTERPRISE_PREMIUM_TECHS_C"'
+
+  abx_play_c:
+    sql: '"ABX_PLAY_C"'
+
+  zoominfo_company_url_c:
+    sql: '"ZOOMINFO_COMPANY_URL_C"'
+
+  persona_mobilizer_c:
+    sql: '"PERSONA_MOBILIZER_C"'
+
+  shipping_postal_code:
+    sql: '"SHIPPING_POSTAL_CODE"'
+
+  cdns_edge_delivery_network_premium_techs_c:
+    sql: '"CDNS_EDGE_DELIVERY_NETWORK_PREMIUM_TECHS_C"'
+
+  cms_techs_c:
+    sql: '"CMS_TECHS_C"'
+
+  _fivetran_deleted:
+    sql: '"_FIVETRAN_DELETED"'
+    hidden: true
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  mmwest_checkbox_c:
+    sql: '"MMWEST_CHECKBOX_C"'
+
+  ultimate_parent_account_name_c:
+    sql: '"ULTIMATE_PARENT_ACCOUNT_NAME_C"'
+
+  territory_for_list_views_c:
+    sql: '"TERRITORY_FOR_LIST_VIEWS_C"'
+
+  customer_segment_c:
+    sql: '"CUSTOMER_SEGMENT_C"'
+
+  sub_region_c:
+    sql: '"SUB_REGION_C"'
+
+  am_i_the_prm_t_f_c:
+    sql: '"AM_I_THE_PRM_T_F_C"'
+
+  ar_nordics_c:
+    sql: '"AR_NORDICS_C"'
+
+  ultimate_parent_account_c:
+    sql: '"ULTIMATE_PARENT_ACCOUNT_C"'
+
+  ar_midwest_c:
+    sql: '"AR_MIDWEST_C"'
+
+  stoplight_status_c:
+    sql: '"STOPLIGHT_STATUS_C"'
+
+  region_c:
+    sql: '"REGION_C"'
+
+  active_ae_c:
+    sql: '"ACTIVE_AE_C"'
+
+  assignment_formula_c:
+    sql: '"ASSIGNMENT_FORMULA_C"'
+
+  ar_dach_c:
+    sql: '"AR_DACH_C"'
+
+  ar_france_italy_spain_pt_meds_c:
+    sql: '"AR_FRANCE_ITALY_SPAIN_PT_MEDS_C"'
+
+  ar_uk_ireland_ukie_c:
+    sql: '"AR_UK_IRELAND_UKIE_C"'
+
+  days_to_deployed_c:
+    sql: '"DAYS_TO_DEPLOYED_C"'
+
+  trid_website_domain_c:
+    sql: '"TRID_WEBSITE_DOMAIN_C"'
+
+  days_to_license_end_c:
+    sql: '"DAYS_TO_LICENSE_END_C"'
+
+  account_owner_name_c:
+    sql: '"ACCOUNT_OWNER_NAME_C"'
+
+  owner_sales_territory_c:
+    sql: '"OWNER_SALES_TERRITORY_C"'
+
+  gong_gong_count_c:
+    sql: '"GONG_GONG_COUNT_C"'
+
+  logged_in_user_csm_c:
+    sql: '"LOGGED_IN_USER_CSM_C"'
+
+  catalyst_c:
+    sql: '"CATALYST_C"'
+
+  accounts_c:
+    sql: '"ACCOUNTS_C"'
+
+  ar_southwest_c:
+    sql: '"AR_SOUTHWEST_C"'
+
+  mmeast_checkbox_c:
+    sql: '"MMEAST_CHECKBOX_C"'
+
+  account_domain_c:
+    sql: '"ACCOUNT_DOMAIN_C"'
+
+  ar_so_cal_c:
+    sql: '"AR_SO_CAL_C"'
+
+  lead_source_category_c:
+    sql: '"LEAD_SOURCE_CATEGORY_C"'
+
+  ar_northeast_c:
+    sql: '"AR_NORTHEAST_C"'
+
+  lean_data_reporting_target_account_number_c:
+    sql: '"LEAN_DATA_REPORTING_TARGET_ACCOUNT_NUMBER_C"'
+
+  account_id_case_safe_c:
+    sql: '"ACCOUNT_ID_CASE_SAFE_C"'
+
+  ar_southeast_c:
+    sql: '"AR_SOUTHEAST_C"'
+
+  ar_central_c:
+    sql: '"AR_CENTRAL_C"'
+
+  account_region_c:
+    sql: '"ACCOUNT_REGION_C"'
+
+  mkto_si_sales_insight_c:
+    sql: '"MKTO_SI_SALES_INSIGHT_C"'
+
+  message_c:
+    sql: '"MESSAGE_C"'
+
+  ar_northwest_nca_pnw_c:
+    sql: '"AR_NORTHWEST_NCA_PNW_C"'
+
+  number_of_days_customer_c:
+    sql: '"NUMBER_OF_DAYS_CUSTOMER_C"'
+
+  ar_ro_emea_c:
+    sql: '"AR_RO_EMEA_C"'
+
+  ar_benelux_c:
+    sql: '"AR_BENELUX_C"'
+
+  count_of_onboarding_records_c:
+    sql: '"COUNT_OF_ONBOARDING_RECORDS_C"'
+
+measures:
+  count:
+    aggregate_type: count

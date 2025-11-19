@@ -1,0 +1,5 @@
+base_view: analytics__fact_dreamguard_main_fiscal
+label: Analytics Fact Dreamguard Main Fiscal
+
+joins:
+  staging__stg_dreamguard_target_table: {}

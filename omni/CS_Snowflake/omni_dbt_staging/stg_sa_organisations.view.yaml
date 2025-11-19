@@ -1,0 +1,406 @@
+# Reference this view as omni_dbt_staging__stg_sa_organisations
+schema_label: ""
+
+schema: omni_dbt_staging
+table_name: STG_SA_ORGANISATIONS
+
+dimensions:
+  source_file_name:
+    sql: '"SOURCE_FILE_NAME"'
+
+  file_row_number:
+    sql: '"FILE_ROW_NUMBER"'
+
+  batch_number:
+    sql: '"BATCH_NUMBER"'
+
+  data_sync_date:
+    sql: '"DATA_SYNC_DATE"'
+
+  uid:
+    sql: '"UID"'
+
+  name:
+    sql: '"NAME"'
+
+  plan_id:
+    sql: '"PLAN_ID"'
+    format: ID
+
+  owner:
+    sql: '"OWNER"'
+
+  created_at:
+    sql: '"CREATED_AT"'
+
+  expires_on:
+    sql: '"EXPIRES_ON"'
+
+  is_over_usage_allowed:
+    sql: '"IS_OVER_USAGE_ALLOWED"'
+
+  enabled:
+    sql: '"ENABLED"'
+
+  created_by:
+    sql: '"CREATED_BY"'
+
+  deleted_at:
+    sql: '"DELETED_AT"'
+
+  cluster:
+    sql: '"CLUSTER"'
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  updated_at:
+    sql: '"UPDATED_AT"'
+
+  tags:
+    sql: '"TAGS"'
+
+  updated_by:
+    sql: '"UPDATED_BY"'
+
+  settings:
+    sql: '"SETTINGS"'
+
+  sso_enforced:
+    sql: '"SSO_ENFORCED"'
+
+  sso_enabled:
+    sql: '"SSO_ENABLED"'
+
+  twofa_enabled:
+    sql: '"TWOFA_ENABLED"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+  location:
+    sql: '"LOCATION"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_sa_organisations
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    select
+        source_file_name,
+        file_row_number,
+        batch_number,
+        data_sync_date,
+        uid,
+        name,
+        plan_id,
+        owner,
+        created_at,
+        expires_on,
+        is_over_usage_allowed,
+        enabled,
+        created_by,
+        deleted_at,
+        cluster,
+        account_id,
+        updated_at,
+        tags,
+        updated_by,
+        settings,
+        CASE 
+        WHEN sso_enforced IS NULL OR TRIM(sso_enforced) = '' THEN 'false' 
+        ELSE sso_enforced 
+        END AS sso_enforced,
+        CASE 
+            WHEN sso_enabled IS NULL OR TRIM(sso_enabled) = '' THEN 'false' 
+            ELSE sso_enabled 
+        END AS sso_enabled,
+        CASE 
+            WHEN twofa_enabled IS NULL OR TRIM(twofa_enabled) = '' THEN 'false' 
+            ELSE twofa_enabled 
+        END AS twofa_enabled,
+        'AWS' as platform,
+        'NA' as location
+    from {{source('aws_orgs_na', 'sa_organizations_na_f')}}
+
+    union all
+
+    select
+        source_file_name,
+        file_row_number,
+        batch_number,
+        data_sync_date,
+        uid,
+        name,
+        plan_id,
+        owner,
+        created_at,
+        expires_on,
+        is_over_usage_allowed,
+        enabled,
+        created_by,
+        deleted_at,
+        cluster,
+        account_id,
+        updated_at,
+        tags,
+        updated_by,
+        settings,
+        CASE 
+        WHEN sso_enforced IS NULL OR TRIM(sso_enforced) = '' THEN 'false' 
+        ELSE sso_enforced 
+        END AS sso_enforced,
+        CASE 
+            WHEN sso_enabled IS NULL OR TRIM(sso_enabled) = '' THEN 'false' 
+            ELSE sso_enabled 
+        END AS sso_enabled,
+        CASE 
+            WHEN twofa_enabled IS NULL OR TRIM(twofa_enabled) = '' THEN 'false' 
+            ELSE twofa_enabled 
+        END AS twofa_enabled,
+        'AWS' as platform,
+        'EU' as location
+    from {{source('aws_orgs_eu', 'sa_organizations_eu_f')}}
+
+    union all
+
+    select
+        source_file_name,
+        file_row_number,
+        batch_number,
+        data_sync_date,
+        uid,
+        name,
+        plan_id,
+        owner,
+        created_at,
+        expires_on,
+        is_over_usage_allowed,
+        enabled,
+        created_by,
+        deleted_at,
+        cluster,
+        account_id,
+        updated_at,
+        tags,
+        updated_by,
+        settings,
+        case 
+            when sso_strict is null or trim(sso_strict) = '' then 'false' 
+            else sso_strict 
+        end as sso_enforced,
+        case 
+            when sso_enabled is null or trim(sso_enabled) = '' then 'false' 
+            else sso_enabled 
+        end as sso_enabled,
+        case 
+            when mfa_enabled is null or trim(mfa_enabled) = '' then 'false' 
+            else mfa_enabled 
+        end as twofa_enabled,
+        'AWS' as platform,
+        'AU' as location
+    from {{source('aws_orgs_au', 'sa_organizations_au_f')}}
+
+    union all
+
+    select
+        source_file_name,
+        file_row_number,
+        batch_number,
+        data_sync_date,
+        uid,
+        name,
+        plan_id,
+        owner,
+        created_at,
+        expires_on,
+        is_over_usage_allowed,
+        enabled,
+        created_by,
+        deleted_at,
+        cluster,
+        account_id,
+        updated_at,
+        tags,
+        updated_by,
+        settings,
+        case 
+            when sso_enforced is null or trim(sso_enforced) = '' then 'false' 
+            else sso_enforced 
+        end as sso_enforced,
+        case 
+            when sso_enabled is null or trim(sso_enabled) = '' then 'false' 
+            else sso_enabled 
+        end as sso_enabled,
+        case 
+            when twofa_enabled is null or trim(twofa_enabled) = '' then 'false' 
+            else twofa_enabled
+        end as twofa_enabled,
+        'AWS' as platform,
+        'BLIZZARD' as location
+    from {{source('aws_orgs_blz', 'sa_organizations_blizzard_f')}}
+
+    union all
+
+    select
+        source_file_name,
+        file_row_number,
+        batch_number,
+        data_sync_date,
+        uid,
+        name,
+        plan_id,
+        owner,
+        created_at,
+        expires_on,
+        is_over_usage_allowed,
+        enabled,
+        created_by,
+        deleted_at,
+        cluster,
+        account_id,
+        updated_at,
+        tags,
+        updated_by,
+        settings,
+        case 
+            when sso_enforced is null or trim(sso_enforced) = '' then 'false' 
+            else sso_enforced 
+        end as sso_enforced,
+        case 
+            when sso_enabled is null or trim(sso_enabled) = '' then 'false' 
+            else sso_enabled 
+        end as sso_enabled,
+        case 
+            when twofa_enabled is null or trim(twofa_enabled) = '' then 'false' 
+            else twofa_enabled
+        end as twofa_enabled,
+        'AZURE' as platform,
+        'NA' as location
+    from {{source('az_orgs_na', 'sa_organizations_na_f')}}
+
+    union all
+
+    select
+        source_file_name,
+        file_row_number,
+        batch_number,
+        data_sync_date,
+        uid,
+        name,
+        plan_id,
+        owner,
+        created_at,
+        expires_on,
+        is_over_usage_allowed,
+        enabled,
+        created_by,
+        deleted_at,
+        cluster,
+        account_id,
+        updated_at,
+        tags,
+        updated_by,
+        settings,
+        case 
+            when sso_enforced is null or trim(sso_enforced) = '' then 'false' 
+            else sso_enforced 
+        end as sso_enforced,
+        case 
+            when sso_enabled is null or trim(sso_enabled) = '' then 'false' 
+            else sso_enabled 
+        end as sso_enabled,
+        case 
+            when twofa_enabled is null or trim(twofa_enabled) = '' then 'false' 
+            else twofa_enabled
+        end as twofa_enabled,
+        'AZURE' as platform,
+        'EU' as location
+    from {{source('az_orgs_eu', 'sa_organizations_eu_f')}}
+
+    union all
+
+    select
+        source_file_name,
+        file_row_number,
+        batch_number,
+        data_sync_date,
+        uid,
+        name,
+        plan_id,
+        owner,
+        created_at,
+        expires_on,
+        is_over_usage_allowed,
+        enabled,
+        created_by,
+        deleted_at,
+        cluster,
+        account_id,
+        updated_at,
+        tags,
+        updated_by,
+        settings,
+        case 
+            when sso_enforced is null or trim(sso_enforced) = '' then 'false' 
+            else sso_enforced 
+        end as sso_enforced,
+        case 
+            when sso_enabled is null or trim(sso_enabled) = '' then 'false' 
+            else sso_enabled 
+        end as sso_enabled,
+        case 
+            when twofa_enabled is null or trim(twofa_enabled) = '' then 'false' 
+            else twofa_enabled
+        end as twofa_enabled,
+        'GCP' as platform,
+        'NA' as location
+    from {{source('gcp_orgs_na', 'sa_organizations_na_f')}}
+
+    union all
+
+    select
+        source_file_name,
+        file_row_number,
+        batch_number,
+        data_sync_date,
+        uid,
+        name,
+        plan_id,
+        owner,
+        created_at,
+        expires_on,
+        is_over_usage_allowed,
+        enabled,
+        created_by,
+        deleted_at,
+        cluster,
+        account_id,
+        updated_at,
+        tags,
+        updated_by,
+        settings,
+        case 
+            when so_enforced is null or trim(so_enforced) = '' then 'false' 
+            else so_enforced 
+        end as sso_enforced,
+        case 
+            when sso_enabled is null or trim(sso_enabled) = '' then 'false' 
+            else sso_enabled 
+        end as sso_enabled,
+        case 
+            when twofa_enabled is null or trim(twofa_enabled) = '' then 'false' 
+            else twofa_enabled
+        end as twofa_enabled,
+        'GCP' as platform,
+        'EU' as location
+    from {{source('gcp_orgs_eu', 'sa_organizations_eu_f')}}
+  referenced_by: [ snp_dim_organisations ]

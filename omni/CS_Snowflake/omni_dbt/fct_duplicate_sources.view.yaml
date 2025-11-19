@@ -1,0 +1,60 @@
+# Reference this view as omni_dbt__fct_duplicate_sources
+schema_label: ""
+#This description was pulled from dbt.
+description: This table shows each source database location with more than one
+  node in your dbt project.
+
+schema: omni_dbt
+table_name: FCT_DUPLICATE_SOURCES
+
+dimensions:
+  source_db_location:
+    sql: '"SOURCE_DB_LOCATION"'
+
+  source_names:
+    sql: '"SOURCE_NAMES"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_duplicate_sources
+  target_schema: STAGING
+  description: This table shows each source database location with more than one
+    node in your dbt project.
+  config:
+    materialized: table
+  code: |-
+    with sources as (
+        select
+            resource_name,
+            case 
+                -- if you're using databricks but not the unity catalog, database will be null
+                when database is NULL then {{ dbt.concat(["schema", "'.'", "identifier"]) }} 
+                else {{ dbt.concat(["database", "'.'", "schema", "'.'", "identifier"]) }} 
+            end as source_db_location 
+        from {{ ref('int_all_graph_resources') }}
+        where resource_type = 'source'
+        and not is_excluded
+        -- we order the CTE so that listagg returns values correctly sorted for some warehouses
+        order by 1, 2
+    ),
+
+    source_duplicates as (
+        select
+            source_db_location,
+            {{ dbt.listagg(
+                measure = 'resource_name', 
+                delimiter_text = "', '", 
+                order_by_clause = 'order by resource_name' if target.type in ['snowflake','redshift','duckdb','trino'])
+            }} as source_names
+        from sources
+        group by source_db_location
+        having count(*) > 1
+    )
+
+    select * from source_duplicates
+
+    {{ filter_exceptions() }}

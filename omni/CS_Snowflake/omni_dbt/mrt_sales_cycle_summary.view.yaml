@@ -1,0 +1,38 @@
+# Reference this view as omni_dbt__mrt_sales_cycle_summary
+schema_label: ""
+
+schema: omni_dbt
+table_name: MRT_SALES_CYCLE_SUMMARY
+
+dimensions:
+  close_month:
+    sql: '"CLOSE_MONTH"'
+
+  product_type:
+    sql: '"PRODUCT_TYPE"'
+
+  owner_name:
+    sql: '"OWNER_NAME"'
+
+  record_type_id:
+    sql: '"RECORD_TYPE_ID"'
+    format: ID
+
+  closed_won_count:
+    sql: '"CLOSED_WON_COUNT"'
+
+  avg_sales_cycle_days:
+    sql: '"AVG_SALES_CYCLE_DAYS"'
+
+  min_sales_cycle_days:
+    sql: '"MIN_SALES_CYCLE_DAYS"'
+
+  max_sales_cycle_days:
+    sql: '"MAX_SALES_CYCLE_DAYS"'
+
+  median_sales_cycle_days:
+    sql: '"MEDIAN_SALES_CYCLE_DAYS"'
+
+measures:
+  count:
+    aggregate_type: count

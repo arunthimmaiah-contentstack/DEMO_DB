@@ -1,0 +1,90 @@
+# Reference this view as staging__stg_salesforce__contract_finances
+#This description was pulled from dbt.
+description: |
+  Staging model for Salesforce contract financial metrics.  This model extracts key financial fields from the Salesforce 'contract' source table, excluding deleted records.
+
+schema: STAGING
+table_name: STG_SALESFORCE__CONTRACT_FINANCES
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Primary key for the contract record.
+    primary_key: true
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Foreign key referencing the account associated with the contract.
+
+  currency_iso_code:
+    sql: '"CURRENCY_ISO_CODE"'
+    #This description was pulled from dbt.
+    description: ISO code representing the contract's currency.
+
+  contract_new_business_bookings:
+    sql: '"CONTRACT_NEW_BUSINESS_BOOKINGS"'
+    #This description was pulled from dbt.
+    description: New business bookings amount for the contract.
+
+  contract_ending_arr:
+    sql: '"CONTRACT_ENDING_ARR"'
+    #This description was pulled from dbt.
+    description: Ending Annual Recurring Revenue (ARR) for the contract.
+
+  contract_nrr_cumulative:
+    sql: '"CONTRACT_NRR_CUMULATIVE"'
+    #This description was pulled from dbt.
+    description: Cumulative Net Revenue Retention (NRR) for the contract.
+
+  contract_average_arrcumulative:
+    sql: '"CONTRACT_AVERAGE_ARRCUMULATIVE"'
+    #This description was pulled from dbt.
+    description: Cumulative average ARR for the contract.
+
+  contract_expansion_bookings:
+    sql: '"CONTRACT_EXPANSION_BOOKINGS"'
+    #This description was pulled from dbt.
+    description: Expansion bookings amount for the contract.
+
+  contract_total_bookings:
+    sql: '"CONTRACT_TOTAL_BOOKINGS"'
+    #This description was pulled from dbt.
+    description: Total bookings amount for the contract.
+
+  contract_renewal_bookings:
+    sql: '"CONTRACT_RENEWAL_BOOKINGS"'
+    #This description was pulled from dbt.
+    description: Renewal bookings amount for the contract.
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__contract_finances
+  target_schema: STAGING
+  description: |
+    Staging model for Salesforce contract financial metrics.  This model extracts key financial fields from the Salesforce 'contract' source table, excluding deleted records.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    select
+        id,
+        account_id,
+        currency_iso_code,
+        contract_new_business_bookings_c as contract_new_business_bookings,
+        contract_ending_arr_c as contract_ending_arr,
+        contract_nrr_cumulative_c as contract_nrr_cumulative,
+        contract_average_arrcumulative_c as contract_average_arrcumulative,
+        contract_expansion_bookings_c as contract_expansion_bookings,
+        contract_total_bookings_c as contract_total_bookings,
+        contract_renewal_bookings_c as contract_renewal_bookings
+    from {{source('salesforce','contract')}}
+    where 1=1
+        and is_deleted = 'false'

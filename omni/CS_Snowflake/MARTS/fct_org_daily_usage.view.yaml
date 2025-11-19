@@ -1,0 +1,355 @@
+# Reference this view as marts__fct_org_daily_usage
+schema: MARTS
+table_name: FCT_ORG_DAILY_USAGE
+
+dimensions:
+  date:
+    sql: '"DATE"'
+
+  organization_id:
+    sql: '"ORGANIZATION_ID"'
+    format: ID
+
+  account_id_18:
+    sql: '"ACCOUNT_ID_18"'
+
+  account_type:
+    sql: '"ACCOUNT_TYPE"'
+
+  customer_designation:
+    sql: '"CUSTOMER_DESIGNATION"'
+
+  organization_name:
+    sql: '"ORGANIZATION_NAME"'
+
+  organization_type:
+    sql: '"ORGANIZATION_TYPE"'
+
+  organization_tag:
+    sql: '"ORGANIZATION_TAG"'
+
+  cma_bandwidth:
+    sql: '"CMA_BANDWIDTH"'
+
+  cma_count:
+    sql: '"CMA_COUNT"'
+
+  cdn_bandwidth:
+    sql: '"CDN_BANDWIDTH"'
+
+  cdn_count:
+    sql: '"CDN_COUNT"'
+
+  assets_bandwidth:
+    sql: '"ASSETS_BANDWIDTH"'
+
+  assets_count:
+    sql: '"ASSETS_COUNT"'
+
+  images_bandwidth:
+    sql: '"IMAGES_BANDWIDTH"'
+
+  images_count:
+    sql: '"IMAGES_COUNT"'
+
+  graphql_bandwidth:
+    sql: '"GRAPHQL_BANDWIDTH"'
+
+  graphql_count:
+    sql: '"GRAPHQL_COUNT"'
+
+  api_bandwidth:
+    sql: '"API_BANDWIDTH"'
+
+  api_count:
+    sql: '"API_COUNT"'
+
+  ui_bandwidth:
+    sql: '"UI_BANDWIDTH"'
+
+  ui_count:
+    sql: '"UI_COUNT"'
+
+  stacks:
+    sql: '"STACKS"'
+
+  users:
+    sql: '"USERS"'
+
+  content_types:
+    sql: '"CONTENT_TYPES"'
+
+  entries:
+    sql: '"ENTRIES"'
+
+  roles:
+    sql: '"ROLES"'
+
+  assets:
+    sql: '"ASSETS"'
+
+  locales:
+    sql: '"LOCALES"'
+
+  environments:
+    sql: '"ENVIRONMENTS"'
+
+  extensions:
+    sql: '"EXTENSIONS"'
+
+  customer_designation_groups:
+    sql: ${marts__fct_org_daily_usage.customer_designation}
+    groups:
+      - filter:
+          is: CMS
+        name: CMS
+      - filter:
+          is: CDP
+        name: CDP
+      - filter:
+          is: DXP
+        name: DXP
+    else: "Null"
+    label: Customer Designation Groups
+
+measures:
+  count:
+    aggregate_type: count
+
+  users_sum:
+    sql: ${marts__fct_org_daily_usage.users}
+    aggregate_type: sum
+
+  assets_sum:
+    sql: ${marts__fct_org_daily_usage.assets}
+    aggregate_type: sum
+
+  entries_sum:
+    sql: ${marts__fct_org_daily_usage.entries}
+    aggregate_type: sum
+
+  stacks_sum:
+    sql: ${marts__fct_org_daily_usage.stacks}
+    aggregate_type: sum
+
+  roles_sum:
+    sql: ${marts__fct_org_daily_usage.roles}
+    aggregate_type: sum
+
+  locales_sum:
+    sql: ${marts__fct_org_daily_usage.locales}
+    aggregate_type: sum
+
+  extensions_sum:
+    sql: ${marts__fct_org_daily_usage.extensions}
+    aggregate_type: sum
+
+  environments_sum:
+    sql: ${marts__fct_org_daily_usage.environments}
+    aggregate_type: sum
+
+  content_types_sum:
+    sql: ${marts__fct_org_daily_usage.content_types}
+    aggregate_type: sum
+
+  cma_count_sum:
+    sql: ${marts__fct_org_daily_usage.cma_count}
+    aggregate_type: sum
+
+  assets_count_sum:
+    sql: ${marts__fct_org_daily_usage.assets_count}
+    aggregate_type: sum
+
+  graphql_count_sum:
+    sql: ${marts__fct_org_daily_usage.graphql_count}
+    aggregate_type: sum
+
+  images_count_sum:
+    sql: ${marts__fct_org_daily_usage.images_count}
+    aggregate_type: sum
+
+  cdn_count_sum:
+    sql: ${marts__fct_org_daily_usage.cdn_count}
+    aggregate_type: sum
+
+  cma_bandwidth_sum:
+    sql: ${marts__fct_org_daily_usage.cma_bandwidth}
+    aggregate_type: sum
+
+  graphql_bandwidth_sum:
+    sql: ${marts__fct_org_daily_usage.graphql_bandwidth}
+    aggregate_type: sum
+
+  assets_bandwidth_sum:
+    sql: ${marts__fct_org_daily_usage.assets_bandwidth}
+    aggregate_type: sum
+
+  cdn_bandwidth_sum:
+    sql: ${marts__fct_org_daily_usage.cdn_bandwidth}
+    aggregate_type: sum
+
+  images_bandwidth_sum:
+    sql: ${marts__fct_org_daily_usage.images_bandwidth}
+    aggregate_type: sum
+
+  account_id_18_count_distinct:
+    sql: ${marts__fct_org_daily_usage.account_id_18}
+    aggregate_type: count_distinct
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_org_daily_usage
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    -- Note: account_id can repeat across multiple orgs
+    -- Limited to  [min(as_of_date), max(as_of_date)-1]
+
+    {{ config(materialized='table') }}
+
+    with org_daily as (
+      select 
+          cast(date as date)            as org_date,               
+          uid                           as organization_id,
+          account_id_18,
+          organization_name,
+          organization_type,
+          organization_tag,
+
+          cma_bandwidth,
+          cma_count,
+          cdn_bandwidth,
+          cdn_count,
+          assets_bandwidth,
+          assets_count,
+          images_bandwidth,
+          images_count,
+          api_bandwidth,
+          api_count,
+          ui_bandwidth,
+          ui_count,
+          graphql_bandwidth,
+          graphql_count,
+
+          stacks,
+          users,
+          content_types,
+          entries,
+          roles,
+          assets,
+          locales,
+          environments,
+          extensions
+      from {{ ref('int_org_usage_with_accounts') }}
+    ),
+
+    sf_daily as (
+      select
+          cast(as_of_date as date)      as as_of_date,
+          account_id                    as account_id_18,
+          type                          as account_type,
+          customer_designation_c        as customer_designation
+      from {{ ref('int_salesforce_account_daily') }}
+    ),
+
+    sf_bounds as (
+      select
+          min(as_of_date) as min_date,
+          max(as_of_date) - 1 as max_date
+      from sf_daily
+    ),
+
+    base_join as (
+      select 
+          coalesce(o.org_date, s.as_of_date)          as date,
+          o.organization_id,
+
+          coalesce(o.account_id_18, s.account_id_18) as account_id_18,
+          s.account_type,
+          s.customer_designation,
+
+          o.organization_name,
+          o.organization_type,
+          o.organization_tag,
+
+          o.cma_bandwidth,
+          o.cma_count,
+          o.cdn_bandwidth,
+          o.cdn_count,
+          o.assets_bandwidth,
+          o.assets_count,
+          o.images_bandwidth,
+          o.images_count,
+          o.graphql_bandwidth,
+          o.graphql_count,
+          o.api_bandwidth,
+          o.api_count,
+          o.ui_bandwidth,
+          o.ui_count,
+
+          o.stacks,
+          o.users,
+          o.content_types,
+          o.entries,
+          o.roles,
+          o.assets,
+          o.locales,
+          o.environments,
+          o.extensions
+      from org_daily o
+      full outer join sf_daily s
+        on s.account_id_18 = o.account_id_18
+       and s.as_of_date    = o.org_date
+      cross join sf_bounds b
+      where coalesce(o.org_date, s.as_of_date) between b.min_date and b.max_date
+    )
+
+    select
+        date,
+        last_value(organization_id ignore nulls) over (
+            partition by account_id_18 
+            order by date 
+            rows between unbounded preceding and current row
+        ) as organization_id,
+        
+        account_id_18,
+        account_type,
+        customer_designation,
+        
+        last_value(organization_name ignore nulls) over (
+            partition by account_id_18 
+            order by date 
+            rows between unbounded preceding and current row
+        ) as organization_name,
+        
+        organization_type,
+        organization_tag,
+
+        cma_bandwidth/1073741824 as cma_bandwidth,
+        cma_count,
+        cdn_bandwidth/1073741824 as cdn_bandwidth,
+        cdn_count,
+        assets_bandwidth/1073741824 as assets_bandwidth,
+        assets_count,
+        images_bandwidth/1073741824 as images_bandwidth,
+        images_count,
+        graphql_bandwidth/1073741824 as graphql_bandwidth,
+        graphql_count,
+        api_bandwidth/1073741824 as api_bandwidth,
+        api_count,
+        ui_bandwidth/1073741824 as ui_bandwidth,
+        ui_count,
+
+        stacks,
+        users,
+        content_types,
+        entries,
+        roles,
+        assets,
+        locales,
+        environments,
+        extensions
+    from base_join
+    order by account_id_18, date

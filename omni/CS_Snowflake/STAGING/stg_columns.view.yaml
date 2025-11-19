@@ -1,0 +1,56 @@
+# Reference this view as staging__stg_columns
+schema: STAGING
+table_name: STG_COLUMNS
+
+dimensions:
+  _dbt_source_relation:
+    sql: '"_DBT_SOURCE_RELATION"'
+    hidden: true
+
+  node_unique_id:
+    sql: '"NODE_UNIQUE_ID"'
+    format: ID
+
+  name:
+    sql: '"NAME"'
+
+  description:
+    sql: '"DESCRIPTION"'
+
+  data_type:
+    sql: '"DATA_TYPE"'
+
+  constraints:
+    sql: '"CONSTRAINTS"'
+
+  has_not_null_constraint:
+    sql: '"HAS_NOT_NULL_CONSTRAINT"'
+
+  constraints_count:
+    sql: '"CONSTRAINTS_COUNT"'
+
+  quote:
+    sql: '"QUOTE"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_columns
+  target_schema: STAGING
+  config:
+    materialized: view
+  code: |-
+    with
+
+    final as (
+
+        {{ dbt_utils.union_relations([
+            ref('base_node_columns'),
+            ref('base_source_columns')
+        ])}}
+    )
+
+    select * from final

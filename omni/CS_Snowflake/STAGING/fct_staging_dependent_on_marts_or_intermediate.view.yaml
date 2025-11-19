@@ -1,0 +1,60 @@
+# Reference this view as staging__fct_staging_dependent_on_marts_or_intermediate
+#This description was pulled from dbt.
+description: This table shows each parent/child relationship where models in the
+  staging layer are dependent on models in the marts and/or intermediate layer.
+
+schema: STAGING
+table_name: FCT_STAGING_DEPENDENT_ON_MARTS_OR_INTERMEDIATE
+
+dimensions:
+  parent:
+    sql: '"PARENT"'
+
+  parent_model_type:
+    sql: '"PARENT_MODEL_TYPE"'
+
+  child:
+    sql: '"CHILD"'
+
+  child_model_type:
+    sql: '"CHILD_MODEL_TYPE"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_staging_dependent_on_marts_or_intermediate
+  target_schema: STAGING
+  description: This table shows each parent/child relationship where models in the
+    staging layer are dependent on models in the marts and/or intermediate
+    layer.
+  config:
+    materialized: table
+  code: |-
+    -- cases where a staging model depends on a marts/intermediate model
+    -- data should flow from raw -> staging -> intermediate -> marts
+    with direct_model_relationships as (
+        select  
+            *
+        from {{ ref('int_all_dag_relationships') }}
+        where distance = 1
+        and parent_resource_type = 'model'
+        and child_resource_type = 'model'
+        and not parent_is_excluded
+        and not child_is_excluded
+    ),
+    final as (
+        select
+            parent,
+            parent_model_type,
+            child,
+            child_model_type
+        from direct_model_relationships
+        where child_model_type = 'staging'
+        and parent_model_type in ('marts', 'intermediate')
+    )
+    select * from final
+
+    {{ filter_exceptions() }}

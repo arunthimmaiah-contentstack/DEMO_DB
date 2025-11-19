@@ -1,0 +1,55 @@
+# Reference this view as staging__fct_too_many_joins
+#This description was pulled from dbt.
+description: This returns models referencing more than 7 or more dependencies.
+  Per dbt best practices, models should be designed in a way that depend on
+  fewer than 7 joins.
+
+schema: STAGING
+table_name: FCT_TOO_MANY_JOINS
+
+dimensions:
+  resource_name:
+    sql: '"RESOURCE_NAME"'
+
+  file_path:
+    sql: '"FILE_PATH"'
+
+  join_count:
+    sql: '"JOIN_COUNT"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_too_many_joins
+  target_schema: STAGING
+  description: This returns models referencing more than 7 or more dependencies.
+    Per dbt best practices, models should be designed in a way that depend on
+    fewer than 7 joins.
+  config:
+    materialized: table
+  code: |-
+    with all_dag_relationships as (
+        select
+            *
+        from {{ ref('int_all_dag_relationships') }}
+        where not child_is_excluded
+        and child_resource_type = 'model'
+    ),
+
+    final as (
+        select
+            child as resource_name,
+            child_file_path as file_path,
+            cast(count(distinct parent) as {{ dbt.type_int() }}) as join_count
+        from all_dag_relationships
+        where distance = 1
+        group by 1, 2
+        having count(distinct parent) >= {{ var('too_many_joins_threshold') }}
+    )
+
+    select * from final
+
+    {{ filter_exceptions() }}

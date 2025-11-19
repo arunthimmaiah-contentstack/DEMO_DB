@@ -1,0 +1,16 @@
+# Reference this view as omni_dbt__lead_conversion_rate
+schema_label: ""
+
+schema: omni_dbt
+table_name: LEAD_CONVERSION_RATE
+
+dimensions:
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  lead_conversion_rate:
+    sql: '"LEAD_CONVERSION_RATE"'
+
+measures:
+  count:
+    aggregate_type: count

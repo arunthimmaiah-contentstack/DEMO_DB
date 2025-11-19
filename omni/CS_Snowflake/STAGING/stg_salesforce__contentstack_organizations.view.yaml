@@ -1,0 +1,30 @@
+# Reference this view as staging__stg_salesforce__contentstack_organizations
+schema: STAGING
+table_name: STG_SALESFORCE__CONTENTSTACK_ORGANIZATIONS
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  name:
+    sql: '"NAME"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  organization_id:
+    sql: '"ORGANIZATION_ID"'
+    format: ID
+
+  organization_tag:
+    sql: '"ORGANIZATION_TAG"'
+
+measures:
+  count:
+    aggregate_type: count

@@ -1,0 +1,11 @@
+# Reference this view as staging__calendar_dates
+schema: STAGING
+table_name: CALENDAR_DATES
+
+dimensions:
+  calendar_date:
+    sql: '"CALENDAR_DATE"'
+
+measures:
+  count:
+    aggregate_type: count

@@ -1,0 +1,25 @@
+# Reference this view as omni_dbt__fct_churn_matrix
+schema_label: ""
+
+schema: omni_dbt
+table_name: FCT_CHURN_MATRIX
+
+dimensions:
+  period_month:
+    sql: '"PERIOD_MONTH"'
+
+  churn_status:
+    sql: '"CHURN_STATUS"'
+
+  product_type_c:
+    sql: '"PRODUCT_TYPE_C"'
+
+  account_count:
+    sql: '"ACCOUNT_COUNT"'
+
+  total_arr:
+    sql: '"TOTAL_ARR"'
+
+measures:
+  count:
+    aggregate_type: count

@@ -1,0 +1,31 @@
+# Reference this view as omni_dbt__fct_salesforce_account_daily
+schema_label: ""
+
+schema: omni_dbt
+table_name: FCT_SALESFORCE_ACCOUNT_DAILY
+
+dimensions:
+  as_of_date:
+    sql: '"AS_OF_DATE"'
+
+  no_of_customers:
+    sql: '"NO_OF_CUSTOMERS"'
+
+  no_of_churned_customers:
+    sql: '"NO_OF_CHURNED_CUSTOMERS"'
+
+  no_of_cms:
+    sql: '"NO_OF_CMS"'
+
+  no_of_dxp:
+    sql: '"NO_OF_DXP"'
+
+  no_of_cdp:
+    sql: '"NO_OF_CDP"'
+
+  no_of_prospects:
+    sql: '"NO_OF_PROSPECTS"'
+
+measures:
+  count:
+    aggregate_type: count

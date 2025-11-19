@@ -1,0 +1,111 @@
+# Reference this view as omni_dbt__stg_salesforce__contact
+schema_label: ""
+
+schema: omni_dbt
+table_name: STG_SALESFORCE__CONTACT
+
+dimensions:
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  contact_id:
+    sql: '"CONTACT_ID"'
+    format: ID
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  department:
+    sql: '"DEPARTMENT"'
+
+  contact_description:
+    sql: '"CONTACT_DESCRIPTION"'
+
+  email:
+    sql: '"EMAIL"'
+
+  first_name:
+    sql: '"FIRST_NAME"'
+
+  home_phone:
+    sql: '"HOME_PHONE"'
+
+  individual_id:
+    sql: '"INDIVIDUAL_ID"'
+    format: ID
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  last_activity_date:
+    sql: '"LAST_ACTIVITY_DATE"'
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  last_name:
+    sql: '"LAST_NAME"'
+
+  last_referenced_date:
+    sql: '"LAST_REFERENCED_DATE"'
+
+  last_viewed_date:
+    sql: '"LAST_VIEWED_DATE"'
+
+  lead_source:
+    sql: '"LEAD_SOURCE"'
+
+  mailing_city:
+    sql: '"MAILING_CITY"'
+
+  mailing_country:
+    sql: '"MAILING_COUNTRY"'
+
+  mailing_country_code:
+    sql: '"MAILING_COUNTRY_CODE"'
+
+  mailing_postal_code:
+    sql: '"MAILING_POSTAL_CODE"'
+
+  mailing_state:
+    sql: '"MAILING_STATE"'
+
+  mailing_state_code:
+    sql: '"MAILING_STATE_CODE"'
+
+  mailing_street:
+    sql: '"MAILING_STREET"'
+
+  master_record_id:
+    sql: '"MASTER_RECORD_ID"'
+    format: ID
+
+  mobile_phone:
+    sql: '"MOBILE_PHONE"'
+
+  contact_name:
+    sql: '"CONTACT_NAME"'
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  phone:
+    sql: '"PHONE"'
+
+  reports_to_id:
+    sql: '"REPORTS_TO_ID"'
+    format: ID
+
+  title:
+    sql: '"TITLE"'
+
+measures:
+  count:
+    aggregate_type: count

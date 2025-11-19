@@ -1,0 +1,38 @@
+# Reference this view as staging__int_marketing__opportunity_contacts
+schema: STAGING
+table_name: INT_MARKETING__OPPORTUNITY_CONTACTS
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  name:
+    sql: '"NAME"'
+
+  stage_name:
+    sql: '"STAGE_NAME"'
+
+  amount:
+    sql: '"AMOUNT"'
+
+  close_date:
+    sql: '"CLOSE_DATE"'
+
+  is_won:
+    sql: '"IS_WON"'
+
+  contact_id:
+    sql: '"CONTACT_ID"'
+    format: ID
+
+  role:
+    sql: '"ROLE"'
+
+  is_primary:
+    sql: '"IS_PRIMARY"'
+
+measures:
+  count:
+    aggregate_type: count

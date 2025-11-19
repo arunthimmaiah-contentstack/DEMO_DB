@@ -1,0 +1,74 @@
+# Reference this view as marts__fct_campaign_member
+label: Marketing Semantic
+
+schema: MARTS
+table_name: FCT_CAMPAIGN_MEMBER
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+  campaign_id:
+    sql: '"CAMPAIGN_ID"'
+    format: ID
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  type:
+    sql: '"TYPE"'
+
+  campaign_status:
+    sql: '"CAMPAIGN_STATUS"'
+
+  account_name:
+    sql: '"ACCOUNT_NAME"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  _entity_account:
+    # Entity is defined in the 'marketing_semantic' dbt semantic model (models/semantic_models/sem_marketing.yml)
+    sql: ${account_id}
+    hidden: true
+
+  _entity_campaign:
+    # Entity is defined in the 'marketing_semantic' dbt semantic model (models/semantic_models/sem_marketing.yml)
+    sql: ${campaign_id}
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_campaign_member
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    with cm as (
+        select * from {{ ref('stg_salesforce__campaign_member') }}
+    ),
+    camp as (
+        select * from {{ ref('dim_campaign') }}
+    ),
+    acct as (
+        select * from {{ ref('dim_account') }}
+    )
+    select
+        cm.id,
+        cm.CAMPAIGN_ID,
+        cm.account_id,
+        camp.type,
+        camp.status as campaign_status,
+        acct.account_name,
+        cm.created_date
+    from cm
+    left join camp using (id)
+    left join acct using (account_id)

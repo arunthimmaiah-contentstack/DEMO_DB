@@ -1,0 +1,245 @@
+# Reference this view as omni_dbt_staging__stg_daily_launch_usage
+schema_label: ""
+
+schema: omni_dbt_staging
+table_name: STG_DAILY_LAUNCH_USAGE
+
+dimensions:
+  source_file_name:
+    sql: '"SOURCE_FILE_NAME"'
+
+  file_row_number:
+    sql: '"FILE_ROW_NUMBER"'
+
+  batch_number:
+    sql: '"BATCH_NUMBER"'
+
+  data_sync_date:
+    sql: '"DATA_SYNC_DATE"'
+
+  date:
+    sql: '"DATE"'
+
+  org_uid:
+    sql: '"ORG_UID"'
+
+  total_server_execution_count:
+    sql: '"TOTAL_SERVER_EXECUTION_COUNT"'
+
+  total_server_execution_time:
+    sql: '"TOTAL_SERVER_EXECUTION_TIME"'
+
+  total_projects:
+    sql: '"TOTAL_PROJECTS"'
+
+  total_env:
+    sql: '"TOTAL_ENV"'
+
+  total_domain:
+    sql: '"TOTAL_DOMAIN"'
+
+  total_success_build_count:
+    sql: '"TOTAL_SUCCESS_BUILD_COUNT"'
+
+  total_build_count:
+    sql: '"TOTAL_BUILD_COUNT"'
+
+  total_count:
+    sql: '"TOTAL_COUNT"'
+
+  total_bandwidth:
+    sql: '"TOTAL_BANDWIDTH"'
+
+  total_deployment_time:
+    sql: '"TOTAL_DEPLOYMENT_TIME"'
+
+  total_deployment_count:
+    sql: '"TOTAL_DEPLOYMENT_COUNT"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+  location:
+    sql: '"LOCATION"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_daily_launch_usage
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    select
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        DATE,
+        ORG_UID,
+        TOTAL_SERVER_EXECUTION_COUNT,
+        TOTAL_SERVER_EXECUTION_TIME,
+        TOTAL_PROJECTS,
+        TOTAL_ENV,
+        TOTAL_DOMAIN,
+        TOTAL_SUCCESS_BUILD_COUNT,
+        TOTAL_BUILD_COUNT,
+        TOTAL_COUNT,
+        TOTAL_BANDWIDTH,
+        TOTAL_DEPLOYMENT_TIME,
+        TOTAL_DEPLOYMENT_COUNT,
+    	'AWS' as PLATFORM,
+    	'NA' as LOCATION
+    from
+    (
+        select 
+        * ,
+        REGEXP_SUBSTR(source_file_name, '\\d{4}-\\d{2}-\\d{2}', 1, 1) as date,
+        row_number() over (partition by date, org_uid order by data_sync_date desc) as rn
+        from {{source('aws_launch_usage_na','launch_usage_na_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('aws_launch_usage_na','launch_usage_na_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        DATE,
+        ORG_UID,
+        TOTAL_SERVER_EXECUTION_COUNT,
+        TOTAL_SERVER_EXECUTION_TIME,
+        TOTAL_PROJECTS,
+        TOTAL_ENV,
+        TOTAL_DOMAIN,
+        TOTAL_SUCCESS_BUILD_COUNT,
+        TOTAL_BUILD_COUNT,
+        TOTAL_COUNT,
+        TOTAL_BANDWIDTH,
+        TOTAL_DEPLOYMENT_TIME,
+        TOTAL_DEPLOYMENT_COUNT,
+    	'AWS' as PLATFORM,
+    	'EU' as LOCATION
+    from
+    (
+        select 
+        * ,
+        REGEXP_SUBSTR(source_file_name, '\\d{4}-\\d{2}-\\d{2}', 1, 1) as date,
+        row_number() over (partition by date, org_uid order by data_sync_date desc) as rn
+        from {{source('aws_launch_usage_eu','launch_usage_eu_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('aws_launch_usage_eu','launch_usage_eu_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        DATE,
+        ORG_UID,
+        TOTAL_SERVER_EXECUTION_COUNT,
+        TOTAL_SERVER_EXECUTION_TIME,
+        TOTAL_PROJECTS,
+        TOTAL_ENV,
+        TOTAL_DOMAIN,
+        TOTAL_SUCCESS_BUILD_COUNT,
+        TOTAL_BUILD_COUNT,
+        TOTAL_COUNT,
+        TOTAL_BANDWIDTH,
+        TOTAL_DEPLOYMENT_TIME,
+        TOTAL_DEPLOYMENT_COUNT,
+    	'AWS' as PLATFORM,
+    	'AU' as LOCATION
+    from
+    (
+        select 
+        * ,
+        REGEXP_SUBSTR(source_file_name, '\\d{4}-\\d{2}-\\d{2}', 1, 1) as date,
+        row_number() over (partition by date, org_uid order by data_sync_date desc) as rn
+        from {{source('aws_launch_usage_au','launch_usage_au_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('aws_launch_usage_au','launch_usage_au_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    --az launch
+
+    select
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        DATE,
+        ORG_UID,
+        TOTAL_SERVER_EXECUTION_COUNT,
+        TOTAL_SERVER_EXECUTION_TIME,
+        TOTAL_PROJECTS,
+        TOTAL_ENV,
+        TOTAL_DOMAIN,
+        TOTAL_SUCCESS_BUILD_COUNT,
+        TOTAL_BUILD_COUNT,
+        TOTAL_COUNT,
+        TOTAL_BANDWIDTH,
+        TOTAL_DEPLOYMENT_TIME,
+        TOTAL_DEPLOYMENT_COUNT,
+    	'GCP' as PLATFORM,
+    	'NA' as LOCATION
+    from
+    (
+        select 
+        * ,
+        REGEXP_SUBSTR(source_file_name, '\\d{4}-\\d{2}-\\d{2}', 1, 1) as date,
+        row_number() over (partition by date, org_uid order by data_sync_date desc) as rn
+        from {{source('gcp_launch_usage_na','launch_usage_na_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('gcp_launch_usage_na','launch_usage_na_f')}} ) 
+    )
+    where rn = 1
+
+    union all
+
+    select
+        SOURCE_FILE_NAME,
+        FILE_ROW_NUMBER,
+        BATCH_NUMBER,
+        DATA_SYNC_DATE,
+        DATE,
+        ORG_UID,
+        TOTAL_SERVER_EXECUTION_COUNT,
+        TOTAL_SERVER_EXECUTION_TIME,
+        TOTAL_PROJECTS,
+        TOTAL_ENV,
+        TOTAL_DOMAIN,
+        TOTAL_SUCCESS_BUILD_COUNT,
+        TOTAL_BUILD_COUNT,
+        TOTAL_COUNT,
+        TOTAL_BANDWIDTH,
+        TOTAL_DEPLOYMENT_TIME,
+        TOTAL_DEPLOYMENT_COUNT,
+    	'GCP' as PLATFORM,
+    	'EU' as LOCATION
+    from
+    (
+        select 
+        * ,
+        REGEXP_SUBSTR(source_file_name, '\\d{4}-\\d{2}-\\d{2}', 1, 1) as date,
+        row_number() over (partition by date, org_uid order by data_sync_date desc) as rn
+        from {{source('gcp_launch_usage_eu','launch_usage_eu_f')}}
+        where 1=1
+            and data_sync_date = (select max(data_sync_date) from {{source('gcp_launch_usage_eu','launch_usage_eu_f')}} ) 
+    )
+    where rn = 1

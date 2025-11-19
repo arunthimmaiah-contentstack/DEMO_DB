@@ -1,0 +1,111 @@
+# Reference this view as staging__stg_analytics__fact_org_api_usage_actuals
+schema: STAGING
+table_name: STG_ANALYTICS__FACT_ORG_API_USAGE_ACTUALS
+
+dimensions:
+  name:
+    sql: '"NAME"'
+
+  uid:
+    sql: '"UID"'
+
+  cdn_bandwidth:
+    sql: '"CDN_BANDWIDTH"'
+
+  cdn_count:
+    sql: '"CDN_COUNT"'
+
+  assets_bandwidth:
+    sql: '"ASSETS_BANDWIDTH"'
+
+  assets_count:
+    sql: '"ASSETS_COUNT"'
+
+  images_bandwidth:
+    sql: '"IMAGES_BANDWIDTH"'
+
+  images_count:
+    sql: '"IMAGES_COUNT"'
+
+  api_bandwidth:
+    sql: '"API_BANDWIDTH"'
+
+  api_count:
+    sql: '"API_COUNT"'
+
+  ui_bandwidth:
+    sql: '"UI_BANDWIDTH"'
+
+  ui_count:
+    sql: '"UI_COUNT"'
+
+  cma_bandwidth:
+    sql: '"CMA_BANDWIDTH"'
+
+  cma_count:
+    sql: '"CMA_COUNT"'
+
+  graphql_bandwidth:
+    sql: '"GRAPHQL_BANDWIDTH"'
+
+  graphql_count:
+    sql: '"GRAPHQL_COUNT"'
+
+  date:
+    sql: '"DATE"'
+
+  location:
+    sql: '"LOCATION"'
+
+  platform:
+    sql: '"PLATFORM"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_analytics__fact_org_api_usage_actuals
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with 
+
+    source as (
+
+        select * from {{ source('analytics', 'fact_org_api_usage_actuals') }}
+
+    ),
+
+    renamed as (
+
+        select
+            name,
+            uid,
+            cdn_bandwidth,
+            cdn_count,
+            assets_bandwidth,
+            assets_count,
+            images_bandwidth,
+            images_count,
+            api_bandwidth,
+            api_count,
+            ui_bandwidth,
+            ui_count,
+            cma_bandwidth,
+            cma_count,
+            graphql_bandwidth,
+            graphql_count,
+            date,
+            location,
+            platform
+
+        from source
+
+    )
+
+    select * from renamed
+  referenced_by: [ dbt_query_refactoring, int_org_usage_with_accounts ]

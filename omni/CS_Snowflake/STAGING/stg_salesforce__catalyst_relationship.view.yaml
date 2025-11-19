@@ -1,0 +1,240 @@
+# Reference this view as staging__stg_salesforce__catalyst_relationship
+#This description was pulled from dbt.
+description: Staging model for Salesforce Catalyst Relationship object. Cleans,
+  standardizes, and filters active relationship records for downstream analytics
+  and reporting.
+
+schema: STAGING
+table_name: STG_SALESFORCE__CATALYST_RELATIONSHIP
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Unique identifier for each Catalyst Relationship record.
+    primary_key: true
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: User ID of the record owner.
+
+  name:
+    sql: '"NAME"'
+    #This description was pulled from dbt.
+    description: Name of the Catalyst Relationship record.
+
+  record_type_id:
+    sql: '"RECORD_TYPE_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Salesforce record type ID for the Catalyst Relationship.
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: User ID of the last person who modified the record.
+
+  catalyst_account_c:
+    sql: '"CATALYST_ACCOUNT_C"'
+    #This description was pulled from dbt.
+    description: Associated Catalyst Account ID.
+
+  catalyst_role_c:
+    sql: '"CATALYST_ROLE_C"'
+    #This description was pulled from dbt.
+    description: Role of the participant in the Catalyst Relationship.
+
+  relationship_source_c:
+    sql: '"RELATIONSHIP_SOURCE_C"'
+    #This description was pulled from dbt.
+    description: Source of the Catalyst Relationship.
+
+  opportunity_c:
+    sql: '"OPPORTUNITY_C"'
+    #This description was pulled from dbt.
+    description: Linked Opportunity ID (if any).
+
+  related_account_c:
+    sql: '"RELATED_ACCOUNT_C"'
+    #This description was pulled from dbt.
+    description: ID of the related Account in the relationship.
+
+  notes_c:
+    sql: '"NOTES_C"'
+    #This description was pulled from dbt.
+    description: Notes or comments associated with the relationship.
+
+  date_c:
+    sql: '"DATE_C"'
+    #This description was pulled from dbt.
+    description: Date associated with the relationship record.
+
+  customer_account_c:
+    sql: '"CUSTOMER_ACCOUNT_C"'
+    #This description was pulled from dbt.
+    description: Customer Account ID related to this relationship.
+
+  relationship_status_c:
+    sql: '"RELATIONSHIP_STATUS_C"'
+    #This description was pulled from dbt.
+    description: Current status of the relationship (e.g., Active, Inactive).
+
+  digital_technology_type_c:
+    sql: '"DIGITAL_TECHNOLOGY_TYPE_C"'
+    #This description was pulled from dbt.
+    description: Type of digital technology involved in the relationship.
+
+  implementation_type_c:
+    sql: '"IMPLEMENTATION_TYPE_C"'
+    #This description was pulled from dbt.
+    description: Type of implementation associated with the relationship.
+
+  digital_property_c:
+    sql: '"DIGITAL_PROPERTY_C"'
+    #This description was pulled from dbt.
+    description: Digital property related to the relationship.
+
+  qualified_pso_c:
+    sql: '"QUALIFIED_PSO_C"'
+    #This description was pulled from dbt.
+    description: Indicates whether the PSO is qualified.
+
+  influencer_approval_status_c:
+    sql: '"INFLUENCER_APPROVAL_STATUS_C"'
+    #This description was pulled from dbt.
+    description: Status of influencer approval for this relationship.
+
+  influence_type_c:
+    sql: '"INFLUENCE_TYPE_C"'
+    #This description was pulled from dbt.
+    description: Type of influence in this Catalyst Relationship.
+
+  contentstack_referred_c:
+    sql: '"CONTENTSTACK_REFERRED_C"'
+    #This description was pulled from dbt.
+    description: Indicates if referred via Contentstack.
+
+  qualified_pso_date_c:
+    sql: '"QUALIFIED_PSO_DATE_C"'
+    #This description was pulled from dbt.
+    description: Date when PSO was qualified.
+
+  target_meeting_date_c:
+    sql: '"TARGET_MEETING_DATE_C"'
+    #This description was pulled from dbt.
+    description: Target date set for the meeting.
+
+  meeting_request_type_c:
+    sql: '"MEETING_REQUEST_TYPE_C"'
+    #This description was pulled from dbt.
+    description: Type of meeting requested.
+
+  description_c:
+    sql: '"DESCRIPTION_C"'
+    #This description was pulled from dbt.
+    description: Description of the Catalyst Relationship.
+
+  prm_notes_c:
+    sql: '"PRM_NOTES_C"'
+    #This description was pulled from dbt.
+    description: Notes added by the Partner Relationship Manager.
+
+  meeting_request_status_c:
+    sql: '"MEETING_REQUEST_STATUS_C"'
+    #This description was pulled from dbt.
+    description: Status of the meeting request.
+
+  prm_c:
+    sql: '"PRM_C"'
+    #This description was pulled from dbt.
+    description: Partner Relationship Manager assigned to this record.
+
+  split_percent_c:
+    sql: '"SPLIT_PERCENT_C"'
+    #This description was pulled from dbt.
+    description: Revenue split percentage associated with the relationship.
+
+  partner_contact_c:
+    sql: '"PARTNER_CONTACT_C"'
+    #This description was pulled from dbt.
+    description: Partner contact ID linked to this relationship.
+
+  partner_relationship_id_case_safe_c:
+    sql: '"PARTNER_RELATIONSHIP_ID_CASE_SAFE_C"'
+    #This description was pulled from dbt.
+    description: Safe-case Partner Relationship ID.
+
+  sentiment_c:
+    sql: '"SENTIMENT_C"'
+    #This description was pulled from dbt.
+    description: Sentiment associated with the relationship (e.g., Positive,
+      Neutral, Negative).
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    #This description was pulled from dbt.
+    description: Timestamp when the record was last synced from Salesforce via Fivetran.
+    hidden: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__catalyst_relationship
+  target_schema: STAGING
+  description: Staging model for Salesforce Catalyst Relationship object. Cleans,
+    standardizes, and filters active relationship records for downstream
+    analytics and reporting.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('catalyst_relationship', 'catalyst_relationship_c') }} where is_deleted != 'true'
+    )
+    select
+        id,
+        owner_id,
+        name,
+        record_type_id,
+        last_modified_by_id,
+        catalyst_account_c,
+        catalyst_role_c,
+        relationship_source_c,
+        opportunity_c,
+        related_account_c,
+        notes_c,
+        date_c,
+        customer_account_c,
+        relationship_status_c,
+        digital_technology_type_c,
+        implementation_type_c,
+        digital_property_c,
+        qualified_pso_c,
+        influencer_approval_status_c,
+        influence_type_c,
+        contentstack_referred_c,
+        qualified_pso_date_c,
+        target_meeting_date_c,
+        meeting_request_type_c,
+        description_c,
+        prm_notes_c,
+        meeting_request_status_c,
+        prm_c,
+        split_percent_c,
+        partner_contact_c,
+        partner_relationship_id_case_safe_c,
+        sentiment_c,
+        is_deleted,
+        _fivetran_synced
+    from source
+  referenced_by: [ int_salesforce__catalyst_relationship_unified ]

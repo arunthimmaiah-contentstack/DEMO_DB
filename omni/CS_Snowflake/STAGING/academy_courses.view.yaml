@@ -1,0 +1,60 @@
+# Reference this view as staging__academy_courses
+schema: STAGING
+table_name: ACADEMY_COURSES
+
+dimensions:
+  data_sync_date:
+    sql: '"DATA_SYNC_DATE"'
+
+  course_id:
+    sql: '"COURSE_ID"'
+    format: ID
+
+  total_bookmarks:
+    sql: '"TOTAL_BOOKMARKS"'
+
+  total_likes:
+    sql: '"TOTAL_LIKES"'
+
+  total_subscriptions:
+    sql: '"TOTAL_SUBSCRIPTIONS"'
+
+  avg_completion_rate:
+    sql: '"AVG_COMPLETION_RATE"'
+
+  avg_course_completion:
+    sql: '"AVG_COURSE_COMPLETION"'
+
+  total_completed:
+    sql: '"TOTAL_COMPLETED"'
+
+  total_started:
+    sql: '"TOTAL_STARTED"'
+
+  total_users:
+    sql: '"TOTAL_USERS"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: academy_courses
+  target_schema: STAGING
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    select
+        CONVERT_TIMEZONE('UTC', 'America/Los_Angeles', current_timestamp()::timestamp_ntz) AS data_sync_date,
+        replace(course_data:_id, '"','') as course_id,
+        course_data:engagement:totalBookmarks as total_bookmarks,
+        course_data:engagement:totalLikes as total_likes,
+        course_data:engagement:totalSubscriptions as total_subscriptions,
+        course_data:progress:avgCompletionRate as avg_completion_rate,
+        course_data:progress:avgCourseCompletion as avg_course_completion,
+        course_data:progress:totalCompleted as total_completed,
+        course_data:progress:totalStarted as total_started,
+        course_data:totalUsers as total_users
+    from {{source('academy','academy_courses')}}

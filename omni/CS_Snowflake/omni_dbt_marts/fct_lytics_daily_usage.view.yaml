@@ -1,0 +1,48 @@
+# Reference this view as omni_dbt_marts__fct_lytics_daily_usage
+schema_label: ""
+
+schema: omni_dbt_marts
+table_name: FCT_LYTICS_DAILY_USAGE
+
+dimensions:
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  event_date:
+    sql: '"EVENT_DATE"'
+
+  inbound_total_count:
+    sql: '"INBOUND_TOTAL_COUNT"'
+
+  outbound_total_count:
+    sql: '"OUTBOUND_TOTAL_COUNT"'
+
+  inbound_entitlement:
+    sql: '"INBOUND_ENTITLEMENT"'
+
+  outbound_entitlement:
+    sql: '"OUTBOUND_ENTITLEMENT"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_lytics_daily_usage
+  target_schema: STAGING
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    select
+        u.account_id,
+        u.event_date,
+        u.inbound_total_count,
+        u.outbound_total_count,
+        e.inbound_entitlement,
+        e.outbound_entitlement
+    from {{ ref('int_lytics_daily_usage') }} u
+    left join {{ ref('fct_lytics_entitlements') }} e
+        on u.account_id = e.account_id

@@ -1,0 +1,68 @@
+# Reference this view as staging__fct_subscriptions
+schema: STAGING
+table_name: FCT_SUBSCRIPTIONS
+
+dimensions:
+  subscription_key:
+    sql: '"SUBSCRIPTION_KEY"'
+
+  subscription_id:
+    sql: '"SUBSCRIPTION_ID"'
+    format: ID
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  opportunity_name:
+    sql: '"OPPORTUNITY_NAME"'
+
+  subscription_start_date:
+    sql: '"SUBSCRIPTION_START_DATE"'
+
+  subscription_end_date:
+    sql: '"SUBSCRIPTION_END_DATE"'
+
+  subscription_status:
+    sql: '"SUBSCRIPTION_STATUS"'
+
+  product_type:
+    sql: '"PRODUCT_TYPE"'
+
+  contract_average_arr:
+    sql: '"CONTRACT_AVERAGE_ARR"'
+
+  monthly_recurring_revenue:
+    sql: '"MONTHLY_RECURRING_REVENUE"'
+
+  total_contract_value:
+    sql: '"TOTAL_CONTRACT_VALUE"'
+
+  start_month:
+    sql: '"START_MONTH"'
+
+  start_quarter:
+    sql: '"START_QUARTER"'
+
+  start_year:
+    sql: '"START_YEAR"'
+
+  subscription_length_months:
+    sql: '"SUBSCRIPTION_LENGTH_MONTHS"'
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  dbt_updated_at:
+    sql: '"DBT_UPDATED_AT"'
+
+measures:
+  count:
+    aggregate_type: count

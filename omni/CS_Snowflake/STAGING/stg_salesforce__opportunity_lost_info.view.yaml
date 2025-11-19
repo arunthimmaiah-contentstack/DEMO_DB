@@ -1,0 +1,74 @@
+# Reference this view as staging__stg_salesforce__opportunity_lost_info
+#This description was pulled from dbt.
+description: |
+  Staging model for Salesforce Opportunities Lost Information. This model extracts and renames fields related to lost opportunities from the Salesforce 'opportunity' source table, filtering out deleted records.  It provides details on lost reasons, explanations, and stage history for each opportunity.
+
+schema: STAGING
+table_name: STG_SALESFORCE__OPPORTUNITY_LOST_INFO
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Composite primary key for the opportunity lost info record, created
+      by concatenating the opportunity ID and name.
+    primary_key: true
+
+  oppotunity_id:
+    sql: '"OPPOTUNITY_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: Salesforce ID of the opportunity.
+
+  opportunity_lost_reason:
+    sql: '"OPPORTUNITY_LOST_REASON"'
+    #This description was pulled from dbt.
+    description: Reason the opportunity was lost, as recorded in Salesforce.
+
+  opportunity_lost_reason_other_explanation:
+    sql: '"OPPORTUNITY_LOST_REASON_OTHER_EXPLANATION"'
+    #This description was pulled from dbt.
+    description: Additional explanation for the lost reason, if provided.
+
+  stage_enter_mqo_c:
+    sql: '"STAGE_ENTER_MQO_C"'
+
+  stage_before_lost:
+    sql: '"STAGE_BEFORE_LOST"'
+    #This description was pulled from dbt.
+    description: Stage of the opportunity before it was marked as lost.
+
+  date_stage_enter_closed_lost:
+    sql: '"DATE_STAGE_ENTER_CLOSED_LOST"'
+    #This description was pulled from dbt.
+    description: Date when the opportunity entered the 'Closed Lost' stage.
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_salesforce__opportunity_lost_info
+  target_schema: STAGING
+  description: |
+    Staging model for Salesforce Opportunities Lost Information. This model extracts and renames fields related to lost opportunities from the Salesforce 'opportunity' source table, filtering out deleted records.  It provides details on lost reasons, explanations, and stage history for each opportunity.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+        select * from {{ source('salesforce_opportunity', 'opportunity') }} where is_deleted = 'FALSE'
+    )
+
+    select
+        concat(id,'|',name) as id,
+        id as oppotunity_id,
+        lost_reason_c as opportunity_lost_reason,
+        lost_reason_other_explanation_c as opportunity_lost_reason_other_explanation,
+    	stage_enter_mqo_c, 
+        stage_before_lost_c as stage_before_lost,
+        stage_enter_closed_lost_c as date_stage_enter_closed_lost
+    from source
+  referenced_by: [ int_salesforce__opportunity_unified ]

@@ -1,0 +1,150 @@
+# Reference this view as staging__stg_salesforce__lead
+schema: STAGING
+table_name: STG_SALESFORCE__LEAD
+
+dimensions:
+  _fivetran_synced:
+    sql: '"_FIVETRAN_SYNCED"'
+    hidden: true
+
+  lead_id:
+    sql: '"LEAD_ID"'
+    format: ID
+
+  annual_revenue:
+    sql: '"ANNUAL_REVENUE"'
+
+  city:
+    sql: '"CITY"'
+
+  company:
+    sql: '"COMPANY"'
+
+  converted_account_id:
+    sql: '"CONVERTED_ACCOUNT_ID"'
+    format: ID
+
+  converted_contact_id:
+    sql: '"CONVERTED_CONTACT_ID"'
+    format: ID
+
+  converted_date:
+    sql: '"CONVERTED_DATE"'
+
+  converted_opportunity_id:
+    sql: '"CONVERTED_OPPORTUNITY_ID"'
+    format: ID
+
+  country:
+    sql: '"COUNTRY"'
+
+  country_code:
+    sql: '"COUNTRY_CODE"'
+
+  created_by_id:
+    sql: '"CREATED_BY_ID"'
+    format: ID
+
+  created_date:
+    sql: '"CREATED_DATE"'
+
+  lead_description:
+    sql: '"LEAD_DESCRIPTION"'
+
+  email:
+    sql: '"EMAIL"'
+
+  email_bounced_date:
+    sql: '"EMAIL_BOUNCED_DATE"'
+
+  email_bounced_reason:
+    sql: '"EMAIL_BOUNCED_REASON"'
+
+  first_name:
+    sql: '"FIRST_NAME"'
+
+  has_opted_out_of_email:
+    sql: '"HAS_OPTED_OUT_OF_EMAIL"'
+
+  individual_id:
+    sql: '"INDIVIDUAL_ID"'
+    format: ID
+
+  industry:
+    sql: '"INDUSTRY"'
+
+  is_converted:
+    sql: '"IS_CONVERTED"'
+
+  is_deleted:
+    sql: '"IS_DELETED"'
+
+  is_unread_by_owner:
+    sql: '"IS_UNREAD_BY_OWNER"'
+
+  last_activity_date:
+    sql: '"LAST_ACTIVITY_DATE"'
+
+  last_modified_by_id:
+    sql: '"LAST_MODIFIED_BY_ID"'
+    format: ID
+
+  last_modified_date:
+    sql: '"LAST_MODIFIED_DATE"'
+
+  last_name:
+    sql: '"LAST_NAME"'
+
+  last_referenced_date:
+    sql: '"LAST_REFERENCED_DATE"'
+
+  last_viewed_date:
+    sql: '"LAST_VIEWED_DATE"'
+
+  lead_source:
+    sql: '"LEAD_SOURCE"'
+
+  master_record_id:
+    sql: '"MASTER_RECORD_ID"'
+    format: ID
+
+  mobile_phone:
+    sql: '"MOBILE_PHONE"'
+
+  lead_name:
+    sql: '"LEAD_NAME"'
+
+  number_of_employees:
+    sql: '"NUMBER_OF_EMPLOYEES"'
+
+  owner_id:
+    sql: '"OWNER_ID"'
+    format: ID
+
+  phone:
+    sql: '"PHONE"'
+
+  postal_code:
+    sql: '"POSTAL_CODE"'
+
+  state:
+    sql: '"STATE"'
+
+  state_code:
+    sql: '"STATE_CODE"'
+
+  status:
+    sql: '"STATUS"'
+
+  street:
+    sql: '"STREET"'
+
+  title:
+    sql: '"TITLE"'
+
+  website:
+    sql: '"WEBSITE"'
+
+measures:
+  count:
+    aggregate_type: count
