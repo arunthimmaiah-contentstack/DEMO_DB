@@ -16,8 +16,9 @@ dimensions:
     sql: '"DATA_SYNC_DATE"'
 
   metric_date:
-    sql: Date(METRIC_DATE)
+    sql: TO_DATE(METRIC_DATE,'YYYY-DD-MM')
     label: Date_Metric Date
+    group_label: Date_Metric Date
 
   quarter:
     sql: '"QUARTER"'
