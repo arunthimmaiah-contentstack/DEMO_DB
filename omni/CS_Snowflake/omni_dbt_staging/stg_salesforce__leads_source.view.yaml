@@ -63,4 +63,3 @@ dbt:
         lead_source_category_c,
         _fivetran_synced
     from source
-  referenced_by: [ mel_volume, mql_volume, sal_volume, sql_volume ]

@@ -113,4 +113,4 @@ dbt:
             )
         )
         AND O.IS_DELETED != 'TRUE'
-  referenced_by: [ bookings, new_pipeline, int_salesforce__opportunity_unified ]
+  referenced_by: [ new_pipeline, int_salesforce__opportunity_unified ]

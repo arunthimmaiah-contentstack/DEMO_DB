@@ -1,0 +1,73 @@
+# Reference this view as omni_dbt__rag_alert_audit
+schema_label: ""
+
+schema: omni_dbt
+table_name: RAG_ALERT_AUDIT
+
+dimensions:
+  alert_id:
+    sql: '"ALERT_ID"'
+    format: ID
+
+  opportunity_id:
+    sql: '"OPPORTUNITY_ID"'
+    format: ID
+
+  account_id:
+    sql: '"ACCOUNT_ID"'
+    format: ID
+
+  opportunity_name:
+    sql: '"OPPORTUNITY_NAME"'
+
+  stage_name:
+    sql: '"STAGE_NAME"'
+
+  amount:
+    sql: '"AMOUNT"'
+
+  close_date:
+    sql: '"CLOSE_DATE"'
+
+  days_in_pipeline:
+    sql: '"DAYS_IN_PIPELINE"'
+
+  stage_risk:
+    sql: '"STAGE_RISK"'
+
+  close_date_risk:
+    sql: '"CLOSE_DATE_RISK"'
+
+  pipeline_age_risk:
+    sql: '"PIPELINE_AGE_RISK"'
+
+  loss_risk:
+    sql: '"LOSS_RISK"'
+
+  overall_risk_score:
+    sql: '"OVERALL_RISK_SCORE"'
+
+  decision:
+    sql: '"DECISION"'
+
+  decision_reason:
+    sql: '"DECISION_REASON"'
+
+  llm_response:
+    sql: '"LLM_RESPONSE"'
+
+  retrieved_docs:
+    sql: '"RETRIEVED_DOCS"'
+
+  executed_action:
+    sql: '"EXECUTED_ACTION"'
+
+  confidence_score:
+    sql: '"CONFIDENCE_SCORE"'
+
+  created_at:
+    sql: '"CREATED_AT"'
+
+measures:
+  count:
+    aggregate_type: count

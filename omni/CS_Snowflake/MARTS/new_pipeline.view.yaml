@@ -1,6 +1,4 @@
 # Reference this view as marts__new_pipeline
-label: New Pipeline
-
 schema: MARTS
 table_name: NEW_PIPELINE
 
@@ -97,32 +95,9 @@ dimensions:
   demand_bucket:
     sql: '"DEMAND_BUCKET"'
 
-  pipeline_date:
-    # Dimension is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
-    sql: ${metric_date_1}
-
-  lead_source:
-    # Dimension is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
-    sql: ${leadsource}
-
-  _entity_opportunity_id:
-    # Entity is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
-    sql: ${id}
-    hidden: true
-
 measures:
   count:
     aggregate_type: count
-
-  opportunity_id_count:
-    # Measure is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
-    sql: "1"
-    aggregate_type: count
-
-  total_piped_amount:
-    # Measure is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
-    sql: ${metric_measure_2}
-    aggregate_type: sum
 
 #The info below was pulled from your dbt repository and is read-only.
 dbt:

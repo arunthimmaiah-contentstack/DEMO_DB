@@ -137,12 +137,3 @@ dbt:
         matched_account_tier_ld_c,
         _fivetran_synced
     from source
-  referenced_by:
-    [
-      mel_volume,
-      mql_volume,
-      sql_volume,
-      mel_to_mql_conversion,
-      mql_to_sal_conversion,
-      sal_to_sql_conversion
-    ]

@@ -120,4 +120,3 @@ dbt:
     )
 
     select * from renamed
-  referenced_by: [ dbt_query_refactoring ]

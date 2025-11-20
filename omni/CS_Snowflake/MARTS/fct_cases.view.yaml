@@ -105,13 +105,6 @@ measures:
     label: Average Case Age (Hours)
     aggregate_type: average
 
-  average_open_case_age_hours:
-    # Measure is defined by the 'average_open_case_age_hours' dbt metric (models/metrics/met_customer_support.yml)
-    sql: ${case_age_hours}
-    label: Average Case Age in hours
-    description: Average case age (including open and closed) in hours
-    aggregate_type: average
-
   open_escalated_cases:
     # Measure is defined in the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
     sql: ${case_id}
@@ -129,6 +122,20 @@ measures:
     sql: ${case_id}
     label: Total Cases with FRT Milestone
     aggregate_type: count
+
+  case_count:
+    # Measure is defined by the 'case_count' dbt metric (models/metrics/met_customer_support.yml)
+    sql: ${case_id}
+    label: Case Count
+    description: Total number of cases created.
+    aggregate_type: count
+
+  average_open_case_age_hours:
+    # Measure is defined by the 'average_open_case_age_hours' dbt metric (models/metrics/met_customer_support.yml)
+    sql: ${case_age_hours}
+    label: Average Case Age in hours
+    description: Average case age (including open and closed) in hours
+    aggregate_type: average
 
 #The info below was pulled from your dbt repository and is read-only.
 dbt:

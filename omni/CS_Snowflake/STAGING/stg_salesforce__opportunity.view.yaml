@@ -231,6 +231,11 @@ measures:
     description: The distinct count of all accounts in the pipeline.
     aggregate_type: count_distinct
 
+  opportunity_count:
+    # Measure is defined in the 'opportunity' dbt semantic model (models/semantic_models/sem_opportunity.yml)
+    sql: ${opportunity_id}
+    aggregate_type: count
+
 #The info below was pulled from your dbt repository and is read-only.
 dbt:
   name: stg_salesforce__opportunity
@@ -289,7 +294,6 @@ dbt:
     [
       fct_renewals,
       fct_opportunity,
-      opp_snapshot,
       fct_campaign_influence,
       int_salesforce__opportunity_unified
     ]

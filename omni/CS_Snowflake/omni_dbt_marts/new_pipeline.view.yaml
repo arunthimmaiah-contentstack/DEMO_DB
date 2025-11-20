@@ -1,5 +1,4 @@
 # Reference this view as omni_dbt_marts__new_pipeline
-label: New Pipeline
 schema_label: ""
 
 schema: omni_dbt_marts
@@ -98,32 +97,9 @@ dimensions:
   demand_bucket:
     sql: '"DEMAND_BUCKET"'
 
-  pipeline_date:
-    # Dimension is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
-    sql: ${omni_dbt_marts__new_pipeline.metric_date_1}
-
-  lead_source:
-    # Dimension is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
-    sql: ${omni_dbt_marts__new_pipeline.leadsource}
-
-  _entity_opportunity_id:
-    # Entity is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
-    sql: ${omni_dbt_marts__new_pipeline.id}
-    hidden: true
-
 measures:
   count:
     aggregate_type: count
-
-  opportunity_id_count:
-    # Measure is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
-    sql: "1"
-    aggregate_type: count
-
-  total_piped_amount:
-    # Measure is defined in the 'new_pipeline' dbt semantic model (models/semantic_models/sem_dreamguard.yml)
-    sql: ${omni_dbt_marts__new_pipeline.metric_measure_2}
-    aggregate_type: sum
 
 #The info below was pulled from your dbt repository and is read-only.
 dbt:

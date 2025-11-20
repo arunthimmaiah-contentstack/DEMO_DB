@@ -1,4 +1,5 @@
 # Reference this view as omni_dbt_analytics__fact_dreamguard_main_fiscal
+label: Dreamguard Main Fiscal Metrics
 schema_label: ""
 #This description was pulled from dbt.
 description: Fact table combining Salesforce opportunity, account, and currency
@@ -10,9 +11,13 @@ table_name: FACT_DREAMGUARD_MAIN_FISCAL
 dimensions:
   metric_name:
     sql: '"METRIC_NAME"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Type of metric (MEL Volume, MQL Volume, Pipeline, Bookings, etc.)
 
   object:
     sql: '"OBJECT"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Source object (Lead, Opportunity, Account)
 
   id:
     sql: '"ID"'
@@ -24,18 +29,28 @@ dimensions:
 
   product:
     sql: '"PRODUCT"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Product name (Lytics, CS)
 
   customer_designation:
     sql: '"CUSTOMER_DESIGNATION"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Customer designation (CDP, CMS, DXP)
 
   product_deal_percentage:
     sql: '"PRODUCT_DEAL_PERCENTAGE"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Percentage of deal attributed to product
 
   metric_date_1:
     sql: '"METRIC_DATE_1"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Primary date for the metric (varies by metric type)
 
   metric_date_2:
     sql: '"METRIC_DATE_2"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Secondary date for the metric (varies by metric type)
 
   metric_measure_1:
     sql: '"METRIC_MEASURE_1"'
@@ -51,21 +66,31 @@ dimensions:
 
   region:
     sql: '"REGION"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Sales region
 
   sub_region:
     sql: '"SUB_REGION"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Sales sub-region
 
   revenue:
     sql: '"REVENUE"'
 
   company_size:
     sql: '"COMPANY_SIZE"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Company size segment
 
   record_type:
     sql: '"RECORD_TYPE"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Record type (Cross-Sell, Upsell, etc.)
 
   leadsource:
     sql: '"LEADSOURCE"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Lead source
 
   motion:
     sql: '"MOTION"'
@@ -74,18 +99,28 @@ dimensions:
 
   sub_motion:
     sql: '"SUB_MOTION"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Sales sub-motion category
 
   opp_type:
     sql: '"OPP_TYPE"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Opportunity type
 
   account_name:
     sql: '"ACCOUNT_NAME"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Account or company name
 
   matched_account_tier_ld:
     sql: '"MATCHED_ACCOUNT_TIER_LD"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Matched account tier from lead data
 
   account_tier:
     sql: '"ACCOUNT_TIER"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Account tier classification
 
   deployment_status_c:
     sql: '"DEPLOYMENT_STATUS_C"'
@@ -95,24 +130,109 @@ dimensions:
 
   sync_date:
     sql: '"SYNC_DATE"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Date when data was synced from source
 
   sales_motion:
     sql: '"SALES_MOTION"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: CMS sales motion
 
   expansion_sales_motion:
     sql: '"EXPANSION_SALES_MOTION"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Expansion sales motion
 
   demand_bucket:
     sql: '"DEMAND_BUCKET"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Demand bucket category
 
   fiscal_quarter:
     sql: '"FISCAL_QUARTER"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Fiscal quarter (1, 2, 3, 4)
 
   fiscal_year:
     sql: '"FISCAL_YEAR"'
+    # This description pulled from the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    description: Fiscal year
+
+  geo:
+    # Dimension is defined in the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    sql: ${omni_dbt_analytics__fact_dreamguard_main_fiscal.geo_c}
+    description: Geographic region
+
+  deployment_status:
+    # Dimension is defined in the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    sql: ${omni_dbt_analytics__fact_dreamguard_main_fiscal.deployment_status_c}
+    description: Deployment status
+
+  account_type:
+    # Dimension is defined in the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    sql: ${omni_dbt_analytics__fact_dreamguard_main_fiscal.type}
+    description: Account type
+
+  metric_measure_1_text:
+    # Dimension is defined in the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    sql: ${omni_dbt_analytics__fact_dreamguard_main_fiscal.metric_measure_1}
+    description: Text-based measure (e.g., lost reason, ID)
+
+  _entity_record:
+    # Entity is defined in the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    sql: "CONCAT(${omni_dbt_analytics__fact_dreamguard_main_fiscal.metric_name},
+      '_', COALESCE(${omni_dbt_analytics__fact_dreamguard_main_fiscal.id},
+      'null'), '_',
+      COALESCE(${omni_dbt_analytics__fact_dreamguard_main_fiscal.metric_date_1}
+      :: STRING, 'null'))"
+    hidden: true
 
 measures:
   count:
+    aggregate_type: count
+
+  fiscal_lead_count:
+    # Measure is defined in the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    sql: CASE WHEN ${omni_dbt_analytics__fact_dreamguard_main_fiscal.object} =
+      'Lead' AND
+      ${omni_dbt_analytics__fact_dreamguard_main_fiscal.metric_measure_1} IS NOT
+      NULL THEN
+      ${omni_dbt_analytics__fact_dreamguard_main_fiscal.metric_measure_1} ELSE
+      NULL END
+    description: Count of unique leads from fiscal metrics table
+    aggregate_type: count_distinct
+
+  fiscal_metric_value:
+    # Measure is defined in the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    sql: ${omni_dbt_analytics__fact_dreamguard_main_fiscal.metric_measure_2}
+    description: Primary metric value (amount, percentage, days)
+    aggregate_type: sum
+
+  fiscal_metric_value_avg:
+    # Measure is defined in the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    sql: ${omni_dbt_analytics__fact_dreamguard_main_fiscal.metric_measure_2}
+    description: Average of primary metric value
+    aggregate_type: average
+
+  fiscal_total_amount:
+    # Measure is defined in the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    sql: ${omni_dbt_analytics__fact_dreamguard_main_fiscal.metric_measure_3}
+    description: Total unadjusted amount from fiscal metrics
+    aggregate_type: sum
+
+  fiscal_opportunity_count:
+    # Measure is defined in the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    sql: CASE WHEN ${omni_dbt_analytics__fact_dreamguard_main_fiscal.object} =
+      'OPPORTUNITY' AND ${omni_dbt_analytics__fact_dreamguard_main_fiscal.id} IS
+      NOT NULL THEN ${omni_dbt_analytics__fact_dreamguard_main_fiscal.id} ELSE
+      NULL END
+    description: Count of unique opportunities from fiscal metrics
+    aggregate_type: count_distinct
+
+  fiscal_record_count:
+    # Measure is defined in the 'dreamguard_main_fiscal_metrics' dbt semantic model (models/semantic_models/sem_dreamguard_main_fiscal_semantic.yml)
+    sql: "1"
+    description: Count of records from fiscal metrics table
     aggregate_type: count
 
 #The info below was pulled from your dbt repository and is read-only.
@@ -824,6 +944,7 @@ dbt:
             and o.stage_name = 'Closed Won'
             and o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell', 'CPQ Amendment', 'CPQ Renewal', 'Upsell')
             and o.opp_total_bookings_c > 0
+            and o.pipeline_date_c is not null
     ),
 
     -- CMS Bookings
@@ -902,6 +1023,7 @@ dbt:
             and o.stage_name = 'Closed Won'
             and o.record_type_c in ('CPQ Sales', 'Sales', 'Cross-Sell', 'CPQ Amendment', 'CPQ Renewal', 'Upsell')
             and o.opp_total_bookings_c > 0
+            and o.pipeline_date_c is not null
     ),
 
     -- Closed Won Opps

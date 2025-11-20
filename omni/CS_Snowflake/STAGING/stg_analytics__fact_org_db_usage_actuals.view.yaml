@@ -164,4 +164,4 @@ dbt:
     )
 
     select * from renamed
-  referenced_by: [ dbt_query_refactoring, int_org_usage_with_accounts ]
+  referenced_by: [ int_org_usage_with_accounts ]

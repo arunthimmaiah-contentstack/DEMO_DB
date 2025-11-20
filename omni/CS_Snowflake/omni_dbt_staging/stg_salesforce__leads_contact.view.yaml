@@ -91,13 +91,3 @@ dbt:
         created_date,
         has_opted_out_of_email
     from source
-  referenced_by:
-    [
-      mel_volume,
-      mql_volume,
-      sal_volume,
-      sql_volume,
-      mel_to_mql_conversion,
-      mql_to_sal_conversion,
-      sal_to_sql_conversion
-    ]
