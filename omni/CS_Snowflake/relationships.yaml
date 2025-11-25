@@ -1,9 +1,9 @@
 - join_from_view: analytics__fact_dreamguard_main_fiscal
   join_to_view: staging__stg_dreamguard_target_table
   join_type: inner
-  on_sql: ${analytics__fact_dreamguard_main_fiscal.metric_date_1} =
-    ${staging__stg_dreamguard_target_table.metric_name}
-    ${staging__stg_dreamguard_target_table.metric_name} and
+  on_sql: |-
+    ${analytics__fact_dreamguard_main_fiscal.metric_date_1[month]} = ${staging__stg_dreamguard_target_table.metric_date[month]} 
+    and ${analytics__fact_dreamguard_main_fiscal.metric_name} = ${staging__stg_dreamguard_target_table.metric_name} 
   reversible: false
 
 # Relationship is defined in the 'partner360_semantic_model' dbt semantic model (models/staging/Partner360/partner360_semantic_model.yml)
