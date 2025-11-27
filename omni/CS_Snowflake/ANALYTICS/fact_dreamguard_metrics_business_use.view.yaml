@@ -47,6 +47,8 @@ dimensions:
 
   pipeline_date_c:
     sql: '"PIPELINE_DATE_C"'
+    ai_context: Use only this date for questions related to the piped amount or
+      pipeline, or new pipeline
 
   close_date:
     sql: '"CLOSE_DATE"'
