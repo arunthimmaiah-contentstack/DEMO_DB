@@ -81,9 +81,11 @@ dimensions:
 
   total_original_piped_amount:
     sql: '"TOTAL_ORIGINAL_PIPED_AMOUNT"'
+    ai_context: Dont use this field to calculate piped amount
 
   product_piped_amount:
     sql: '"PRODUCT_PIPED_AMOUNT"'
+    ai_context: Always use this field for piped amount or pipeline amount or new pipeline
 
   opp_total_bookings:
     sql: '"OPP_TOTAL_BOOKINGS"'
