@@ -9,6 +9,9 @@ table_name: FACT_DREAMGUARD_METRICS_BUSINESS_USE
 dimensions:
   metric_name:
     sql: '"METRIC_NAME"'
+    synonyms: [ Metric name ]
+    ai_context: Always use this Metric name for the filter based on the questions
+      asked by the user
 
   object:
     sql: '"OBJECT"'
@@ -49,6 +52,8 @@ dimensions:
     sql: '"CLOSE_DATE"'
     #This description was pulled from dbt.
     description: Date when the opportunity was closed.
+    synonyms: [ Booking date, Booked date, bookings date ]
+    ai_context: Use this date whenever users ask about Bookings or revenue
 
   stage_enter_mqo_c:
     sql: '"STAGE_ENTER_MQO_C"'
