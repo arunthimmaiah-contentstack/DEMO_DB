@@ -40,14 +40,14 @@ dimensions:
   column_name:
     sql: '"COLUMN_NAME"'
 
+  is_test_not_null:
+    sql: '"IS_TEST_NOT_NULL"'
+
   is_test_unique:
     sql: '"IS_TEST_UNIQUE"'
 
   is_test_unique_combination_of_columns:
     sql: '"IS_TEST_UNIQUE_COMBINATION_OF_COLUMNS"'
-
-  is_test_not_null:
-    sql: '"IS_TEST_NOT_NULL"'
 
   is_enabled:
     sql: '"IS_ENABLED"'

@@ -60,11 +60,12 @@ dbt:
     ),
 
     accounts as (
-        select * from {{ ref('stg_salesforce__accounts') }}
+        select *
+        from {{ ref('stg_salesforce__accounts') }}
     ),
 
     mapped as (
-        select 
+        select
             csr.id as survey_id,
             csr.case_c,
             csr.chat_transcript_c,
@@ -72,16 +73,30 @@ dbt:
             csr.account_c,
             csr.response_completed_c,
             a.account_name,
-            case 
-                when csr.csat_for_support_experience_c = 'Very Satisfied' then 5
-                when csr.csat_for_support_experience_c = 'Satisfied' then 4
-                when csr.csat_for_support_experience_c = 'Dissatisfied' then 2
-                when csr.csat_for_support_experience_c = 'Very Dissatisfied' then 1
+
+            -- Case CSAT (only for Case CSAT Survey rows)
+            case
+                when csr.survey_type_c = 'Case CSAT Survey'
+                     and csr.csat_for_support_experience_c = 'Very Satisfied' then 5
+                when csr.survey_type_c = 'Case CSAT Survey'
+                     and csr.csat_for_support_experience_c = 'Satisfied' then 4
+                when csr.survey_type_c = 'Case CSAT Survey'
+                     and csr.csat_for_support_experience_c = 'Dissatisfied' then 2
+                when csr.survey_type_c = 'Case CSAT Survey'
+                     and csr.csat_for_support_experience_c = 'Very Dissatisfied' then 1
             end as case_csat_score,
-            csr.rating_c as chat_csat_score
+
+            -- Chat CSAT (Post Chat Survey only, doesn’t depend on case)
+            case
+                when csr.survey_type_c = 'Post Chat Survey'
+                     and csr.chat_transcript_c is not null
+                     and csr.rating_c is not null
+                then csr.rating_c
+            end as chat_csat_score
+
         from source csr
         left join accounts a
-            on csr.account_c = a.account_id 
+            on csr.account_c = a.account_id
         where (a.account_id is null or a.account_name not like '%Contentstack%')
     )
 

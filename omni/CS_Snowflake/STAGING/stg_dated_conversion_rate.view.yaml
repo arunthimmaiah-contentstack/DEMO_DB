@@ -52,4 +52,10 @@ dbt:
         start_date,
         next_start_date
     from fivetran_database.salesforce.dated_conversion_rate
-  referenced_by: [ fact_dreamguard_all, fact_dreamguard_main, fact_dreamguard_main_fiscal ]
+  referenced_by:
+    [
+      fact_dreamguard_all,
+      fact_dreamguard_main,
+      fact_dreamguard_main_fiscal,
+      fact_dreamguard_metrics_business_use
+    ]

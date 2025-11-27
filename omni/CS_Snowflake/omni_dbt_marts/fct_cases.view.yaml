@@ -6,61 +6,92 @@ schema: omni_dbt_marts
 table_name: FCT_CASES
 
 dimensions:
+  interaction_id:
+    sql: '"INTERACTION_ID"'
+    format: ID
+    primary_key: true
+
+  interaction_type:
+    sql: '"INTERACTION_TYPE"'
+    # This description pulled from the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
+    description: "Type of interaction: 'case' or 'chat'."
+
   case_id:
     sql: '"CASE_ID"'
     format: ID
-    primary_key: true
+
+  fivetran_case_id:
+    sql: '"FIVETRAN_CASE_ID"'
+    format: ID
 
   created_at:
     sql: '"CREATED_AT"'
     # This description pulled from the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
-    description: Timestamp when the case was created
+    description: Timestamp when the interaction was created (case creation or chat
+      survey completion).
 
   closed_at:
     sql: '"CLOSED_AT"'
 
+  case_age_hours:
+    sql: '"CASE_AGE_HOURS"'
+
   status:
     sql: '"STATUS"'
+    # This description pulled from the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
+    description: Case status (only populated for case interactions).
 
   channel:
     sql: '"CHANNEL"'
+    # This description pulled from the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
+    description: Channel through which the interaction was created (e.g., Web, Email, Chat).
 
   is_closed:
     sql: '"IS_CLOSED"'
+    # This description pulled from the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
+    description: Whether the case is closed (only populated for case interactions).
 
   is_escalated:
     sql: '"IS_ESCALATED"'
+    # This description pulled from the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
+    description: Whether the case is escalated (only populated for case interactions).
 
   last_escalated_c:
     sql: '"LAST_ESCALATED_C"'
     # This description pulled from the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
-    description: Timestamp when the case was last escalated
+    description: Timestamp when the case was last escalated (only populated for case
+      interactions).
 
   priority:
     sql: '"PRIORITY"'
+    # This description pulled from the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
+    description: Case priority.
 
   categories_c:
     sql: '"CATEGORIES_C"'
+    # This description pulled from the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
+    description: High-level case category.
 
   microservices_c:
     sql: '"MICROSERVICES_C"'
+    # This description pulled from the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
+    description: Microservice associated with the case.
 
   sub_microservices_c:
     sql: '"SUB_MICROSERVICES_C"'
+    # This description pulled from the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
+    description: Sub-microservice associated with the case.
 
   account_name:
     sql: '"ACCOUNT_NAME"'
     # This description pulled from the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
-    description: Name of the associated Salesforce account
+    description: Name of the associated Salesforce account.
 
   case_csat_score:
     sql: '"CASE_CSAT_SCORE"'
 
   chat_csat_score:
     sql: '"CHAT_CSAT_SCORE"'
-
-  case_age_hours:
-    sql: '"CASE_AGE_HOURS"'
 
   frt_milestone_type:
     sql: '"FRT_MILESTONE_TYPE"'
@@ -70,6 +101,11 @@ dimensions:
 
   is_frt_sla_violated:
     sql: '"IS_FRT_SLA_VIOLATED"'
+
+  _entity_interaction:
+    # Entity is defined in the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
+    sql: ${omni_dbt_marts__fct_cases.interaction_id}
+    hidden: true
 
   _entity_case:
     # Entity is defined in the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
@@ -83,43 +119,50 @@ measures:
   avg_case_csat:
     # Measure is defined in the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
     sql: ${omni_dbt_marts__fct_cases.case_csat_score}
-    label: Average CSAT (All Cases)
+    label: Average CSAT (Cases)
+    description: Average CSAT score for case-based CSAT surveys.
     aggregate_type: average
 
   avg_chat_csat:
     # Measure is defined in the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
     sql: ${omni_dbt_marts__fct_cases.chat_csat_score}
     label: Average CSAT (Chat)
+    description: Average CSAT score for chat-based CSAT surveys.
     aggregate_type: average
 
   total_case_count:
     # Measure is defined in the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
     sql: ${omni_dbt_marts__fct_cases.case_id}
     label: Total Cases
+    description: Total number of cases (interaction_type = 'case').
     aggregate_type: count
 
   avg_case_age_hours:
     # Measure is defined in the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
     sql: ${omni_dbt_marts__fct_cases.case_age_hours}
     label: Average Case Age (Hours)
+    description: Average case age in hours (only populated for cases).
     aggregate_type: average
 
   open_escalated_cases:
     # Measure is defined in the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
     sql: ${omni_dbt_marts__fct_cases.case_id}
     label: Open Escalated Cases
+    description: Count of currently open and escalated cases.
     aggregate_type: count
 
   successful_frt_sla_cases:
     # Measure is defined in the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
     sql: ${omni_dbt_marts__fct_cases.case_id}
     label: Successful FRT SLA Cases
+    description: Count of cases where the first response time SLA was not violated.
     aggregate_type: count
 
   total_frt_sla_cases:
     # Measure is defined in the 'case_semantic' dbt semantic model (models/semantic_models/sem_case.yml)
     sql: ${omni_dbt_marts__fct_cases.case_id}
     label: Total Cases with FRT Milestone
+    description: Total number of cases that have an FRT milestone.
     aggregate_type: count
 
   case_count:
@@ -144,88 +187,104 @@ dbt:
     schema: marts
     materialized: table
   code: |-
-    with cases as (
-        select * from {{ ref('stg_salesforce__case') }}
-    ),
+    with 
 
-    accounts as (
-        select * from {{ ref('stg_salesforce__accounts') }}
-    ),
+    cases as (
+        select
+            -- Generic interaction identifiers
+            c.fivetran_case_id                      as interaction_id,
+            'case'                                  as interaction_type,
 
-    frt_milestones as (
-        select * from {{ ref('stg_salesforce__case_milestone') }}
-    ),
-
-    surveys as (
-        select * from {{ ref('stg_salesforce__survey') }}
-    ),
-
-    joined as (
-        select 
+            -- Case identifiers
             c.case_id,
             c.fivetran_case_id,
-            c.created_at,
-            c.closed_at,
+
+            -- Timestamps
+            c.created_at                            as created_at,
+            c.closed_at                             as closed_at,
+
+            -- Case Age in Hours (for cases only)
+            datediff(
+                hour,
+                c.created_at,
+                coalesce(c.closed_at, current_timestamp()::timestamp_ntz)
+            )                                       as case_age_hours,
+
+            -- Case attributes
             c.status,
-            c.origin,
+            c.origin                                as channel,
             c.is_closed,
             c.is_escalated,
             c.last_escalated_c,
             c.priority,
             c.categories_c,
             c.microservices_c,
-            c.sub_microservices_c, 
-            a.account_name
-        from cases c
-        left join accounts a 
+            c.sub_microservices_c,
+            a.account_name,
+
+            -- CSAT Scores
+            s.case_csat_score                       as case_csat_score,
+            null::number                            as chat_csat_score,
+
+            -- FRT SLA details from CaseMilestone
+            frt.milestone_type_name                 as frt_milestone_type,
+            frt.milestone_completion_date           as frt_completed_at,
+            frt.is_milestone_violated               as is_frt_sla_violated
+
+        from {{ ref('stg_salesforce__case') }} c
+        left join {{ ref('stg_salesforce__accounts') }} a
             on c.account_id = a.account_id
+        left join {{ ref('stg_salesforce__survey') }} s
+            on c.fivetran_case_id = s.case_c
+        left join {{ ref('stg_salesforce__case_milestone') }} frt
+            on c.fivetran_case_id = frt.case_id
+    ),
+
+    chats as (
+        -- One row per qualifying chat survey (Post Chat Survey),
+        -- independent of whether a case exists
+        select
+            csr.survey_id                           as interaction_id,
+            'chat'                                  as interaction_type,
+
+            -- Case reference if present (may be null)
+            csr.case_c                              as case_id,
+            csr.case_c                              as fivetran_case_id,
+
+            -- For chats, treat survey completion as created_at
+            csr.response_completed_c                as created_at,
+            null::timestamp_tz                      as closed_at,
+
+            -- Chats do not have case lifecycle fields
+            null::number                            as case_age_hours,
+            null::varchar                           as status,
+            'Chat'                                  as channel,
+            null::boolean                           as is_closed,
+            null::boolean                           as is_escalated,
+            null::timestamp_tz                      as last_escalated_c,
+            null::varchar                           as priority,
+            null::varchar                           as categories_c,
+            null::varchar                           as microservices_c,
+            null::varchar                           as sub_microservices_c,
+            csr.account_name,
+
+            -- CSAT Scores
+            null::number                            as case_csat_score,
+            csr.chat_csat_score                     as chat_csat_score,
+
+            -- FRT SLA does not apply to chats
+            null::varchar                           as frt_milestone_type,
+            null::timestamp_tz                      as frt_completed_at,
+            null::boolean                           as is_frt_sla_violated
+
+        from {{ ref('stg_salesforce__survey') }} csr
+        where csr.chat_csat_score is not null
     ),
 
     final as (
-        select
-            joined.case_id,
-            joined.created_at,
-            joined.closed_at,
-            joined.status,
-            joined.origin as channel,
-            joined.is_closed,
-            joined.is_escalated,
-            joined.last_escalated_c,
-            joined.priority,
-            joined.categories_c,
-            joined.microservices_c,
-            joined.sub_microservices_c,
-            joined.account_name,
-
-            -- CSAT Score for Cases
-            case 
-                when surveys.survey_type_c = 'Case CSAT Survey' 
-                then surveys.case_csat_score 
-            end as case_csat_score,
-
-            -- CSAT Score for Chats (may be null if not linked)
-            case 
-                when surveys.survey_type_c = 'Post Chat Survey' 
-                then surveys.chat_csat_score 
-            end as chat_csat_score,
-
-            -- Case Age in Hours
-            datediff(
-                hour, 
-                joined.created_at, 
-                coalesce(joined.closed_at, current_timestamp()::timestamp_ntz)
-            ) as case_age_hours,
-
-            -- FRT SLA details from the CaseMilestone object
-            frt_milestones.milestone_type_name as frt_milestone_type,
-            frt_milestones.milestone_completion_date as frt_completed_at,
-            frt_milestones.is_milestone_violated as is_frt_sla_violated
-
-        from joined
-        left join frt_milestones 
-            on joined.fivetran_case_id = frt_milestones.case_id
-        left join surveys 
-            on joined.fivetran_case_id = surveys.case_c
+        select * from cases
+        union all
+        select * from chats
     )
 
     select * from final
