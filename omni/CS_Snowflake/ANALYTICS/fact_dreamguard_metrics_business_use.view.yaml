@@ -55,7 +55,9 @@ dimensions:
     #This description was pulled from dbt.
     description: Date when the opportunity was closed.
     synonyms: [ Booking date, Booked date, bookings date ]
-    ai_context: Use this date whenever users ask about Bookings or revenue
+    ai_context: Use this date whenever users ask about Bookings or revenue or win
+      rate. Win rate calculation is total bookings/(closed lost bookings +
+      closed won bookings)
 
   stage_enter_mqo_c:
     sql: '"STAGE_ENTER_MQO_C"'
