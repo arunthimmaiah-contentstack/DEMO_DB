@@ -5,4 +5,11 @@ description: "This Dreamguard table is used for Business users. "
 
 joins: {}
 
+views:
+  analytics__fact_dreamguard_metrics_business_use:
+    dimensions:
+      product_deal_percentage:
+        sql: '"PRODUCT_DEAL_PERCENTAGE"/100.0'
+        format: PERCENT
+
 ai_context: Our fiscal year starts from the month of February.
