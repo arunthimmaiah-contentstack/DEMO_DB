@@ -1,5 +1,5 @@
 base_view: analytics__fact_dreamguard_metrics_business_use
-label: Analytics Fact Dreamguard Metrics Business Use
+label: Dreamguard Metrics Business Use
 group_label: ""
 description: "This Dreamguard table is used for Business users. "
 
