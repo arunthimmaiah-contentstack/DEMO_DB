@@ -176,8 +176,14 @@ dimensions:
     group_label: Fiscal Timeframes
 
   fiscal_year:
-    sql: '"FISCAL_YEAR"'
+    sql: TRY_CAST(TRY_CAST("FISCAL_YEAR" as varchar) || '-01-01' as date)
     group_label: Fiscal Timeframes
+    hidden: false
+    timeframes: [ year ]
+    timeframe_metadata:
+      year:
+        label: " "
+        group_label: Fiscal Timeframes
 
 measures:
   count:
